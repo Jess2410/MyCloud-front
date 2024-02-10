@@ -24,7 +24,6 @@ const Button: React.FC<ButtonProps> = ({ label, variant, disabled }) => {
       className={customButtonClassname}
     >
       {label}
-      im
     </ButtonMuiBase>
   );
 };
