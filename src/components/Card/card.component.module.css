@@ -1,6 +1,6 @@
 .card {
   max-width: 180px;
-  max-height: 230px;
+  height: 230px;
   background-color: #fff;
   border: 2px solid transparent;
 }
@@ -12,13 +12,18 @@
   padding-bottom: 0;
 }
 .card__content {
-  padding: 0;
+  padding: 0 !important;
 }
 .card__title {
   font-family: Poppins;
   line-height: 1rem;
   color: #a0a0a0;
   font-size: 15;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding: 0;
+  margin: 0;
 }
 .card__date {
   font-family: Poppins;
