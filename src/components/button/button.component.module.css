@@ -1,0 +1,21 @@
+.button {
+  background-color: #7cd2d7;
+  border: 2px solid #7cd2d7;
+  border-radius: 10px;
+  padding: 10px 20px;
+}
+.button:hover {
+  background-color: #49d4db;
+  border: 2px solid #49d4db;
+}
+
+.button--outlined {
+  background-color: #fff;
+  border: 2px solid #9b61f5;
+  color: #9b61f5;
+}
+.button--outlined:hover {
+  background-color: #e6dcf5;
+  border: 2px solid #8d48f5;
+  color: #9b61f5;
+}
