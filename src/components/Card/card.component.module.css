@@ -1,0 +1,28 @@
+.card {
+  max-width: 180px;
+  max-height: 230px;
+  background-color: #fff;
+  border: 2px solid transparent;
+}
+.card:hover {
+  border: 2px solid #49d4db;
+}
+.card__actions {
+  justify-content: space-between;
+  padding-bottom: 0;
+}
+.card__content {
+  padding: 0;
+}
+.card__title {
+  font-family: Poppins;
+  line-height: 1rem;
+  color: #a0a0a0;
+  font-size: 15;
+}
+.card__date {
+  font-family: Poppins;
+  line-height: 1rem;
+  color: #a0a0a0;
+  font-size: 13;
+}
