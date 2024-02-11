@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import Input from "./Input";
-import Button from "../button/Button";
+import Button from "../Button/Button";
 import { Link, Typography } from "@mui/material";
 import { FC } from "react";
 
@@ -16,6 +16,7 @@ type GenericFormProps = {
   spanText: string;
   linkText: string;
 };
+
 const GenericForm: FC<GenericFormProps> = ({
   title,
   inputs,
@@ -29,7 +30,8 @@ const GenericForm: FC<GenericFormProps> = ({
       sx={{
         "& > :not(style)": {
           m: 1,
-          width: "400px",
+          width: "100%",
+          maxWidth: "400px",
           display: "flex",
           flexDirection: "column",
           fontFamily: "Poppins",
@@ -42,11 +44,12 @@ const GenericForm: FC<GenericFormProps> = ({
       <Typography
         component="h2"
         sx={{
-          fontSize: "40px",
+          fontSize: ["32px", "40px"],
           fontFamily: "Poppins",
           textAlign: "right",
           color: "#E4B8FD",
           position: "relative",
+          marginBottom: "1rem",
         }}
       >
         {title}
@@ -67,7 +70,7 @@ const GenericForm: FC<GenericFormProps> = ({
       {inputs.map((input, index) => (
         <Input key={index} label={input.label} password={input.password} />
       ))}
-      <Box sx={{ padding: "24px 0" }}>
+      <Box sx={{ padding: "1rem 0" }}>
         <Button
           label={buttonText}
           variant="contained"

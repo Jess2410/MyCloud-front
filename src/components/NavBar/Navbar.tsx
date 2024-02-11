@@ -45,7 +45,7 @@ const Navbar: React.FC = () => {
 
   return (
     <AppBar
-      position="static"
+      position="absolute"
       sx={{
         backgroundColor: "transparent",
         padding: "0",
@@ -194,9 +194,10 @@ const Navbar: React.FC = () => {
             sx={{
               flexGrow: 0,
               border: "2px solid #49d4db ",
+              background: "#fff",
               borderRadius: "50%",
               "&:hover": {
-                background: "RGBA(228,184,253,0.2)",
+                background: "RGBA(256,256,256,0.8)",
               },
             }}
           >

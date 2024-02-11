@@ -1,8 +1,10 @@
-import './App.css';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import "./App.css";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import HomeView from "./views/app/home/HomeView";
+import LoginView from "./views/app/login/LoginView";
 import UiComponents from "./views/app/UiComponents/UiComponents";
-
+import RegisterView from "./views/app/register/RegisterView";
+import ForgetPasswordView from "./views/app/forgetPassword/forgetPassword";
 
 const router = createBrowserRouter([
   {
@@ -15,17 +17,19 @@ const router = createBrowserRouter([
   },
   {
     path: "/login",
-    element: <HomeView />,
+    element: <LoginView />,
   },
   {
     path: "/signin",
-    element: <HomeView />,
+    element: <RegisterView />,
   },
-
-])
+  {
+    path: "/forgetpassword",
+    element: <ForgetPasswordView />,
+  },
+]);
 
 function App() {
-
   return (
     <div className="App">
       <RouterProvider router={router} />
