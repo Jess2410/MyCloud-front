@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import styles from "./button.component.module.css";
 import { Button as ButtonMuiBase } from "@mui/base/Button";
+import { Typography } from "@mui/material";
 
 export interface ButtonProps
   extends Pick<
@@ -23,7 +24,16 @@ const Button: React.FC<ButtonProps> = ({ label, variant, disabled }) => {
       disabled={disabled}
       className={customButtonClassname}
     >
-      {label}
+      <Typography
+        sx={{
+          textAlign: "center",
+          // width: "100%",
+          fontWeight: "bold",
+          fontFamily: "Poppins",
+        }}
+      >
+        {label}
+      </Typography>
     </ButtonMuiBase>
   );
 };

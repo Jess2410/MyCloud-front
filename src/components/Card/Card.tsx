@@ -41,7 +41,9 @@ const Card = () => {
           inputProps={{ "aria-label": "favorite" }}
         />
       </CardActions>
-      <img src={iconFileImage} alt="icon" />
+      <CardMedia>
+        <img src={iconFileImage} alt="icon" />
+      </CardMedia>
       <CardContent className={styles["card__content"]}>
         <Typography
           gutterBottom
