@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import Input from "./Input";
-import Button from "../Button/Button";
+import Button from "../button/Button";
 import { Link, Typography } from "@mui/material";
 import { FC } from "react";
 
