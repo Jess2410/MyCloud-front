@@ -4,15 +4,15 @@ import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 
-import StorageIcon from "@mui/icons-material/Storage";
-import SyncIcon from "@mui/icons-material/Sync";
-import ShareIcon from "@mui/icons-material/Share";
+import StartIcon from '@mui/icons-material/Start';
+import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
+import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import Button from "../../../components/button/Button";
 import Navbar from "../../../components/NavBar/Navbar";
 import image from "../../../assets/images/cloud-data.png";
 import { Link } from "react-router-dom";
 
-const ServiceView = () => {
+const AproposView = () => {
   return (
     <>
       <Navbar />
@@ -53,7 +53,7 @@ const ServiceView = () => {
             gutterBottom
             align="center"
           >
-            Nos Services
+            À propos
           </Typography>
           <Typography
             sx={{
@@ -64,12 +64,12 @@ const ServiceView = () => {
             align="center"
             color="#a0a0a0"
           >
-            Découvrez les fonctionnalités offertes par notre service de stockage
+            Découvrez l'histoire de votre partenaire de stockage
             en ligne.
           </Typography>
-          <Link to="/login" style={{textDecoration: "none"}}>
+          <Link to="/contact" style={{textDecoration: "none"}}>
             <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
-              <Button variant="contained" label="Démarrer" />
+                <Button variant="contained" label="Contactez l'équipe" />
             </Box>
           </Link>
           <Grid container spacing={4} sx={{ mt: 4 }}>
@@ -90,7 +90,7 @@ const ServiceView = () => {
                     alignItems: "center",
                   }}
                 >
-                  <StorageIcon sx={{ fontSize: 60, color: "#E4B8FD", mb: 2 }} />
+                  <StartIcon sx={{ fontSize: 60, color: "#E4B8FD", mb: 2 }} />
                   <Typography
                     gutterBottom
                     variant="h5"
@@ -100,7 +100,7 @@ const ServiceView = () => {
                       color: "#49d4db",
                     }}
                   >
-                    Stockage Illimité
+                    22 Mai 2023
                   </Typography>
                   <Typography
                     sx={{
@@ -109,8 +109,7 @@ const ServiceView = () => {
                     variant="body2"
                     color="#a0a0a0"
                   >
-                    Stockez tous vos fichiers en ligne sans aucune limite de
-                    capacité.
+                    Les membres de l'équipe dev se recontrent.
                   </Typography>
                 </CardContent>
               </Card>
@@ -132,7 +131,7 @@ const ServiceView = () => {
                     alignItems: "center",
                   }}
                 >
-                  <SyncIcon
+                  <HourglassEmptyIcon
                     sx={{
                       fontSize: 60,
                       color: "#E4B8FD",
@@ -149,7 +148,7 @@ const ServiceView = () => {
                       textAlign: "center",
                     }}
                   >
-                    Synchro. Automatique
+                    2 Février 2024
                   </Typography>
                   <Typography
                     sx={{
@@ -158,8 +157,7 @@ const ServiceView = () => {
                     variant="body2"
                     color="#a0a0a0"
                   >
-                    Accédez à vos fichiers depuis n'importe quel appareil et
-                    synchronisez-les automatiquement.
+                    La conception du projet "Le Nuage" commence.
                   </Typography>
                 </CardContent>
               </Card>
@@ -181,7 +179,7 @@ const ServiceView = () => {
                     alignItems: "center",
                   }}
                 >
-                  <ShareIcon
+                  <RocketLaunchIcon
                     sx={{
                       fontFamily: "Poppins",
                       fontSize: 60,
@@ -199,7 +197,7 @@ const ServiceView = () => {
                       color: "#49d4db",
                     }}
                   >
-                    Partage Facile
+                    4 Mars 2024
                   </Typography>
                   <Typography
                     variant="body2"
@@ -208,8 +206,7 @@ const ServiceView = () => {
                       fontFamily: "Poppins",
                     }}
                   >
-                    Partagez vos fichiers et dossiers en toute simplicité avec
-                    vos collègues et amis.
+                    Notre produit est prêt pour votre utilisation!
                   </Typography>
                 </CardContent>
               </Card>
@@ -221,4 +218,4 @@ const ServiceView = () => {
   );
 };
 
-export default ServiceView;
+export default AproposView;
