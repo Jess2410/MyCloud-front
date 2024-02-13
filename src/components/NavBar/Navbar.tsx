@@ -43,11 +43,12 @@ const Navbar: React.FC = () => {
 
   return (
     <AppBar
-      position="absolute"
+      position="sticky"
       sx={{
         backgroundColor: "transparent",
         padding: "0",
         boxShadow: "none",
+        height: "fit-content",
       }}
     >
       <Container maxWidth="xl">

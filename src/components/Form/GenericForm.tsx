@@ -30,13 +30,14 @@ const GenericForm: FC<GenericFormProps> = ({
       component="form"
       sx={{
         "& > :not(style)": {
-          m: 1,
+          // m: 1,
           width: "100%",
           maxWidth: "400px",
           display: "flex",
           flexDirection: "column",
           fontFamily: "Poppins",
           position: "relative",
+          // padding: 1,
         },
       }}
       noValidate
@@ -57,7 +58,7 @@ const GenericForm: FC<GenericFormProps> = ({
         <span
           style={{
             position: "absolute",
-            left: "-100vw",
+            right: "0px",
             bottom: "-16px",
             width: "calc(100vw + 400px)",
             height: "18px",

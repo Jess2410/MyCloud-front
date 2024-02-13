@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
 import Drawer from "@mui/material/Drawer";
 import CssBaseline from "@mui/material/CssBaseline";
 import Toolbar from "@mui/material/Toolbar";
@@ -149,54 +150,115 @@ const DashboardComponent = () => {
               Bienvenue 'nom' ! 👋
             </Typography>
           </Box>
-          <Box
-            sx={{
-              p: 4,
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-              gap: "16px",
-              justifyContent: "center",
-              alignItems: "flex-start",
-            }}
-          ></Box>
-          <Box
-            sx={{
-              p: 4,
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "16px",
-              justifyContent: "center",
-              alignItems: "flex-start",
-            }}
-          >
-            <Card
-              extensionFile="folder"
-              name="Nouveau dossier"
-              date="21/06/2023"
-            />
-            <Card
-              extensionFile="folder"
-              name="Nouveau dossier"
-              date="09/09/2023"
-            />
-            <Card
-              extensionFile="folder"
-              name="Nouveau dossier"
-              date="21/06/2023"
-            />
-            <Card extensionFile="audio" name="Music" date="21/06/2023" />
-            <Card extensionFile="file" name="Photo12.jpeg" date="09/09/2023" />
-            <Card extensionFile="image" name="Drawing" date="21/06/2023" />
-            <Card extensionFile="audio" name="Music" date="21/06/2023" />
-            <Card extensionFile="file" name="Photo12.jpeg" date="09/09/2023" />
-            <Card extensionFile="audio" name="Music" date="21/06/2023" />
-            <Card extensionFile="image" name="Drawing" date="21/06/2023" />
-            <Card extensionFile="file" name="Photo12.jpeg" date="09/09/2023" />
-            <Card extensionFile="audio" name="Music" date="21/06/2023" />
-            <Card extensionFile="image" name="Drawing" date="21/06/2023" />
-            <Card extensionFile="file" name="Photo12.jpeg" date="09/09/2023" />
-            <Card extensionFile="audio" name="Music" date="21/06/2023" />
-          </Box>
+
+          <Grid sx={{ px: 4 }}>
+            <Box
+              sx={{
+                background: "rgba(124, 210, 215, 0.2)",
+                borderRadius: "60px",
+                p: "4px",
+                display: "flex",
+                alignItems: "center",
+                mr: 1,
+                flex: 1,
+              }}
+            >
+              <Box
+                sx={{
+                  borderRight: "1px solid #7CD2D7",
+                  mx: 1,
+
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <IconButton icon={addFolder} />
+                <IconButton icon={addFile} />
+              </Box>
+              <Box
+                sx={{
+                  borderRight: "1px solid #7CD2D7",
+                  display: "flex",
+                  alignItems: "center",
+                  mx: 1,
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontFamily: "Poppins",
+                    color: "#A0A0A0",
+                    fontSize: 18,
+                    fontWeight: 300,
+                  }}
+                >
+                  Sélectionner
+                </Typography>
+                <Box onClick={() => onSelected()}>
+                  {selected ? (
+                    <IconButton icon={checkBox} />
+                  ) : (
+                    <IconButton icon={checkBoxNoChecked} />
+                  )}
+                </Box>
+              </Box>
+              <IconButton icon={trash} />
+            </Box>
+
+            <Box
+              sx={{
+                p: 4,
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "16px",
+                justifyContent: "center",
+                alignItems: "flex-start",
+              }}
+            >
+              <Card
+                extensionFile="folder"
+                name="Nouveau dossier"
+                date="21/06/2023"
+              />
+              <Card
+                extensionFile="folder"
+                name="Nouveau dossier"
+                date="09/09/2023"
+              />
+              <Card
+                extensionFile="folder"
+                name="Nouveau dossier"
+                date="21/06/2023"
+              />
+              <Card extensionFile="audio" name="Music" date="21/06/2023" />
+              <Card
+                extensionFile="file"
+                name="Photo12.jpeg"
+                date="09/09/2023"
+              />
+              <Card extensionFile="image" name="Drawing" date="21/06/2023" />
+              <Card extensionFile="audio" name="Music" date="21/06/2023" />
+              <Card
+                extensionFile="file"
+                name="Photo12.jpeg"
+                date="09/09/2023"
+              />
+              <Card extensionFile="audio" name="Music" date="21/06/2023" />
+              <Card extensionFile="image" name="Drawing" date="21/06/2023" />
+              <Card
+                extensionFile="file"
+                name="Photo12.jpeg"
+                date="09/09/2023"
+              />
+              <Card extensionFile="audio" name="Music" date="21/06/2023" />
+              <Card extensionFile="image" name="Drawing" date="21/06/2023" />
+              <Card
+                extensionFile="file"
+                name="Photo12.jpeg"
+                date="09/09/2023"
+              />
+              <Card extensionFile="audio" name="Music" date="21/06/2023" />
+            </Box>
+          </Grid>
         </Box>
       </Box>
     </Box>
