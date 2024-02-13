@@ -5,20 +5,25 @@ import Toolbar from "@mui/material/Toolbar";
 import { IconButton as IconButtonMui } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
-//import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import logo from "../../assets/images/logo-le-nuage.webp";
-//import logoResponsiveVide from "../../assets/icons/logo-responsive-svg.svg";
 import logoResponsiveBurger from "../../assets/icons/logo-burger-svg.svg";
 import LoginIcon from "@mui/icons-material/Login";
-//import trashDef from "../../assets/icons/trash-definitive-icon.png";
 import IconButton from "../IconButton/IconButton";
+import { Link } from "react-router-dom";
 
-const pages = ["À propos", "Services", "Contact"];
-const settings = ["Sign In", "Login"];
+const pages = [
+  { key: 1, name: "À propos", href: "/about" },
+  { key: 2, name: "Services", href: "/services" },
+  { key: 3, name: "Contact", href: "/contact" },
+];
+const settings = [
+  { key: 1, name: "Sign In", href: "/signin" },
+  { key: 2, name: "Login", href: "/login" },
+];
 
 const Navbar: React.FC = () => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -45,36 +50,39 @@ const Navbar: React.FC = () => {
 
   return (
     <AppBar
-      position="absolute"
+      position="sticky"
       sx={{
         backgroundColor: "transparent",
         padding: "0",
         boxShadow: "none",
+        height: "fit-content",
       }}
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Box
-            sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            <img
-              src={logo}
-              alt="logo-le-nuage"
-              style={{
-                width: 200,
-                height: "auto",
-                marginRight: 24,
+          <Link to="/">
+            <Box
+              sx={{
+                mr: 2,
+                display: { xs: "none", md: "flex" },
+                fontFamily: "monospace",
+                fontWeight: 700,
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
               }}
-            />
-          </Box>
+            >
+              <img
+                src={logo}
+                alt="logo-le-nuage"
+                style={{
+                  width: 200,
+                  height: "auto",
+                  marginRight: 24,
+                }}
+              />
+            </Box>
+          </Link>
 
           <Box
             sx={{
@@ -116,21 +124,26 @@ const Navbar: React.FC = () => {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography
-                    textAlign="center"
-                    sx={{
-                      textTransform: "none",
-                      fontFamily: "Poppins",
-                      color: "#6A6369",
-                      "&:hover": {
-                        color: "#49d4db",
-                      },
-                    }}
+              {pages.map((page, index) => (
+                <MenuItem key={index} onClick={handleCloseNavMenu}>
+                  <Link
+                    to={page.href}
+                    style={{ textDecoration: "none", color: "#6A6369" }}
                   >
-                    {page}
-                  </Typography>
+                    <Typography
+                      textAlign="center"
+                      sx={{
+                        textTransform: "none",
+                        fontFamily: "Poppins",
+                        color: "#6A6369",
+                        "&:hover": {
+                          color: "#49d4db",
+                        },
+                      }}
+                    >
+                      {page.name}
+                    </Typography>
+                  </Link>
                 </MenuItem>
               ))}
             </Menu>
@@ -160,33 +173,38 @@ const Navbar: React.FC = () => {
 
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{
-                  my: 2,
-                  display: "block",
-                  "&:hover": {
-                    color: "#49d4db",
-                  },
-                }}
+              <Link
+                to={page.href}
+                style={{ textDecoration: "none", color: "#6A6369" }}
               >
-                <Typography
-                  variant="body1"
+                <Button
+                  key={page.key}
+                  onClick={handleCloseNavMenu}
                   sx={{
-                    textTransform: "none",
-                    fontFamily: "Poppins",
-                    mx: "16px",
-                    fontSize: 17,
-                    color: "#6A6369",
+                    my: 2,
+                    display: "block",
                     "&:hover": {
                       color: "#49d4db",
                     },
                   }}
                 >
-                  {page}
-                </Typography>
-              </Button>
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      textTransform: "none",
+                      fontFamily: "Poppins",
+                      mx: "16px",
+                      fontSize: 17,
+                      color: "#6A6369",
+                      "&:hover": {
+                        color: "#49d4db",
+                      },
+                    }}
+                  >
+                    {page.name}
+                  </Typography>
+                </Button>
+              </Link>
             ))}
           </Box>
 
@@ -223,20 +241,25 @@ const Navbar: React.FC = () => {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography
-                    textAlign="center"
-                    sx={{
-                      textTransform: "none",
-                      fontFamily: "Poppins",
-                      color: "#6A6369",
-                      "&:hover": {
-                        color: "#9B61F5",
-                      },
-                    }}
+                <MenuItem key={setting.key} onClick={handleCloseUserMenu}>
+                  <Link
+                    to={setting.href}
+                    style={{ textDecoration: "none", color: "#6A6369" }}
                   >
-                    {setting}
-                  </Typography>
+                    <Typography
+                      textAlign="center"
+                      sx={{
+                        textTransform: "none",
+                        fontFamily: "Poppins",
+                        color: "#6A6369",
+                        "&:hover": {
+                          color: "#9B61F5",
+                        },
+                      }}
+                    >
+                      {setting.name}
+                    </Typography>
+                  </Link>
                 </MenuItem>
               ))}
             </Menu>

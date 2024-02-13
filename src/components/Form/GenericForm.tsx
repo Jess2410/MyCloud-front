@@ -1,8 +1,10 @@
 import Box from "@mui/material/Box";
 import Input from "./Input";
-import Button from "../Button/Button";
-import { Link, Typography } from "@mui/material";
+
+import { Typography } from "@mui/material";
 import { FC } from "react";
+import { Link } from "react-router-dom";
+import Button from "../Button/Button";
 
 type InputConfig = {
   label: string;
@@ -29,7 +31,6 @@ const GenericForm: FC<GenericFormProps> = ({
       component="form"
       sx={{
         "& > :not(style)": {
-          m: 1,
           width: "100%",
           maxWidth: "400px",
           display: "flex",
@@ -56,7 +57,7 @@ const GenericForm: FC<GenericFormProps> = ({
         <span
           style={{
             position: "absolute",
-            left: "-100vw",
+            right: "0px",
             bottom: "-16px",
             width: "calc(100vw + 400px)",
             height: "18px",
@@ -71,16 +72,28 @@ const GenericForm: FC<GenericFormProps> = ({
         <Input key={index} label={input.label} password={input.password} />
       ))}
       <Box sx={{ padding: "1rem 0" }}>
-        <Button
-          label={buttonText}
-          variant="contained"
-          style={{ flexGrow: 1 }}
-        />
+        <Link
+          to="/dashboard"
+          style={{
+            textDecoration: "none",
+            padding: 1,
+            color: "#7CD2D7",
+          }}
+        >
+          <Button
+            label={buttonText}
+            variant="contained"
+            style={{ display: "flex" }}
+          />
+        </Link>
       </Box>
       <Typography variant="body2">
         <span style={{ color: "#ADADA0" }}>
           {spanText}
-          <Link sx={{ textDecoration: "none", padding: 1, color: "#7CD2D7" }}>
+          <Link
+            to="/"
+            style={{ textDecoration: "none", padding: 1, color: "#7CD2D7" }}
+          >
             {linkText}
           </Link>
         </span>
