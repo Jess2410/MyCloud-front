@@ -5,6 +5,7 @@
   border-radius: 10px;
   padding: 10px 20px;
   cursor: pointer;
+  width: 100%;
 }
 .button:hover {
   background-color: #49d4db;

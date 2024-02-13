@@ -12,7 +12,6 @@ import AboutView from "./views/app/about/AboutView";
 
 import ContactView from "./views/app/contact/ContactView";
 
-
 const router = createBrowserRouter([
   {
     path: "/",
@@ -43,10 +42,9 @@ const router = createBrowserRouter([
     element: <ServicesView />,
   },
   {
-
     path: "/about",
     element: <AboutView />,
-
+  },
   {
     path: "/contact",
     element: <ContactView />,

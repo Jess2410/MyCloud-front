@@ -27,7 +27,7 @@ const Button: React.FC<ButtonProps> = ({ label, variant, disabled }) => {
       <Typography
         sx={{
           textAlign: "center",
-          // width: "100%",
+
           fontWeight: "bold",
           fontFamily: "Poppins",
         }}

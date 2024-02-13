@@ -7,7 +7,7 @@ import CardContent from "@mui/material/CardContent";
 import StorageIcon from "@mui/icons-material/Storage";
 import SyncIcon from "@mui/icons-material/Sync";
 import ShareIcon from "@mui/icons-material/Share";
-import Button from "../../../components/button/Button";
+import Button from "../../../components/Button/Button";
 import Navbar from "../../../components/NavBar/Navbar";
 import image from "../../../assets/images/cloud-data.png";
 import { Link } from "react-router-dom";
@@ -67,11 +67,11 @@ const ServiceView = () => {
             Découvrez les fonctionnalités offertes par notre service de stockage
             en ligne.
           </Typography>
-          <Link to="/login" style={{textDecoration: "none"}}>
-            <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
+          <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
+            <Link to="/signin" style={{ textDecoration: "none" }}>
               <Button variant="contained" label="Démarrer" />
-            </Box>
-          </Link>
+            </Link>
+          </Box>
           <Grid container spacing={4} sx={{ mt: 4 }}>
             <Grid item xs={12} md={4}>
               <Card

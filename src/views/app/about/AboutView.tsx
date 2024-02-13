@@ -3,6 +3,7 @@ import Typography from "@mui/material/Typography";
 import Button from "../../../components/Button/Button";
 import Navbar from "../../../components/NavBar/Navbar";
 import vector from "../../../assets/images/cloud-data.svg";
+import { Link } from "react-router-dom";
 
 const AboutView = () => {
   return (
@@ -113,7 +114,12 @@ const AboutView = () => {
               utiliser.
             </Typography>
             <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
-              <Button variant="outlined" label="Essayez-le !" />
+              <Link
+                to={"/signin"}
+                style={{ textDecoration: "none", color: "#6A6369" }}
+              >
+                <Button variant="outlined" label="Essayez-le !" />
+              </Link>
             </Box>
           </Box>
         </Box>

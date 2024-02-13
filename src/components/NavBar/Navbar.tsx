@@ -15,8 +15,15 @@ import LoginIcon from "@mui/icons-material/Login";
 import IconButton from "../IconButton/IconButton";
 import { Link } from "react-router-dom";
 
-const pages = ["À propos", "Services", "Contact"];
-const settings = ["Sign In", "Login"];
+const pages = [
+  { key: 1, name: "À propos", href: "/about" },
+  { key: 2, name: "Services", href: "/services" },
+  { key: 3, name: "Contact", href: "/contact" },
+];
+const settings = [
+  { key: 1, name: "Sign In", href: "/signin" },
+  { key: 2, name: "Login", href: "/login" },
+];
 
 const Navbar: React.FC = () => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -117,9 +124,12 @@ const Navbar: React.FC = () => {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Link to={`/${page.toLowerCase().replace(" ", "_")}`} style={{ textDecoration: 'none', color: '#6A6369' }}>
+              {pages.map((page, index) => (
+                <MenuItem key={index} onClick={handleCloseNavMenu}>
+                  <Link
+                    to={page.href}
+                    style={{ textDecoration: "none", color: "#6A6369" }}
+                  >
                     <Typography
                       textAlign="center"
                       sx={{
@@ -131,7 +141,7 @@ const Navbar: React.FC = () => {
                         },
                       }}
                     >
-                      {page}
+                      {page.name}
                     </Typography>
                   </Link>
                 </MenuItem>
@@ -163,9 +173,12 @@ const Navbar: React.FC = () => {
 
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
-              <Link to={`/${page.toLowerCase().replace(" ", "_")}`} style={{ textDecoration: 'none', color: '#6A6369' }}>
+              <Link
+                to={page.href}
+                style={{ textDecoration: "none", color: "#6A6369" }}
+              >
                 <Button
-                  key={page}
+                  key={page.key}
                   onClick={handleCloseNavMenu}
                   sx={{
                     my: 2,
@@ -188,7 +201,7 @@ const Navbar: React.FC = () => {
                       },
                     }}
                   >
-                    {page}
+                    {page.name}
                   </Typography>
                 </Button>
               </Link>
@@ -228,8 +241,11 @@ const Navbar: React.FC = () => {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Link to={`/${setting.toLowerCase().replace(" ", "")}`} style={{ textDecoration: 'none', color: '#6A6369' }}>
+                <MenuItem key={setting.key} onClick={handleCloseUserMenu}>
+                  <Link
+                    to={setting.href}
+                    style={{ textDecoration: "none", color: "#6A6369" }}
+                  >
                     <Typography
                       textAlign="center"
                       sx={{
@@ -241,7 +257,7 @@ const Navbar: React.FC = () => {
                         },
                       }}
                     >
-                      {setting}
+                      {setting.name}
                     </Typography>
                   </Link>
                 </MenuItem>
