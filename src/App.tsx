@@ -5,11 +5,10 @@ import LoginView from "./views/app/login/LoginView";
 import UiComponents from "./views/app/UiComponents/UiComponents";
 import RegisterView from "./views/app/register/RegisterView";
 import ForgetPasswordView from "./views/app/forgetPassword/forgetPassword";
+import ResetPasswordView from "./views/app/passwordReset/ResetPasswordView";
 import DashboardView from "./views/auth/dashboard/Dashboard";
 import ServicesView from "./views/app/services/ServicesView";
-
 import AboutView from "./views/app/about/AboutView";
-
 import ContactView from "./views/app/contact/ContactView";
 
 const router = createBrowserRouter([
@@ -34,6 +33,9 @@ const router = createBrowserRouter([
     element: <ForgetPasswordView />,
   },
   {
+    path: "/reset-password/:token",
+    element: <ResetPasswordView />,
+   },
     path: "/dashboard",
     element: <DashboardView />,
   },

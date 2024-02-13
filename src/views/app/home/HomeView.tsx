@@ -1,5 +1,5 @@
 import Navbar from "../../../components/NavBar/Navbar";
-import Button from "../../../components/Button/Button";
+import Button from "../../../components/button/Button";
 import background from "../../../assets/images/Homebackground-home.png";
 import { Link } from "react-router-dom";
 
