@@ -13,6 +13,7 @@ import logo from "../../assets/images/logo-le-nuage.webp";
 import logoResponsiveBurger from "../../assets/icons/logo-burger-svg.svg";
 import LoginIcon from "@mui/icons-material/Login";
 import IconButton from "../IconButton/IconButton";
+import { Link } from "react-router-dom";
 
 const pages = ["À propos", "Services", "Contact"];
 const settings = ["Sign In", "Login"];
@@ -52,27 +53,29 @@ const Navbar: React.FC = () => {
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Box
-            sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            <img
-              src={logo}
-              alt="logo-le-nuage"
-              style={{
-                width: 200,
-                height: "auto",
-                marginRight: 24,
+          <Link to="/">
+            <Box
+              sx={{
+                mr: 2,
+                display: { xs: "none", md: "flex" },
+                fontFamily: "monospace",
+                fontWeight: 700,
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
               }}
-            />
-          </Box>
+            >
+              <img
+                src={logo}
+                alt="logo-le-nuage"
+                style={{
+                  width: 200,
+                  height: "auto",
+                  marginRight: 24,
+                }}
+              />
+            </Box>
+          </Link>
 
           <Box
             sx={{
@@ -116,19 +119,21 @@ const Navbar: React.FC = () => {
             >
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography
-                    textAlign="center"
-                    sx={{
-                      textTransform: "none",
-                      fontFamily: "Poppins",
-                      color: "#6A6369",
-                      "&:hover": {
-                        color: "#49d4db",
-                      },
-                    }}
-                  >
-                    {page}
-                  </Typography>
+                  <Link to={`/${page.toLowerCase().replace(" ", "_")}`} style={{ textDecoration: 'none', color: '#6A6369' }}>
+                    <Typography
+                      textAlign="center"
+                      sx={{
+                        textTransform: "none",
+                        fontFamily: "Poppins",
+                        color: "#6A6369",
+                        "&:hover": {
+                          color: "#49d4db",
+                        },
+                      }}
+                    >
+                      {page}
+                    </Typography>
+                  </Link>
                 </MenuItem>
               ))}
             </Menu>
@@ -158,33 +163,35 @@ const Navbar: React.FC = () => {
 
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{
-                  my: 2,
-                  display: "block",
-                  "&:hover": {
-                    color: "#49d4db",
-                  },
-                }}
-              >
-                <Typography
-                  variant="body1"
+              <Link to={`/${page.toLowerCase().replace(" ", "_")}`} style={{ textDecoration: 'none', color: '#6A6369' }}>
+                <Button
+                  key={page}
+                  onClick={handleCloseNavMenu}
                   sx={{
-                    textTransform: "none",
-                    fontFamily: "Poppins",
-                    mx: "16px",
-                    fontSize: 17,
-                    color: "#6A6369",
+                    my: 2,
+                    display: "block",
                     "&:hover": {
                       color: "#49d4db",
                     },
                   }}
                 >
-                  {page}
-                </Typography>
-              </Button>
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      textTransform: "none",
+                      fontFamily: "Poppins",
+                      mx: "16px",
+                      fontSize: 17,
+                      color: "#6A6369",
+                      "&:hover": {
+                        color: "#49d4db",
+                      },
+                    }}
+                  >
+                    {page}
+                  </Typography>
+                </Button>
+              </Link>
             ))}
           </Box>
 
@@ -222,19 +229,21 @@ const Navbar: React.FC = () => {
             >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography
-                    textAlign="center"
-                    sx={{
-                      textTransform: "none",
-                      fontFamily: "Poppins",
-                      color: "#6A6369",
-                      "&:hover": {
-                        color: "#9B61F5",
-                      },
-                    }}
-                  >
-                    {setting}
-                  </Typography>
+                  <Link to={`/${setting.toLowerCase().replace(" ", "")}`} style={{ textDecoration: 'none', color: '#6A6369' }}>
+                    <Typography
+                      textAlign="center"
+                      sx={{
+                        textTransform: "none",
+                        fontFamily: "Poppins",
+                        color: "#6A6369",
+                        "&:hover": {
+                          color: "#9B61F5",
+                        },
+                      }}
+                    >
+                      {setting}
+                    </Typography>
+                  </Link>
                 </MenuItem>
               ))}
             </Menu>

@@ -1,8 +1,9 @@
 import Box from "@mui/material/Box";
 import Input from "./Input";
-import Button from "../Button/Button";
-import { Link, Typography } from "@mui/material";
+import Button from "../button/Button";
+import { Typography } from "@mui/material";
 import { FC } from "react";
+import { Link } from "react-router-dom";
 
 type InputConfig = {
   label: string;
@@ -72,16 +73,18 @@ const GenericForm: FC<GenericFormProps> = ({
         <Input key={index} label={input.label} password={input.password} />
       ))}
       <Box sx={{ padding: "1rem 0" }}>
+      <Link  to="/dashboard" style={{ textDecoration: "none", padding: 1, color: "#7CD2D7" }}>
         <Button
           label={buttonText}
           variant="contained"
           style={{ flexGrow: 1 }}
         />
+        </Link>
       </Box>
       <Typography variant="body2">
         <span style={{ color: "#ADADA0" }}>
           {spanText}
-          <Link sx={{ textDecoration: "none", padding: 1, color: "#7CD2D7" }}>
+          <Link  to="/" style={{ textDecoration: "none", padding: 1, color: "#7CD2D7" }}>
             {linkText}
           </Link>
         </span>

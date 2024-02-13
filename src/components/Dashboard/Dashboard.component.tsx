@@ -16,12 +16,13 @@ import fileIcon from "../../assets/icons/file-drawer.svg";
 import addFile from "../../assets/icons/add-file-icon.png";
 import addFolder from "../../assets/icons/add-folder-icon.png";
 import trash from "../../assets/icons/trash-icon.png";
-import Button from "../Button/Button";
+import Button from "../button/Button";
 import IconButton from "../IconButton/IconButton";
 import checkBox from "../../assets/icons/checkbox-tool.svg";
 import checkBoxNoChecked from "../../assets/icons/checkbox-checked-tool.svg";
 import { useState } from "react";
 import Card from "../Card/Card";
+import { Link } from "react-router-dom";
 
 const drawerWidth = 400;
 const tabsList = [
@@ -67,16 +68,18 @@ const DashboardComponent = () => {
           }}
         >
           <Box sx={{ overflow: "auto" }}>
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <img
-                src={logoCloud}
-                alt="logo-le-nuage"
-                style={{
-                  height: "auto",
-                  margin: 24,
-                }}
-              />
-            </div>
+            <Link  to="/dashboard" style={{ textDecoration: "none" }}>
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <img
+                  src={logoCloud}
+                  alt="logo-le-nuage"
+                  style={{
+                    height: "auto",
+                    margin: 24,
+                  }}
+                />
+              </div>
+            </Link>
             <Typography
               sx={{
                 color: "#A0A0A0",
@@ -132,7 +135,9 @@ const DashboardComponent = () => {
               >
                 Mon Cloud
               </Typography>
-              <Button label="Déconnexion" variant="contained" />
+              <Link  to="/" style={{ textDecoration: "none" }}>
+                <Button label="Déconnexion" variant="contained" />
+              </Link>
             </Box>
             <Typography
               sx={{

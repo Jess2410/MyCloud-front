@@ -4,15 +4,13 @@ import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 
-import StorageIcon from "@mui/icons-material/Storage";
-import SyncIcon from "@mui/icons-material/Sync";
-import ShareIcon from "@mui/icons-material/Share";
-import Button from "../../../components/button/Button";
+import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
+import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import Navbar from "../../../components/NavBar/Navbar";
 import image from "../../../assets/images/cloud-data.png";
-import { Link } from "react-router-dom";
 
-const ServiceView = () => {
+const ContactView = () => {
   return (
     <>
       <Navbar />
@@ -53,7 +51,7 @@ const ServiceView = () => {
             gutterBottom
             align="center"
           >
-            Nos Services
+            Contact
           </Typography>
           <Typography
             sx={{
@@ -64,14 +62,8 @@ const ServiceView = () => {
             align="center"
             color="#a0a0a0"
           >
-            Découvrez les fonctionnalités offertes par notre service de stockage
-            en ligne.
+           Pour nous contacter, rien de plus simple!
           </Typography>
-          <Link to="/login" style={{textDecoration: "none"}}>
-            <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
-              <Button variant="contained" label="Démarrer" />
-            </Box>
-          </Link>
           <Grid container spacing={4} sx={{ mt: 4 }}>
             <Grid item xs={12} md={4}>
               <Card
@@ -90,7 +82,7 @@ const ServiceView = () => {
                     alignItems: "center",
                   }}
                 >
-                  <StorageIcon sx={{ fontSize: 60, color: "#E4B8FD", mb: 2 }} />
+                  <LocalPhoneIcon sx={{ fontSize: 60, color: "#E4B8FD", mb: 2 }} />
                   <Typography
                     gutterBottom
                     variant="h5"
@@ -100,7 +92,7 @@ const ServiceView = () => {
                       color: "#49d4db",
                     }}
                   >
-                    Stockage Illimité
+                    Appelez-nous
                   </Typography>
                   <Typography
                     sx={{
@@ -109,8 +101,7 @@ const ServiceView = () => {
                     variant="body2"
                     color="#a0a0a0"
                   >
-                    Stockez tous vos fichiers en ligne sans aucune limite de
-                    capacité.
+                    +33 (0)4 93 62 44 58
                   </Typography>
                 </CardContent>
               </Card>
@@ -132,7 +123,7 @@ const ServiceView = () => {
                     alignItems: "center",
                   }}
                 >
-                  <SyncIcon
+                  <AlternateEmailIcon
                     sx={{
                       fontSize: 60,
                       color: "#E4B8FD",
@@ -149,7 +140,7 @@ const ServiceView = () => {
                       textAlign: "center",
                     }}
                   >
-                    Synchro. Automatique
+                    Adresse E-mail
                   </Typography>
                   <Typography
                     sx={{
@@ -158,8 +149,7 @@ const ServiceView = () => {
                     variant="body2"
                     color="#a0a0a0"
                   >
-                    Accédez à vos fichiers depuis n'importe quel appareil et
-                    synchronisez-les automatiquement.
+                    hello@lenuage.com
                   </Typography>
                 </CardContent>
               </Card>
@@ -181,7 +171,7 @@ const ServiceView = () => {
                     alignItems: "center",
                   }}
                 >
-                  <ShareIcon
+                  <LinkedInIcon
                     sx={{
                       fontFamily: "Poppins",
                       fontSize: 60,
@@ -199,7 +189,7 @@ const ServiceView = () => {
                       color: "#49d4db",
                     }}
                   >
-                    Partage Facile
+                    LinkedIn
                   </Typography>
                   <Typography
                     variant="body2"
@@ -208,8 +198,9 @@ const ServiceView = () => {
                       fontFamily: "Poppins",
                     }}
                   >
-                    Partagez vos fichiers et dossiers en toute simplicité avec
-                    vos collègues et amis.
+                    <a href="https://www.linkedin.com/school/le-bocal-academy-bcl/" >
+                        Le Nuage
+                    </a>
                   </Typography>
                 </CardContent>
               </Card>
@@ -221,4 +212,4 @@ const ServiceView = () => {
   );
 };
 
-export default ServiceView;
+export default ContactView;
