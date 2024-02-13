@@ -5,6 +5,7 @@ import LoginView from "./views/app/login/LoginView";
 import UiComponents from "./views/app/UiComponents/UiComponents";
 import RegisterView from "./views/app/register/RegisterView";
 import ForgetPasswordView from "./views/app/forgetPassword/forgetPassword";
+import ResetPasswordView from "./views/app/passwordReset/ResetPasswordView";
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
   {
     path: "/forgetpassword",
     element: <ForgetPasswordView />,
+  },
+  {
+    path: "/reset-password/:token",
+    element: <ResetPasswordView />,
   },
 ]);
 
