@@ -7,6 +7,8 @@ import RegisterView from "./views/app/register/RegisterView";
 import ForgetPasswordView from "./views/app/forgetPassword/forgetPassword";
 import DashboardView from "./views/auth/dashboard/Dashboard";
 import ServicesView from "./views/app/services/ServicesView";
+import ContactView from "./views/app/contact/ContactView";
+import AproposView from "./views/app/apropos/AproposView";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +38,14 @@ const router = createBrowserRouter([
   {
     path: "/services",
     element: <ServicesView />,
+  },
+  {
+    path: "/à_propos",
+    element: <AproposView />,
+  },
+  {
+    path: "/contact",
+    element: <ContactView />,
   },
 ]);
 

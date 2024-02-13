@@ -1,4 +1,4 @@
-import Button from "../../../components/Button/Button";
+import Button from "../../../components/button/Button";
 import addFile from "../../../assets/icons/add-file-icon.png";
 import addFolder from "../../../assets/icons/add-folder-icon.png";
 import trash from "../../../assets/icons/trash-icon.png";
