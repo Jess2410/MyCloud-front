@@ -124,8 +124,8 @@ const Navbar: React.FC = () => {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page, index) => (
-                <MenuItem key={index} onClick={handleCloseNavMenu}>
+              {pages.map((page) => (
+                <MenuItem key={page.key} onClick={handleCloseNavMenu}>
                   <Link
                     to={page.href}
                     style={{ textDecoration: "none", color: "#6A6369" }}

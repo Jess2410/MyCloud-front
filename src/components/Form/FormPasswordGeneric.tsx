@@ -8,8 +8,9 @@ const FormPasswordGeneric = () => {
       title="Password oublié ?"
       inputs={inputs}
       buttonText="Changez votre mot de passe !"
-      spanText="Pas intéressé ?"
+      spanText="Pas intéressé ? "
       linkText="Retour à la page d'accueil !"
+      href="/"
     />
   );
 };

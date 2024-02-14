@@ -17,23 +17,26 @@ import styles from "./card.component.module.css";
 
 type CardProps = {
   extensionFile?: string;
+  isFavorite: boolean;
+  isSelected: boolean;
+  id: number;
   name: string;
   date: string;
+  onAddSelectedCards: (id: number) => void;
 };
 
 const Card: FC<CardProps> = ({
   extensionFile,
-  name = "Nom du Fichier",
-  date = "Date",
+  isFavorite,
+  isSelected,
+  id,
+  onAddSelectedCards,
+  name,
+  date,
 }) => {
-  const [isSelected, setIsSelected] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
-
-  const onSelect = () => {
-    setIsSelected(!isSelected);
-  };
-  const onFavorite = () => {
-    setIsFavorite(!isFavorite);
+  const onFavorite = (event: React.ChangeEvent<HTMLInputElement>) => {
+    isFavorite = !isFavorite;
+    //TODO call API
   };
 
   return (
@@ -42,15 +45,15 @@ const Card: FC<CardProps> = ({
         <Checkbox
           icon={<img src={starUnchecked} alt="Unchecked" />}
           checkedIcon={<img src={starChecked} alt="Checked" />}
-          checked={isSelected}
-          onChange={onSelect}
+          checked={isFavorite}
+          onChange={onFavorite}
           inputProps={{ "aria-label": "favorite" }}
         />
         <Checkbox
           icon={<img src={checkboxUnchecked} alt="Unchecked" />}
           checkedIcon={<img src={checkboxChecked} alt="Checked" />}
-          checked={isFavorite}
-          onChange={onFavorite}
+          checked={isSelected}
+          onChange={() => onAddSelectedCards(id)}
           inputProps={{ "aria-label": "favorite" }}
         />
       </CardActions>
@@ -86,4 +89,5 @@ const Card: FC<CardProps> = ({
     </CardMui>
   );
 };
+
 export default Card;
