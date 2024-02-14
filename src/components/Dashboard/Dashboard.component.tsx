@@ -24,6 +24,7 @@ import { useState } from "react";
 import Card from "../Card/Card";
 import { Link } from "react-router-dom";
 import Button from "../Button/Button";
+import SearchWithFilter from "../SearchBarFilter/SearchBarFilter.component";
 
 const drawerWidth = 400;
 const tabsList = [
@@ -54,7 +55,9 @@ const DashboardComponent = () => {
     setSelected(!selected);
   };
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", height: "100vh" }}>
+    <Box
+      sx={{ display: "flex", flexDirection: "column", height: "100vh", px: 6 }}
+    >
       <CssBaseline />
       <Toolbar />
       <Box sx={{ display: "flex", flexGrow: 1 }}>
@@ -64,6 +67,7 @@ const DashboardComponent = () => {
             width: drawerWidth,
             flexShrink: 0,
             [`& .MuiDrawer-paper`]: {
+              px: 5,
               width: drawerWidth,
             },
           }}
@@ -161,7 +165,8 @@ const DashboardComponent = () => {
                 display: "flex",
                 alignItems: "center",
                 mr: 1,
-                flex: 1,
+                flexWrap: "wrap",
+                px: 2,
               }}
             >
               <Box
@@ -176,12 +181,13 @@ const DashboardComponent = () => {
                 <IconButton icon={addFolder} />
                 <IconButton icon={addFile} />
               </Box>
+              <SearchWithFilter />
               <Box
                 sx={{
-                  borderRight: "1px solid #7CD2D7",
                   display: "flex",
                   alignItems: "center",
                   mx: 1,
+                  flexWrap: "nowrap",
                 }}
               >
                 <Typography
@@ -194,15 +200,21 @@ const DashboardComponent = () => {
                 >
                   Sélectionner
                 </Typography>
-                <Box onClick={() => onSelected()}>
+                <Box
+                  sx={{
+                    borderRight: "1px solid #7CD2D7",
+                  }}
+                  onClick={() => onSelected()}
+                >
                   {selected ? (
                     <IconButton icon={checkBox} />
                   ) : (
                     <IconButton icon={checkBoxNoChecked} />
                   )}
                 </Box>
+
+                <IconButton icon={trash} />
               </Box>
-              <IconButton icon={trash} />
             </Box>
 
             <Box
@@ -214,51 +226,7 @@ const DashboardComponent = () => {
                 justifyContent: "center",
                 alignItems: "flex-start",
               }}
-            >
-              <Card
-                extensionFile="folder"
-                name="Nouveau dossier"
-                date="21/06/2023"
-              />
-              <Card
-                extensionFile="folder"
-                name="Nouveau dossier"
-                date="09/09/2023"
-              />
-              <Card
-                extensionFile="folder"
-                name="Nouveau dossier"
-                date="21/06/2023"
-              />
-              <Card extensionFile="audio" name="Music" date="21/06/2023" />
-              <Card
-                extensionFile="file"
-                name="Photo12.jpeg"
-                date="09/09/2023"
-              />
-              <Card extensionFile="image" name="Drawing" date="21/06/2023" />
-              <Card extensionFile="audio" name="Music" date="21/06/2023" />
-              <Card
-                extensionFile="file"
-                name="Photo12.jpeg"
-                date="09/09/2023"
-              />
-              <Card extensionFile="audio" name="Music" date="21/06/2023" />
-              <Card extensionFile="image" name="Drawing" date="21/06/2023" />
-              <Card
-                extensionFile="file"
-                name="Photo12.jpeg"
-                date="09/09/2023"
-              />
-              <Card extensionFile="audio" name="Music" date="21/06/2023" />
-              <Card extensionFile="image" name="Drawing" date="21/06/2023" />
-              <Card
-                extensionFile="file"
-                name="Photo12.jpeg"
-                date="09/09/2023"
-              />
-              <Card extensionFile="audio" name="Music" date="21/06/2023" />
-            </Box>
+            ></Box>
           </Grid>
         </Box>
       </Box>

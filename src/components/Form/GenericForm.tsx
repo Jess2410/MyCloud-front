@@ -17,6 +17,7 @@ type GenericFormProps = {
   buttonText: string;
   spanText: string;
   linkText: string;
+  href: string;
 };
 
 const GenericForm: FC<GenericFormProps> = ({
@@ -25,6 +26,7 @@ const GenericForm: FC<GenericFormProps> = ({
   buttonText,
   spanText,
   linkText,
+  href,
 }) => {
   return (
     <Box
@@ -91,7 +93,7 @@ const GenericForm: FC<GenericFormProps> = ({
         <span style={{ color: "#ADADA0" }}>
           {spanText}
           <Link
-            to="/"
+            to={href}
             style={{ textDecoration: "none", padding: 1, color: "#7CD2D7" }}
           >
             {linkText}

@@ -1,8 +1,8 @@
 import { IconButton as IconButtonMui } from "@mui/material";
 
-const IconButton = ({ icon }: any) => {
+const IconButton = ({ icon, onClick }: any) => {
   return (
-    <IconButtonMui>
+    <IconButtonMui onClick={onClick}>
       <img src={icon} />
     </IconButtonMui>
   );

@@ -11,8 +11,9 @@ const FormLoginGeneric = () => {
       title="Connectez-vous"
       inputs={inputs}
       buttonText="C'est parti !"
-      spanText="Pas de compte ?"
+      spanText="Pas de compte ? "
       linkText="C’est ici !"
+      href="/signin"
     />
   );
 };
