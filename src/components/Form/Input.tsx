@@ -10,11 +10,23 @@ import { FC, useState } from "react";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
-type InputProps = {
+export type InputProps = {
   label: string;
-  password?: true;
+  password: boolean;
+  inputName: string;
+  value: string;
+  handleChange: React.ChangeEventHandler<
+    HTMLInputElement | HTMLTextAreaElement
+  >;
 };
-const Input: FC<InputProps> = ({ label, password }) => {
+
+const Input: FC<InputProps> = ({
+  label,
+  password,
+  inputName,
+  value,
+  handleChange,
+}) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -38,6 +50,9 @@ const Input: FC<InputProps> = ({ label, password }) => {
         fullWidth
         color="secondary"
         id="standard-adornment-password"
+        name={inputName}
+        value={value}
+        onChange={handleChange}
         type={showPassword ? "text" : "password"}
         endAdornment={
           <InputAdornment position="end">
@@ -60,6 +75,9 @@ const Input: FC<InputProps> = ({ label, password }) => {
         id="standard-basic"
         label={label}
         variant="standard"
+        name={inputName}
+        value={value}
+        onChange={handleChange}
         InputLabelProps={{
           sx: { fontFamily: "Poppins", color: "#A0A0A0" },
         }}

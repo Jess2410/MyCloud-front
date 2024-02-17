@@ -3,11 +3,10 @@ import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-
 import StorageIcon from "@mui/icons-material/Storage";
 import SyncIcon from "@mui/icons-material/Sync";
 import ShareIcon from "@mui/icons-material/Share";
-import Button from "../../../components/Button/Button";
+import Button from "../../../components/button/Button";
 import Navbar from "../../../components/NavBar/Navbar";
 import image from "../../../assets/images/cloud-data.png";
 import { Link } from "react-router-dom";

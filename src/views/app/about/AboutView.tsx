@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import Button from "../../../components/Button/Button";
+import Button from "../../../components/button/Button";
 import Navbar from "../../../components/NavBar/Navbar";
 import vector from "../../../assets/images/cloud-data.svg";
 import { Link } from "react-router-dom";

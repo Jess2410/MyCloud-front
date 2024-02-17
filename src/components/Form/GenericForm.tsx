@@ -1,20 +1,11 @@
 import Box from "@mui/material/Box";
-import Input from "./Input";
-
 import { Typography } from "@mui/material";
 import { FC } from "react";
 import { Link } from "react-router-dom";
-import Button from "../Button/Button";
-
-type InputConfig = {
-  label: string;
-  password?: boolean;
-};
 
 type GenericFormProps = {
   title: string;
-  inputs: InputConfig[];
-  buttonText: string;
+  children: React.ReactNode;
   spanText: string;
   linkText: string;
   href: string;
@@ -22,8 +13,7 @@ type GenericFormProps = {
 
 const GenericForm: FC<GenericFormProps> = ({
   title,
-  inputs,
-  buttonText,
+  children,
   spanText,
   linkText,
   href,
@@ -70,25 +60,7 @@ const GenericForm: FC<GenericFormProps> = ({
         />
       </Typography>
       <br />
-      {inputs.map((input, index) => (
-        <Input key={index} label={input.label} password={input.password} />
-      ))}
-      <Box sx={{ padding: "1rem 0" }}>
-        <Link
-          to="/dashboard"
-          style={{
-            textDecoration: "none",
-            padding: 1,
-            color: "#7CD2D7",
-          }}
-        >
-          <Button
-            label={buttonText}
-            variant="contained"
-            style={{ display: "flex" }}
-          />
-        </Link>
-      </Box>
+      {children}
       <Typography variant="body2">
         <span style={{ color: "#ADADA0" }}>
           {spanText}

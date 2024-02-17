@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import LayoutForm from "../../../components/layoutForm/layoutForm.component";
+import cloudImage from "../../../assets/images/cloud-data.svg";
+import GenericForm from "../../../components/Form/GenericForm";
+import Input from "../../../components/Form/Input";
+import Button from "../../../components/button/Button";
+import { Box } from "@mui/material";
 
 type UserDataState = {
   email: string;
@@ -9,17 +15,43 @@ type UserDataState = {
 
 export default function ResetPasswordView() {
   const { token } = useParams();
+  const navigate = useNavigate();
+
   const [userData, setUserData] = useState<UserDataState>({
     email: "",
     password: "",
     password_confirmation: "",
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUserData({ ...userData, [e.target.name]: e.target.value });
+  const inputs = [
+    {
+      label: "Adresse Email",
+      inputName: "email",
+      value: userData.email,
+      password: false,
+    },
+    {
+      label: "Mot de passe",
+      inputName: "password",
+      value: userData.password,
+      password: true,
+    },
+    {
+      label: "Confirmation mot de passe",
+      inputName: "password_confirmation",
+      value: userData.password_confirmation,
+      password: true,
+    },
+  ];
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserData((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }));
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     try {
       const request = await fetch("http://localhost:8000/api/reset-password", {
@@ -37,7 +69,8 @@ export default function ResetPasswordView() {
       });
       const response = await request.json();
       if (response.status === 200) {
-        console.log(response.message);
+        console.log("response", response.message);
+        navigate("/login");
         return;
       }
     } catch (error) {
@@ -46,29 +79,33 @@ export default function ResetPasswordView() {
   };
 
   return (
-    <div>
-      <h1>Réinitialiser le mot de passe</h1>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          onChange={handleInputChange}
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Mot de passe"
-          onChange={handleInputChange}
-        />
-        <input
-          type="password"
-          name="password_confirmation"
-          placeholder="Confirmation du mot de passe"
-          onChange={handleInputChange}
-        />
-        <button type="submit">Valider</button>
-      </form>
-    </div>
+    <>
+      <LayoutForm image={cloudImage}>
+        <GenericForm
+          title="New Password"
+          spanText="Retour à l'accueil ? "
+          linkText="C'est ici !"
+          href="/"
+        >
+          {inputs.map((input, index) => (
+            <Input
+              key={index}
+              label={input.label}
+              password={input.password}
+              value={input.value}
+              inputName={input.inputName}
+              handleChange={handleChange}
+            />
+          ))}
+          <Box sx={{ padding: "1rem 0" }}>
+            <Button
+              label="Réinitialisez votre mot de passe"
+              variant="contained"
+              onClick={handleSubmit}
+            />
+          </Box>
+        </GenericForm>
+      </LayoutForm>
+    </>
   );
 }

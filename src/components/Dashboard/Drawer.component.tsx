@@ -26,8 +26,8 @@ import addFolder from "../../assets/icons/add-folder-icon.png";
 import trash from "../../assets/icons/trash-icon.png";
 import checkBox from "../../assets/icons/checkbox-tool.svg";
 import checkBoxNoChecked from "../../assets/icons/checkbox-checked-tool.svg";
-import { Link } from "react-router-dom";
-import Button from "../Button/Button";
+import { Link, useNavigate } from "react-router-dom";
+import Button from "../button/Button";
 const drawerWidth = 240;
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -98,6 +98,7 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function DashboardDrawer() {
+  const navigate = useNavigate();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [selected, setSelected] = React.useState(false);
@@ -114,6 +115,27 @@ export default function DashboardDrawer() {
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  const logout = async () => {
+    try {
+      const token = localStorage.getItem("@userToken");
+      const request = await fetch("http://localhost:8000/api/logout", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const response = await request.json();
+      if (response.status === 200) {
+        console.log(response.message);
+        localStorage.removeItem("@userToken");
+        navigate("/");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const mockData = [
@@ -332,7 +354,11 @@ export default function DashboardDrawer() {
                 Mon Cloud
               </Typography>
               <Link to="/" style={{ textDecoration: "none" }}>
-                <Button label="Déconnexion" variant="contained" />
+                <Button
+                  label="Déconnexion"
+                  variant="contained"
+                  onClick={logout}
+                />
               </Link>
             </Box>
             <Typography
@@ -436,8 +462,9 @@ export default function DashboardDrawer() {
               alignItems: "flex-start",
             }}
           >
-            {mockData.map((card) => (
+            {mockData.map((card, index) => (
               <Card
+                key={index}
                 {...card}
                 isSelected={listSelectedCards.includes(card.id)}
                 onAddSelectedCards={onAddSelectedCards}

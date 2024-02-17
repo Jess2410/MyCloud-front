@@ -16,14 +16,12 @@ import fileIcon from "../../assets/icons/file-drawer.svg";
 import addFile from "../../assets/icons/add-file-icon.png";
 import addFolder from "../../assets/icons/add-folder-icon.png";
 import trash from "../../assets/icons/trash-icon.png";
-
 import IconButton from "../IconButton/IconButton";
 import checkBox from "../../assets/icons/checkbox-tool.svg";
 import checkBoxNoChecked from "../../assets/icons/checkbox-checked-tool.svg";
 import { useState } from "react";
-import Card from "../Card/Card";
 import { Link } from "react-router-dom";
-import Button from "../Button/Button";
+import Button from "../button/Button";
 import SearchWithFilter from "../SearchBarFilter/SearchBarFilter.component";
 
 const drawerWidth = 400;

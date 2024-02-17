@@ -3,10 +3,9 @@ import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-
-import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
-import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
+import AlternateEmailIcon from "@mui/icons-material/AlternateEmail";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import Navbar from "../../../components/NavBar/Navbar";
 import image from "../../../assets/images/cloud-data.png";
 
@@ -62,7 +61,7 @@ const ContactView = () => {
             align="center"
             color="#a0a0a0"
           >
-           Pour nous contacter, rien de plus simple!
+            Pour nous contacter, rien de plus simple!
           </Typography>
           <Grid container spacing={4} sx={{ mt: 4 }}>
             <Grid item xs={12} md={4}>
@@ -82,7 +81,9 @@ const ContactView = () => {
                     alignItems: "center",
                   }}
                 >
-                  <LocalPhoneIcon sx={{ fontSize: 60, color: "#E4B8FD", mb: 2 }} />
+                  <LocalPhoneIcon
+                    sx={{ fontSize: 60, color: "#E4B8FD", mb: 2 }}
+                  />
                   <Typography
                     gutterBottom
                     variant="h5"
@@ -198,8 +199,8 @@ const ContactView = () => {
                       fontFamily: "Poppins",
                     }}
                   >
-                    <a href="https://www.linkedin.com/school/le-bocal-academy-bcl/" >
-                        Le Nuage
+                    <a href="https://www.linkedin.com/school/le-bocal-academy-bcl/">
+                      Le Nuage
                     </a>
                   </Typography>
                 </CardContent>

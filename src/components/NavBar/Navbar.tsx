@@ -172,8 +172,9 @@ const Navbar: React.FC = () => {
           </Box>
 
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
+            {pages.map((page, index) => (
               <Link
+                key={index}
                 to={page.href}
                 style={{ textDecoration: "none", color: "#6A6369" }}
               >

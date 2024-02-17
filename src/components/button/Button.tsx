@@ -13,7 +13,12 @@ export interface ButtonProps
   variant: "contained" | "outlined";
 }
 
-const Button: React.FC<ButtonProps> = ({ label, variant, disabled }) => {
+const Button: React.FC<ButtonProps> = ({
+  label,
+  variant,
+  disabled,
+  onClick,
+}) => {
   const customButtonClassname = clsx(styles["button"], {
     [styles["button--outlined"]]: variant === "outlined",
   });
@@ -23,11 +28,11 @@ const Button: React.FC<ButtonProps> = ({ label, variant, disabled }) => {
       variant={variant}
       disabled={disabled}
       className={customButtonClassname}
+      onClick={onClick}
     >
       <Typography
         sx={{
           textAlign: "center",
-
           fontWeight: "bold",
           fontFamily: "Poppins",
         }}
