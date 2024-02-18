@@ -6,6 +6,7 @@ import GenericForm from "../../../components/Form/GenericForm";
 import Input from "../../../components/Form/Input";
 import Button from "../../../components/button/Button";
 import { Box } from "@mui/material";
+import { toast } from "react-toastify";
 
 type UserDataState = {
   email: string;
@@ -53,6 +54,7 @@ export default function ResetPasswordView() {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    const loader = toast.loading("Veuillez patienter...");
     try {
       const request = await fetch("http://localhost:8000/api/reset-password", {
         method: "POST",
@@ -67,14 +69,27 @@ export default function ResetPasswordView() {
           token: token,
         }),
       });
+
       const response = await request.json();
       if (response.status === 200) {
-        console.log("response", response.message);
+        toast.update(loader, {
+          render: "Mot de passe réinitialisé !",
+          type: "success",
+          autoClose: 2000,
+          isLoading: false,
+        });
         navigate("/login");
         return;
       }
+      toast.update(loader, {
+        render: `Une erreur est survenue : ${response.message}.`,
+        type: "error",
+        autoClose: 2000,
+        isLoading: false,
+      });
+      throw new Error(response.message);
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   };
 

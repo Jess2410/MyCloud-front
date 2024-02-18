@@ -5,6 +5,7 @@ import Input from "../../../components/Form/Input";
 import Button from "../../../components/button/Button";
 import LayoutForm from "../../../components/layoutForm/layoutForm.component";
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 import { Box } from "@mui/material";
 
 type RegisterFormState = {
@@ -34,6 +35,7 @@ export default function RegisterView() {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    const loader = toast.loading("Veuillez patienter...");
     try {
       const request = await fetch("http://localhost:8000/api/register", {
         method: "POST",
@@ -51,12 +53,24 @@ export default function RegisterView() {
       });
       const response = await request.json();
       if (response.status === 201) {
-        localStorage.setItem("@userToken", response.authToken);
-        navigate("/dashboard");
+        toast.update(loader, {
+          render: "Votre compte a bien été créé !",
+          type: "success",
+          autoClose: 2000,
+          isLoading: false,
+        });
+        navigate("/login");
         return;
       }
+      toast.update(loader, {
+        render: `Une erreur est survenue : ${response.message}.`,
+        type: "error",
+        autoClose: 2000,
+        isLoading: false,
+      });
+      throw new Error(response.message);
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   };
 

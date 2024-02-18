@@ -1,4 +1,3 @@
-import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Drawer from "@mui/material/Drawer";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -22,6 +21,7 @@ import checkBoxNoChecked from "../../assets/icons/checkbox-checked-tool.svg";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Button from "../button/Button";
+import { Box } from "@mui/material";
 import SearchWithFilter from "../SearchBarFilter/SearchBarFilter.component";
 
 const drawerWidth = 400;
