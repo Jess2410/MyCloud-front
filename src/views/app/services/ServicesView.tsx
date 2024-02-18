@@ -1,4 +1,3 @@
-import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
@@ -10,8 +9,9 @@ import Button from "../../../components/button/Button";
 import Navbar from "../../../components/NavBar/Navbar";
 import image from "../../../assets/images/cloud-data.png";
 import { Link } from "react-router-dom";
+import { Box } from "@mui/material";
 
-const ServiceView = () => {
+const ServicesView = () => {
   return (
     <>
       <Navbar />
@@ -220,4 +220,4 @@ const ServiceView = () => {
   );
 };
 
-export default ServiceView;
+export default ServicesView;

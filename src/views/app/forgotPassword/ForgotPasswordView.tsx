@@ -1,4 +1,3 @@
-import { Box } from "@mui/material";
 import cloudImage from "../../../assets/images/key.png";
 import GenericForm from "../../../components/Form/GenericForm";
 import Input from "../../../components/Form/Input";
@@ -6,8 +5,10 @@ import Button from "../../../components/button/Button";
 import LayoutForm from "../../../components/layoutForm/layoutForm.component";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { Box } from "@mui/material";
 
-export default function LoginView() {
+export default function ForgotPasswordView() {
   const navigate = useNavigate();
   const [email, setEmail] = useState<string>("");
 
@@ -17,6 +18,7 @@ export default function LoginView() {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    const loader = toast.loading("Veuillez patienter...");
     try {
       const request = await fetch("http://localhost:8000/api/forgot-password", {
         method: "POST",
@@ -30,12 +32,24 @@ export default function LoginView() {
       });
       const response = await request.json();
       if (response.status === 250) {
-        console.log("response", response.message);
+        toast.update(loader, {
+          render: "Un email vient de vous être envoyé !",
+          type: "success",
+          autoClose: 2000,
+          isLoading: false,
+        });
         navigate("/login");
-        return response.message;
+        return;
       }
+      toast.update(loader, {
+        render: `Une erreur est survenue : ${response.message}.`,
+        type: "error",
+        autoClose: 2000,
+        isLoading: false,
+      });
+      throw new Error(response.message);
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   };
 

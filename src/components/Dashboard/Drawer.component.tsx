@@ -1,9 +1,8 @@
 import * as React from "react";
 import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
-import Box from "@mui/material/Box";
+import CssBaseline from "@mui/material/CssBaseline";
 import MuiDrawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
-import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import { IconButton as IconButtonMui, Grid } from "@mui/material";
@@ -28,6 +27,8 @@ import checkBox from "../../assets/icons/checkbox-tool.svg";
 import checkBoxNoChecked from "../../assets/icons/checkbox-checked-tool.svg";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "../button/Button";
+import { Box } from "@mui/material";
+import { UserContext } from "../../context/UserContext";
 const drawerWidth = 240;
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -98,6 +99,7 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function DashboardDrawer() {
+  const userContext = React.useContext(UserContext);
   const navigate = useNavigate();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -115,6 +117,14 @@ export default function DashboardDrawer() {
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  const getUserName = () => {
+    if (userContext.user) {
+      const { firstname, lastname } = userContext.user;
+      return `${firstname} ${lastname}`;
+    }
+    return "";
   };
 
   const logout = async () => {
@@ -369,7 +379,7 @@ export default function DashboardDrawer() {
                 fontWeight: 300,
               }}
             >
-              Bienvenue 'nom' ! 👋
+              Bienvenue {getUserName()} ! 👋
             </Typography>
           </Box>
           <Box

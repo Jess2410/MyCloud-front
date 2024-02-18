@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import cloudImage from "../../../assets/images/cloud-data.svg";
 import GenericForm from "../../../components/Form/GenericForm";
 import LayoutForm from "../../../components/layoutForm/layoutForm.component";
 import Button from "../../../components/button/Button";
 import { useNavigate } from "react-router-dom";
 import Input from "../../../components/Form/Input";
+import { toast } from "react-toastify";
 import { Box } from "@mui/material";
+import { UserContext } from "../../../context/UserContext";
 
 type LoginFormState = {
   email: string;
@@ -13,6 +15,7 @@ type LoginFormState = {
 };
 
 export default function LoginView() {
+  const userContext = useContext(UserContext);
   const navigate = useNavigate();
   const [userCredentials, setUserCredentials] = useState<LoginFormState>({
     email: "",
@@ -28,6 +31,7 @@ export default function LoginView() {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    const loader = toast.loading("Veuillez patienter...");
     try {
       const request = await fetch("http://localhost:8000/api/login", {
         method: "POST",
@@ -43,11 +47,29 @@ export default function LoginView() {
       const response = await request.json();
       if (response.status === 200) {
         localStorage.setItem("@userToken", response.authToken);
-        navigate("/dashboard");
+        toast.update(loader, {
+          render: "Connexion réussie !",
+          type: "success",
+          autoClose: 2000,
+          isLoading: false,
+        });
+        const { firstname, lastname, email, id } = response;
+        userContext.login({ firstname, lastname, email, id });
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 2000);
+
         return;
       }
+      toast.update(loader, {
+        render: `Une erreur est survenue : ${response.message}.`,
+        type: "error",
+        autoClose: 2000,
+        isLoading: false,
+      });
+      throw new Error(response.message);
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   };
 
@@ -65,6 +87,7 @@ export default function LoginView() {
       password: true,
     },
   ];
+
   return (
     <div>
       <LayoutForm image={cloudImage}>

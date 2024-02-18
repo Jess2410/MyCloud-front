@@ -1,6 +1,5 @@
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import { IconButton as IconButtonMui } from "@mui/material";
 import Typography from "@mui/material/Typography";
@@ -13,6 +12,7 @@ import logo from "../../assets/images/logo-le-nuage.webp";
 import logoResponsiveBurger from "../../assets/icons/logo-burger-svg.svg";
 import LoginIcon from "@mui/icons-material/Login";
 import IconButton from "../IconButton/IconButton";
+import { Box } from "@mui/material";
 import { Link } from "react-router-dom";
 
 const pages = [
