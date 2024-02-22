@@ -24,22 +24,16 @@ const ServicesView = () => {
           maxWidth: 1200,
 
           position: "relative",
-          "&::after": {
-            content: '""',
-            position: "absolute",
-            top: 100,
-            right: "-300px",
-            bottom: 0,
-            width: "400px",
-            backgroundColor: "#E4B8FD",
-            opacity: 0.4,
-            filter: "blur(100px)",
-            zIndex: -1,
-          },
         }}
       >
         <img
-          style={{ position: "absolute", zIndex: -1, left: -600, opacity: 0.7 }}
+          style={{
+            position: "fixed",
+            zIndex: -1,
+            left: -600,
+            opacity: 0.7,
+            bottom: 0,
+          }}
           src={image}
         />
         <Box sx={{ p: 4 }}>
