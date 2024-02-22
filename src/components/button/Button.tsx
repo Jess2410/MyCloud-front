@@ -1,3 +1,46 @@
-export default function Button() {
-  return <div></div>;
+import clsx from "clsx";
+import styles from "./button.component.module.css";
+import { Button as ButtonMuiBase } from "@mui/base/Button";
+import { Typography } from "@mui/material";
+
+export interface ButtonProps
+  extends Pick<
+    React.HTMLAttributes<HTMLButtonElement>,
+    "className" | "style" | "onClick"
+  > {
+  disabled?: boolean;
+  label: string;
+  variant: "contained" | "outlined";
 }
+
+const Button: React.FC<ButtonProps> = ({
+  label,
+  variant,
+  disabled,
+  onClick,
+}) => {
+  const customButtonClassname = clsx(styles["button"], {
+    [styles["button--outlined"]]: variant === "outlined",
+  });
+
+  return (
+    <ButtonMuiBase
+      variant={variant}
+      disabled={disabled}
+      className={customButtonClassname}
+      onClick={onClick}
+    >
+      <Typography
+        sx={{
+          textAlign: "center",
+          fontWeight: "bold",
+          fontFamily: "Poppins",
+        }}
+      >
+        {label}
+      </Typography>
+    </ButtonMuiBase>
+  );
+};
+
+export default Button;
