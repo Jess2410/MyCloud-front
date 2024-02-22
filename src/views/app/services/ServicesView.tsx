@@ -5,11 +5,12 @@ import CardContent from "@mui/material/CardContent";
 import StorageIcon from "@mui/icons-material/Storage";
 import SyncIcon from "@mui/icons-material/Sync";
 import ShareIcon from "@mui/icons-material/Share";
-import Button from "../../../components/button/Button";
-import Navbar from "../../../components/NavBar/Navbar";
+
 import image from "../../../assets/images/cloud-data.png";
 import { Link } from "react-router-dom";
 import { Box } from "@mui/material";
+import Navbar from "../../../components/NavBar/Navbar";
+import Button from "../../../components/Button/Button";
 
 const ServicesView = () => {
   return (

@@ -1,13 +1,16 @@
-import { Box } from "@mui/material";
-import DashboardDrawer from "../../../components/Dashboard/Drawer.component";
+// import { Box } from "@mui/material";
+// import LayoutDashboard from "../../../components/Dashboard/LayoutDashboard.component";
+// import CloudCards from "../../../components/Dashboard/CardsDisplay/CloudCards.component";
 
-const DashboardView = () => {
-  // return <Dashboard2 />;
-  return (
-    <Box sx={{ background: "#E4B8FD", minHeight: "100vh" }}>
-      <DashboardDrawer />
-    </Box>
-  );
-};
+// const DashboardView = () => {
+//   // return <Dashboard2 />;
+//   return (
+//     <Box sx={{ background: "#E4B8FD", minHeight: "100vh" }}>
+//       <LayoutDashboard>
+//         <CloudCards />
+//       </LayoutDashboard>
+//     </Box>
+//   );
+// };
 
-export default DashboardView;
+// export default DashboardView;

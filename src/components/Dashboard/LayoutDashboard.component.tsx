@@ -13,9 +13,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import Card from "../Card/Card";
-import IconButton from "../IconButton/IconButton";
-import SearchWithFilter from "../SearchBarFilter/SearchBarFilter.component";
+
 import logoCloud from "../../assets/icons/logoResponsive.png";
 import trashIcon from "../../assets/icons/trash-drawer.svg";
 import starIcon from "../../assets/icons/star-drawer.svg";
@@ -26,9 +24,12 @@ import trash from "../../assets/icons/trash-icon.png";
 import checkBox from "../../assets/icons/checkbox-tool.svg";
 import checkBoxNoChecked from "../../assets/icons/checkbox-checked-tool.svg";
 import { Link, useNavigate } from "react-router-dom";
-import Button from "../button/Button";
+import Button from "../Button/Button";
 import { Box } from "@mui/material";
 import { UserContext } from "../../context/UserContext";
+import SearchWithFilter from "../SearchBarFilter/SearchBarFilter.component";
+import IconButton from "../IconButton/IconButton";
+import Card from "../Card/Card";
 const drawerWidth = 240;
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -98,7 +99,7 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function DashboardDrawer() {
+export default function LayoutDashboard({ children }: any) {
   const userContext = React.useContext(UserContext);
   const navigate = useNavigate();
   const theme = useTheme();
@@ -472,7 +473,8 @@ export default function DashboardDrawer() {
               alignItems: "flex-start",
             }}
           >
-            {mockData.map((card, index) => (
+            {children}
+            {/* {mockData.map((card, index) => (
               <Card
                 key={index}
                 {...card}
@@ -484,7 +486,7 @@ export default function DashboardDrawer() {
                 // date={card.date}
                 // isFavorite={card.isFavorite}
               />
-            ))}
+            ))} */}
           </Box>
         </Grid>
       </Box>

@@ -4,7 +4,7 @@ import LayoutForm from "../../../components/layoutForm/layoutForm.component";
 import cloudImage from "../../../assets/images/cloud-data.svg";
 import GenericForm from "../../../components/Form/GenericForm";
 import Input from "../../../components/Form/Input";
-import Button from "../../../components/button/Button";
+import Button from "../../../components/Button/Button";
 import { Box } from "@mui/material";
 import { toast } from "react-toastify";
 

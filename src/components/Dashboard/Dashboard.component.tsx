@@ -20,7 +20,7 @@ import checkBox from "../../assets/icons/checkbox-tool.svg";
 import checkBoxNoChecked from "../../assets/icons/checkbox-checked-tool.svg";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import Button from "../button/Button";
+import Button from "../Button/Button";
 import { Box } from "@mui/material";
 import SearchWithFilter from "../SearchBarFilter/SearchBarFilter.component";
 

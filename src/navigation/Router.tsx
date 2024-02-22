@@ -7,9 +7,10 @@ import HomeView from "../views/app/home/HomeView";
 import ServicesView from "../views/app/services/ServicesView";
 import AboutView from "../views/app/about/AboutView";
 import ContactView from "../views/app/contact/ContactView";
-import DashboardView from "../views/auth/dashboard/Dashboard";
 import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
+import DashboardCloudView from "../views/auth/dashboard/DashboardCloudView";
+import DashboardAddFolderView from "../views/auth/dashboard/DashboardAddFolderView";
 
 const AppRouter = () => {
   const { user } = useContext(UserContext);
@@ -25,7 +26,12 @@ const AppRouter = () => {
     },
     {
       path: "/dashboard",
-      element: user ? <DashboardView /> : <LoginView />,
+      // element: user ? <DashboardCloudView /> : <LoginView />,
+      element: <DashboardCloudView />,
+    },
+    {
+      path: "/dashboard-add-folder",
+      element: <DashboardAddFolderView />,
     },
     {
       path: "/about",

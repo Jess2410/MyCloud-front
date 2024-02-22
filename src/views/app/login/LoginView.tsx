@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import cloudImage from "../../../assets/images/cloud-data.svg";
 import GenericForm from "../../../components/Form/GenericForm";
 import LayoutForm from "../../../components/layoutForm/layoutForm.component";
-import Button from "../../../components/button/Button";
+import Button from "../../../components/Button/Button";
 import { useNavigate } from "react-router-dom";
 import Input from "../../../components/Form/Input";
 import { toast } from "react-toastify";

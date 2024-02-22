@@ -1,7 +1,7 @@
 import cloudImage from "../../../assets/images/key.png";
 import GenericForm from "../../../components/Form/GenericForm";
 import Input from "../../../components/Form/Input";
-import Button from "../../../components/button/Button";
+import Button from "../../../components/Button/Button";
 import LayoutForm from "../../../components/layoutForm/layoutForm.component";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
