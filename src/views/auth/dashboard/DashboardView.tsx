@@ -22,6 +22,7 @@ import { toast } from "react-toastify";
 import CreateFolderForm from "../../../components/FormDashboard/CreateFolderForm.component";
 import { DEV_DOMAIN } from "../../../constants/url";
 import { sendGetRequest, sendPostRequest } from "../../../utils/data";
+import FormDialog from "../../../components/Dialog/FormDialog.component";
 
 const tabsList = [
   {
@@ -45,7 +46,9 @@ export default function DashboardView() {
   const userContext = useContext(UserContext);
   const navigate = useNavigate();
   const [selected, setSelected] = useState(false);
-  const [showForm, setShowForm] = useState(false);
+  const [showFormFolder, setShowFormFolder] = useState(false);
+  const [showFormFile, setShowFormFile] = useState(false);
+  const [newName, setNewName] = useState("");
   const [name, setName] = useState("");
   const [cloudData, setCloudData] = useState({
     folders: null,
@@ -57,9 +60,19 @@ export default function DashboardView() {
     setSelected(!selected);
   };
 
-  const switchFormVisibility = () => {
-    setShowForm(!showForm);
+  const switchFormFolderVisibility = () => {
+    setShowFormFolder(!showFormFolder);
   };
+  const switchFormFileVisibility = () => {
+    setShowFormFile(!showFormFile);
+  };
+
+  //TODO RENAME A FOLDER OR A FILE
+  // const renameFolderOrFile = (id, type, e) => {
+  //   e.preventDefault();
+  //   setNewName(e.target.value);
+  //   Patch name in DB
+  // };
 
   const onAddSelectedCards = (id: number) => {
     if (listSelectedCards.includes(id)) {
@@ -209,8 +222,11 @@ export default function DashboardView() {
                   alignItems: "center",
                 }}
               >
-                <IconButton icon={addFolder} onClick={switchFormVisibility} />
-                <IconButton icon={addFile} />
+                <IconButton
+                  icon={addFolder}
+                  onClick={switchFormFolderVisibility}
+                />
+                <IconButton icon={addFile} onClick={switchFormFileVisibility} />
               </Box>
               <SearchWithFilter />
               <Box
@@ -256,12 +272,18 @@ export default function DashboardView() {
                 alignItems: "flex-start",
               }}
             >
-              {/* {showForm ? (
-                <CreateFolderForm
-                  handleChange={handleChange}
-                  handleSubmit={handleSubmit}
+              {showFormFolder && (
+                <FormDialog
+                  handleClose={() => setShowFormFolder(false)}
+                  title={"Nouveau dossier"}
                 />
-              ) : null} */}
+              )}
+              {showFormFile && (
+                <FormDialog
+                  handleClose={() => setShowFormFile(false)}
+                  title={"Nouveau fichier"}
+                />
+              )}
             </Box>
           </Grid>
         </Box>

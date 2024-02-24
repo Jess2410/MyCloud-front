@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { ChangeEvent, FC, useState } from "react";
 import { Card as CardMui } from "@mui/material";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -34,7 +34,7 @@ const Card: FC<CardProps> = ({
   name,
   date,
 }) => {
-  const onFavorite = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onFavorite = (event: ChangeEvent<HTMLInputElement>) => {
     isFavorite = !isFavorite;
     //TODO call API
   };
