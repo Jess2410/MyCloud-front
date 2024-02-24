@@ -7,6 +7,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Box } from "@mui/material";
+import { sendPostRequest } from "../../../utils/data";
+import { API_BASE_URL } from "../../../constants/url";
 
 export default function ForgotPasswordView() {
   const navigate = useNavigate();
@@ -20,17 +22,11 @@ export default function ForgotPasswordView() {
     e.preventDefault();
     const loader = toast.loading("Veuillez patienter...");
     try {
-      const request = await fetch("http://localhost:8000/api/forgot-password", {
-        method: "POST",
-        headers: {
-          "Content-type": "Application/json",
-          Accept: "Application/json",
-        },
-        body: JSON.stringify({
-          email: email,
-        }),
-      });
-      const response = await request.json();
+      const response = await sendPostRequest(
+        `${API_BASE_URL}/forgot-password`,
+        undefined,
+        { email }
+      );
       if (response.status === 250) {
         toast.update(loader, {
           render: "Un email vient de vous être envoyé !",
