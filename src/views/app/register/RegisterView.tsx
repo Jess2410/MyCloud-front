@@ -7,6 +7,8 @@ import LayoutForm from "../../../components/layoutForm/layoutForm.component";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { Box } from "@mui/material";
+import { sendPostRequest } from "../../../utils/data";
+import { API_BASE_URL } from "../../../constants/url";
 
 type RegisterFormState = {
   lastname: string;
@@ -37,21 +39,17 @@ export default function RegisterView() {
     e.preventDefault();
     const loader = toast.loading("Veuillez patienter...");
     try {
-      const request = await fetch("http://localhost:8000/api/register", {
-        method: "POST",
-        headers: {
-          "Content-type": "Application/json",
-          Accept: "Application/json",
-        },
-        body: JSON.stringify({
+      const response = await sendPostRequest(
+        `${API_BASE_URL}/register`,
+        undefined,
+        {
           email: formState.email,
-          firstname: formState.firstname,
           lastname: formState.lastname,
+          firstname: formState.firstname,
           password: formState.password,
           password_confirmation: formState.password_confirmation,
-        }),
-      });
-      const response = await request.json();
+        }
+      );
       if (response.status === 201) {
         toast.update(loader, {
           render: "Votre compte a bien été créé !",

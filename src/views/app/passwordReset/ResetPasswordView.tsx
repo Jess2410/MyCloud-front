@@ -7,6 +7,8 @@ import Input from "../../../components/Form/Input";
 import Button from "../../../components/Button/Button";
 import { Box } from "@mui/material";
 import { toast } from "react-toastify";
+import { sendPostRequest } from "../../../utils/data";
+import { API_BASE_URL } from "../../../constants/url";
 
 type UserDataState = {
   email: string;
@@ -56,21 +58,16 @@ export default function ResetPasswordView() {
     e.preventDefault();
     const loader = toast.loading("Veuillez patienter...");
     try {
-      const request = await fetch("http://localhost:8000/api/reset-password", {
-        method: "POST",
-        headers: {
-          "Content-type": "Application/json",
-          Accept: "Application/json",
-        },
-        body: JSON.stringify({
+      const response = await sendPostRequest(
+        `${API_BASE_URL}/reset-password`,
+        undefined,
+        {
           email: userData.email,
           password: userData.password,
           password_confirmation: userData.password_confirmation,
           token: token,
-        }),
-      });
-
-      const response = await request.json();
+        }
+      );
       if (response.status === 200) {
         toast.update(loader, {
           render: "Mot de passe réinitialisé !",

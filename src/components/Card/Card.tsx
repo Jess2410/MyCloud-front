@@ -16,24 +16,39 @@ import checkboxUnchecked from "../../assets/icons/Vectorcheckbox-no-checked.svg"
 import styles from "./card.component.module.css";
 
 type CardProps = {
-  extensionFile?: string;
+  extension?: string;
+  type: string;
   isFavorite: boolean;
-  isSelected: boolean;
+  isSelected?: boolean;
   id: number;
   name: string;
-  date: string;
+  creation_date: string;
   onAddSelectedCards: (id: number) => void;
 };
 
 const Card: FC<CardProps> = ({
-  extensionFile,
+  extension,
   isFavorite,
   isSelected,
   id,
   onAddSelectedCards,
   name,
-  date,
+  type,
+  creation_date,
 }) => {
+  const displayIcon = () => {
+    if (type === "file" && extension === "mp3") {
+      return <img src={iconFileAudio} alt="audio-file-icon" />;
+    }
+    if (type === "file" && (extension === "png" || extension === "jpeg")) {
+      return <img src={iconFileImage} alt="icon" />;
+    }
+    if (type === "folder") {
+      return <img src={iconFolder} alt="icon" />;
+    }
+    return <img src={iconFile} alt="icon" />;
+  };
+
   const onFavorite = (event: ChangeEvent<HTMLInputElement>) => {
     isFavorite = !isFavorite;
     //TODO call API
@@ -57,19 +72,7 @@ const Card: FC<CardProps> = ({
           inputProps={{ "aria-label": "favorite" }}
         />
       </CardActions>
-      <CardMedia className={styles["card__media"]}>
-        {extensionFile === "audio" ? (
-          <img src={iconFileAudio} alt="audio-file-icon" />
-        ) : extensionFile === "image" ? (
-          <img src={iconFileImage} alt="icon" />
-        ) : extensionFile === "file" ? (
-          <img src={iconFile} alt="icon" />
-        ) : extensionFile === "folder" ? (
-          <img src={iconFolder} alt="icon" />
-        ) : (
-          <img src={iconFileImage} alt="icon" />
-        )}
-      </CardMedia>
+      <CardMedia className={styles["card__media"]}>{displayIcon()}</CardMedia>
       <CardContent className={styles["card__content"]}>
         <Typography
           gutterBottom
@@ -83,7 +86,7 @@ const Card: FC<CardProps> = ({
           color="text.secondary"
           className={styles["card__date"]}
         >
-          {date}
+          {creation_date}
         </Typography>
       </CardContent>
     </CardMui>

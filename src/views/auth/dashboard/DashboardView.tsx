@@ -10,7 +10,7 @@ import checkBoxNoChecked from "../../../assets/icons/checkbox-checked-tool.svg";
 import trashIcon from "../../../assets/icons/trash-drawer.svg";
 import starIcon from "../../../assets/icons/star-drawer.svg";
 import fileIcon from "../../../assets/icons/file-drawer.svg";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Box } from "@mui/material";
 import DashboardDrawer from "../../../components/Drawer/DashboardDrawer.component";
@@ -19,10 +19,10 @@ import IconButton from "../../../components/IconButton/IconButton";
 import SearchWithFilter from "../../../components/SearchBarFilter/SearchBarFilter.component";
 import { UserContext } from "../../../context/UserContext";
 import { toast } from "react-toastify";
-import CreateFolderForm from "../../../components/FormDashboard/CreateFolderForm.component";
 import { DEV_DOMAIN } from "../../../constants/url";
 import { sendGetRequest, sendPostRequest } from "../../../utils/data";
 import FormDialog from "../../../components/Dialog/FormDialog.component";
+import Card from "../../../components/Card/Card";
 
 const tabsList = [
   {
@@ -42,23 +42,31 @@ const tabsList = [
   },
 ];
 
+export type CloudData = {
+  id: number;
+  type: string;
+  name: string;
+  isTrash: boolean;
+  isFavorite: boolean;
+  extension?: string;
+  url?: string;
+  size?: number;
+  creation_date: string;
+  owner_id?: number;
+  folder_id?: number;
+  parent_folder_id?: number;
+};
+
 export default function DashboardView() {
   const userContext = useContext(UserContext);
   const navigate = useNavigate();
-  const [selected, setSelected] = useState(false);
   const [showFormFolder, setShowFormFolder] = useState(false);
   const [showFormFile, setShowFormFile] = useState(false);
   const [newName, setNewName] = useState("");
   const [name, setName] = useState("");
-  const [cloudData, setCloudData] = useState({
-    folders: null,
-    files: null,
-  });
+  const [cloudData, setCloudData] = useState<CloudData[]>([]);
   const [listSelectedCards, setListSelectedCards] = useState<number[]>([]);
-
-  const onSelected = () => {
-    setSelected(!selected);
-  };
+  const [allCardsSelected, setAllCardsSelected] = useState(false);
 
   const switchFormFolderVisibility = () => {
     setShowFormFolder(!showFormFolder);
@@ -74,6 +82,15 @@ export default function DashboardView() {
   //   Patch name in DB
   // };
 
+  const handleSelectAllCards = () => {
+    setAllCardsSelected(!allCardsSelected);
+    if (allCardsSelected) {
+      cloudData.map((data) => listSelectedCards.push(data.id));
+    } else {
+      setListSelectedCards([]);
+    }
+  };
+
   const onAddSelectedCards = (id: number) => {
     if (listSelectedCards.includes(id)) {
       setListSelectedCards(listSelectedCards.filter((cardId) => cardId !== id));
@@ -85,21 +102,6 @@ export default function DashboardView() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     setName(e.target.value);
-  };
-
-  const getCloudData = async () => {
-    try {
-      const getFolders = await sendGetRequest(`${DEV_DOMAIN}/folders`);
-      const getFiles = await sendGetRequest(`${DEV_DOMAIN}/files`);
-      const [files, folders] = await Promise.all([getFolders, getFiles]);
-      setCloudData((prevState) => ({
-        ...prevState,
-        files: files,
-        folders: folders,
-      }));
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   const handleSubmit = async (e: any) => {
@@ -156,6 +158,121 @@ export default function DashboardView() {
     }
     return "stranger";
   };
+
+  const renderData = () => {
+    return cloudData.map((data) => {
+      if (data.type === "folder") {
+        return (
+          <Card
+            key={data.id}
+            id={data.id}
+            type={data.type}
+            isSelected={listSelectedCards.includes(data.id)}
+            creation_date={data.creation_date}
+            isFavorite={data.isFavorite}
+            name={data.name}
+            onAddSelectedCards={() => onAddSelectedCards(data.id)}
+          />
+        );
+      }
+      if (data.type === "file") {
+        return (
+          <Card
+            key={data.id}
+            extension={data.extension}
+            id={data.id}
+            isSelected={listSelectedCards.includes(data.id)}
+            type={data.type}
+            creation_date={data.creation_date}
+            isFavorite={data.isFavorite}
+            name={data.name}
+            onAddSelectedCards={() => onAddSelectedCards(data.id)}
+          />
+        );
+      }
+      return null;
+    });
+  };
+
+  const mockData = [
+    {
+      type: "folder",
+      name: "Folder",
+      creation_date: "2024-02-16",
+      id: 1,
+      isFavorite: false,
+      isTrash: false,
+      owner_id: 1,
+      parent_folder_id: 7,
+    },
+    {
+      type: "folder",
+      name: "Folder",
+      creation_date: "2024-02-16",
+      id: 2,
+      isFavorite: false,
+      isTrash: false,
+      owner_id: 1,
+      parent_folder_id: 7,
+    },
+    {
+      type: "folder",
+      name: "Folder",
+      creation_date: "2024-02-16",
+      id: 3,
+      isFavorite: true,
+      isTrash: false,
+      owner_id: 1,
+      parent_folder_id: 7,
+    },
+    {
+      type: "file",
+      extension: "mp3",
+      name: "Audio File",
+      creation_date: "2024-02-14",
+      id: 4,
+      isFavorite: false,
+      isTrash: false,
+      folder_id: 3,
+      owner_id: 5,
+    },
+    {
+      type: "file",
+      extension: "png",
+      name: "Image File",
+      creation_date: "2024-02-14",
+      id: 5,
+      isFavorite: false,
+      isTrash: false,
+      folder_id: 3,
+      owner_id: 5,
+    },
+    {
+      type: "file",
+      extension: "txt",
+      name: "Text File",
+      creation_date: "2024-02-14",
+      id: 6,
+      isFavorite: true,
+      isTrash: false,
+      folder_id: 3,
+      owner_id: 5,
+    },
+  ];
+
+  useEffect(() => {
+    const getCloudData = async () => {
+      try {
+        // const getFolders = await sendGetRequest(`${DEV_DOMAIN}/folders`);
+        // const getFiles = await sendGetRequest(`${DEV_DOMAIN}/files`);
+        // const [files, folders] = await Promise.all([getFolders, getFiles]);
+        setCloudData(mockData);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getCloudData();
+  }, []);
 
   return (
     <Box
@@ -251,9 +368,10 @@ export default function DashboardView() {
                   sx={{
                     borderRight: "1px solid #7CD2D7",
                   }}
-                  onClick={() => onSelected()}
+                  // onClick={() => onSelected()}
+                  onClick={() => handleSelectAllCards()}
                 >
-                  {selected ? (
+                  {allCardsSelected ? (
                     <IconButton icon={checkBox} />
                   ) : (
                     <IconButton icon={checkBoxNoChecked} />
@@ -272,6 +390,7 @@ export default function DashboardView() {
                 alignItems: "flex-start",
               }}
             >
+              {renderData()}
               {showFormFolder && (
                 <FormDialog
                   handleClose={() => setShowFormFolder(false)}

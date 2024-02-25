@@ -8,6 +8,8 @@ import Input from "../../../components/Form/Input";
 import { toast } from "react-toastify";
 import { Box } from "@mui/material";
 import { UserContext } from "../../../context/UserContext";
+import { sendPostRequest } from "../../../utils/data";
+import { API_BASE_URL } from "../../../constants/url";
 
 type LoginFormState = {
   email: string;
@@ -33,18 +35,11 @@ export default function LoginView() {
     e.preventDefault();
     const loader = toast.loading("Veuillez patienter...");
     try {
-      const request = await fetch("http://localhost:8000/api/login", {
-        method: "POST",
-        headers: {
-          "Content-type": "Application/json",
-          Accept: "Application/json",
-        },
-        body: JSON.stringify({
-          email: userCredentials.email,
-          password: userCredentials.password,
-        }),
-      });
-      const response = await request.json();
+      const response = await sendPostRequest(
+        `${API_BASE_URL}/login`,
+        undefined,
+        { email: userCredentials.email, password: userCredentials.password }
+      );
       if (response.status === 200) {
         localStorage.setItem("@userToken", response.authToken);
         toast.update(loader, {
