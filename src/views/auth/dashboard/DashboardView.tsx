@@ -8,11 +8,12 @@ import trash from "../../../assets/icons/trash-icon.png";
 import checkBox from "../../../assets/icons/checkbox-tool.svg";
 import checkBoxNoChecked from "../../../assets/icons/checkbox-checked-tool.svg";
 import trashIcon from "../../../assets/icons/trash-drawer.svg";
+import deftrashIcon from "../../../assets/icons/trash-definitive-icon.png";
 import starIcon from "../../../assets/icons/star-drawer.svg";
 import fileIcon from "../../../assets/icons/file-drawer.svg";
 import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Box } from "@mui/material";
+import { Box, ButtonBase } from "@mui/material";
 import DashboardDrawer from "../../../components/Drawer/DashboardDrawer.component";
 import Button from "../../../components/Button/Button";
 import IconButton from "../../../components/IconButton/IconButton";
@@ -60,19 +61,19 @@ export type CloudData = {
 export default function DashboardView() {
   const userContext = useContext(UserContext);
   const navigate = useNavigate();
-  const [showFormFolder, setShowFormFolder] = useState(false);
-  const [showFormFile, setShowFormFile] = useState(false);
-  const [newName, setNewName] = useState("");
-  const [name, setName] = useState("");
+  const [tabActive, setTabActive] = useState<number>(1);
+  const [showForm, setShowForm] = useState(false);
+  const [typeForm, setTypeForm] = useState("");
+  // const [newName, setNewName] = useState("");
+  // const [name, setName] = useState("");
   const [cloudData, setCloudData] = useState<CloudData[]>([]);
-  const [listSelectedCards, setListSelectedCards] = useState<number[]>([]);
+  const [idCardsSelected, setIdCardsSelected] = useState<number[]>([]);
   const [allCardsSelected, setAllCardsSelected] = useState(false);
+  const [allCheckboxesChecked, setAllCheckboxesChecked] = useState(false);
 
-  const switchFormFolderVisibility = () => {
-    setShowFormFolder(!showFormFolder);
-  };
-  const switchFormFileVisibility = () => {
-    setShowFormFile(!showFormFile);
+  const displayForm = (type: string) => {
+    setShowForm(!showForm);
+    setTypeForm(type);
   };
 
   //TODO RENAME A FOLDER OR A FILE
@@ -84,25 +85,32 @@ export default function DashboardView() {
 
   const handleSelectAllCards = () => {
     setAllCardsSelected(!allCardsSelected);
-    if (allCardsSelected) {
-      cloudData.map((data) => listSelectedCards.push(data.id));
-    } else {
-      setListSelectedCards([]);
-    }
+    setAllCheckboxesChecked(!allCheckboxesChecked);
   };
 
   const onAddSelectedCards = (id: number) => {
-    if (listSelectedCards.includes(id)) {
-      setListSelectedCards(listSelectedCards.filter((cardId) => cardId !== id));
+    let newArray = [];
+    if (idCardsSelected.includes(id)) {
+      newArray = idCardsSelected.filter((cardId) => cardId !== id);
+      setIdCardsSelected(newArray);
+      setAllCheckboxesChecked(false);
+      setIdCardsSelected([...idCardsSelected, id]);
+      if (idCardsSelected.includes(id)) {
+        setIdCardsSelected([id]);
+        setAllCheckboxesChecked(false);
+        if (idCardsSelected.includes(id)) {
+          setIdCardsSelected([id]);
+        }
+      }
     } else {
-      setListSelectedCards([...listSelectedCards, id]);
+      setIdCardsSelected([...idCardsSelected, id]);
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    setName(e.target.value);
-  };
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   e.preventDefault();
+  //   setName(e.target.value);
+  // };
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -159,15 +167,24 @@ export default function DashboardView() {
     return "stranger";
   };
 
-  const renderData = () => {
+  const renderData = (
+    filterType: string,
+    isFavorite: boolean,
+    isTrash: boolean
+  ) => {
     return cloudData.map((data) => {
-      if (data.type === "folder") {
+      if (
+        data.type === filterType &&
+        data.isFavorite === isFavorite &&
+        data.isTrash === isTrash
+      ) {
         return (
           <Card
             key={data.id}
             id={data.id}
             type={data.type}
-            isSelected={listSelectedCards.includes(data.id)}
+            extension={data.extension}
+            isSelected={idCardsSelected.includes(data.id)}
             creation_date={data.creation_date}
             isFavorite={data.isFavorite}
             name={data.name}
@@ -175,13 +192,67 @@ export default function DashboardView() {
           />
         );
       }
-      if (data.type === "file") {
+      return null;
+    });
+  };
+  const renderDataFavorite = () => {
+    return cloudData.map((data) => {
+      if (data.type === "folder" && data.isFavorite) {
+        return (
+          <Card
+            key={data.id}
+            id={data.id}
+            type={data.type}
+            isSelected={idCardsSelected.includes(data.id)}
+            creation_date={data.creation_date}
+            isFavorite={data.isFavorite}
+            name={data.name}
+            onAddSelectedCards={() => onAddSelectedCards(data.id)}
+          />
+        );
+      }
+      if (data.type === "file" && data.isFavorite) {
         return (
           <Card
             key={data.id}
             extension={data.extension}
             id={data.id}
-            isSelected={listSelectedCards.includes(data.id)}
+            isSelected={idCardsSelected.includes(data.id)}
+            type={data.type}
+            creation_date={data.creation_date}
+            isFavorite={data.isFavorite}
+            name={data.name}
+            onAddSelectedCards={() => onAddSelectedCards(data.id)}
+          />
+        );
+      }
+      return null;
+    });
+  };
+
+  const renderDataTrash = () => {
+    return cloudData.map((data) => {
+      if (data.type === "folder" && data.isTrash) {
+        return (
+          <Card
+            key={data.id}
+            id={data.id}
+            type={data.type}
+            isSelected={idCardsSelected.includes(data.id)}
+            creation_date={data.creation_date}
+            isFavorite={data.isFavorite}
+            name={data.name}
+            onAddSelectedCards={() => onAddSelectedCards(data.id)}
+          />
+        );
+      }
+      if (data.type === "file" && data.isTrash) {
+        return (
+          <Card
+            key={data.id}
+            extension={data.extension}
+            id={data.id}
+            isSelected={idCardsSelected.includes(data.id)}
             type={data.type}
             creation_date={data.creation_date}
             isFavorite={data.isFavorite}
@@ -197,11 +268,11 @@ export default function DashboardView() {
   const mockData = [
     {
       type: "folder",
-      name: "Folder",
+      name: "FolderTrash",
       creation_date: "2024-02-16",
       id: 1,
       isFavorite: false,
-      isTrash: false,
+      isTrash: true,
       owner_id: 1,
       parent_folder_id: 7,
     },
@@ -250,13 +321,98 @@ export default function DashboardView() {
     {
       type: "file",
       extension: "txt",
-      name: "Text File",
+      name: "Text trash",
       creation_date: "2024-02-14",
       id: 6,
-      isFavorite: true,
-      isTrash: false,
+      isFavorite: false,
+      isTrash: true,
       folder_id: 3,
       owner_id: 5,
+    },
+    {
+      type: "folder",
+      name: "Vacation Photos",
+      creation_date: "2024-03-01",
+      id: 7,
+      isFavorite: true,
+      isTrash: false,
+      owner_id: 2,
+      parent_folder_id: 1,
+    },
+    {
+      type: "folder",
+      name: "Work Documents",
+      creation_date: "2024-02-28",
+      id: 8,
+      isFavorite: false,
+      isTrash: false,
+      owner_id: 2,
+      parent_folder_id: 2,
+    },
+    {
+      type: "file",
+      extension: "docx",
+      name: "Project Proposal",
+      creation_date: "2024-02-28",
+      id: 9,
+      isFavorite: true,
+      isTrash: false,
+      folder_id: 8,
+      owner_id: 2,
+    },
+    {
+      type: "file",
+      extension: "jpg",
+      name: "Family Picnic",
+      creation_date: "2024-03-02",
+      id: 10,
+      isFavorite: true,
+      isTrash: false,
+      folder_id: 7,
+      owner_id: 2,
+    },
+    {
+      type: "file",
+      extension: "xlsx",
+      name: "Financial Report",
+      creation_date: "2024-03-01",
+      id: 11,
+      isFavorite: false,
+      isTrash: false,
+      folder_id: 8,
+      owner_id: 2,
+    },
+    {
+      type: "folder",
+      name: "Unused Projects",
+      creation_date: "2024-02-27",
+      id: 12,
+      isFavorite: false,
+      isTrash: true,
+      owner_id: 2,
+      parent_folder_id: 1,
+    },
+    {
+      type: "file",
+      extension: "pptx",
+      name: "Presentation Slides",
+      creation_date: "2024-02-27",
+      id: 13,
+      isFavorite: false,
+      isTrash: true,
+      folder_id: 12,
+      owner_id: 2,
+    },
+    {
+      type: "file",
+      extension: "pdf",
+      name: "User Manual",
+      creation_date: "2024-02-27",
+      id: 14,
+      isFavorite: false,
+      isTrash: true,
+      folder_id: 12,
+      owner_id: 2,
     },
   ];
 
@@ -274,6 +430,23 @@ export default function DashboardView() {
     getCloudData();
   }, []);
 
+  useEffect(() => {
+    let newArray: number[] = [];
+    if (allCardsSelected) {
+      cloudData.forEach((data) => newArray.push(data.id));
+
+      setIdCardsSelected(newArray);
+    } else {
+      setIdCardsSelected([]);
+    }
+  }, [allCardsSelected]);
+
+  useEffect(() => {
+    if (idCardsSelected.length !== cloudData.length) {
+      setAllCardsSelected(false);
+    }
+  }, []);
+
   return (
     <Box
       sx={{ display: "flex", flexDirection: "column", height: "100vh", px: 6 }}
@@ -281,7 +454,7 @@ export default function DashboardView() {
       <CssBaseline />
       <Toolbar />
       <Box sx={{ display: "flex", flexGrow: 1 }}>
-        <DashboardDrawer tabsList={tabsList} />
+        <DashboardDrawer tabsList={tabsList} setTabActive={setTabActive} />
         <Box
           component="main"
           sx={{ flexGrow: 1, px: 2, display: "flex", flexDirection: "column" }}
@@ -341,9 +514,12 @@ export default function DashboardView() {
               >
                 <IconButton
                   icon={addFolder}
-                  onClick={switchFormFolderVisibility}
+                  onClick={() => displayForm("folder")}
                 />
-                <IconButton icon={addFile} onClick={switchFormFileVisibility} />
+                <IconButton
+                  icon={addFile}
+                  onClick={() => displayForm("file")}
+                />
               </Box>
               <SearchWithFilter />
               <Box
@@ -371,13 +547,30 @@ export default function DashboardView() {
                   // onClick={() => onSelected()}
                   onClick={() => handleSelectAllCards()}
                 >
-                  {allCardsSelected ? (
-                    <IconButton icon={checkBox} />
-                  ) : (
+                  {allCheckboxesChecked ? (
                     <IconButton icon={checkBoxNoChecked} />
+                  ) : (
+                    <IconButton icon={checkBox} />
                   )}
                 </Box>
-                <IconButton icon={trash} />
+                {tabActive === 3 ? (
+                  <>
+                    <IconButton icon={deftrashIcon} />
+                    <ButtonBase
+                      style={{
+                        border: "1.5px solid #49D4DB",
+                        padding: "5px",
+                        borderRadius: "10px",
+                        color: "#49D4DB",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Restaurer
+                    </ButtonBase>
+                  </>
+                ) : (
+                  <IconButton icon={trash} />
+                )}
               </Box>
             </Box>
             <Box
@@ -390,19 +583,28 @@ export default function DashboardView() {
                 alignItems: "flex-start",
               }}
             >
-              {renderData()}
-              {showFormFolder && (
+              {tabActive === 1 ? renderData("folder", false, false) : null}
+              {tabActive === 1 ? renderData("file", false, false) : null}
+              {tabActive === 2 ? renderData("folder", true, false) : null}
+              {tabActive === 2 ? renderData("file", true, false) : null}
+              {tabActive === 3 ? renderData("folder", false, true) : null}
+              {tabActive === 3 ? renderData("file", false, true) : null}
+              {showForm && (
                 <FormDialog
-                  handleClose={() => setShowFormFolder(false)}
-                  title={"Nouveau dossier"}
+                  handleClose={() => setShowForm(false)}
+                  title={
+                    typeForm === "folder"
+                      ? "Nouveau dossier"
+                      : "Nouveau fichier"
+                  }
                 />
               )}
-              {showFormFile && (
+              {/* {showFormFile && (
                 <FormDialog
                   handleClose={() => setShowFormFile(false)}
                   title={"Nouveau fichier"}
                 />
-              )}
+              )} */}
             </Box>
           </Grid>
         </Box>

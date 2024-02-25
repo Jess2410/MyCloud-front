@@ -67,6 +67,7 @@ const Drawer = styled(MuiDrawer, {
 
 export type DashboardDrawerProps = {
   tabsList: TabsListProps[];
+  setTabActive: (key: number) => void;
 };
 
 export interface TabsListProps {
@@ -75,7 +76,10 @@ export interface TabsListProps {
   icon: string;
 }
 
-export default function DashboardDrawer({ tabsList }: DashboardDrawerProps) {
+export default function DashboardDrawer({
+  tabsList,
+  setTabActive,
+}: DashboardDrawerProps) {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
 
@@ -192,6 +196,7 @@ export default function DashboardDrawer({ tabsList }: DashboardDrawerProps) {
                   justifyContent: open ? "initial" : "center",
                   px: 2.5,
                 }}
+                onClick={() => setTabActive(item.key)}
               >
                 <ListItemIcon
                   sx={{
