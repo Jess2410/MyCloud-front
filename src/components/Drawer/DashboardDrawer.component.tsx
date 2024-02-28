@@ -123,7 +123,7 @@ export default function DashboardDrawer({
                     color: "#A0A0A0",
                     textAlign: "center",
                     fontFamily: "Poppins",
-                    mb: "24px",
+                    mb: "var(--spacing-3x)",
                   }}
                 >
                   Dashboard Menu
@@ -164,7 +164,7 @@ export default function DashboardDrawer({
                 </Typography>
                 <Typography
                   sx={{
-                    mb: "24px",
+                    mb: "var(--spacing-3x)",
                   }}
                 >
                   Dashboard Menu

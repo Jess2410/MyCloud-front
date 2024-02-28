@@ -31,7 +31,7 @@ const SearchWithFilter = () => {
   return (
     <Box
       sx={{
-        border: "1px solid #49D4DB",
+        border: "1px solid var(--primary-hover)",
         px: 2,
         my: 1,
         borderRadius: "50px",
@@ -52,10 +52,10 @@ const SearchWithFilter = () => {
       <FilterButton onClick={handleOpenMenu} aria-label="filter">
         <Typography
           sx={{
-            color: "#49D4DB",
+            color: "var(--primary-hover)",
             fontWeight: 600,
             pl: 1,
-            borderLeft: "1px solid #49d4db",
+            borderLeft: "1px solid var(--primary-hover)",
           }}
         >
           Filtrer
@@ -66,9 +66,10 @@ const SearchWithFilter = () => {
         open={Boolean(anchorEl)}
         onClose={handleCloseMenu}
       >
-        <MenuItem onClick={handleCloseMenu}>Filter Option 1</MenuItem>
-        <MenuItem onClick={handleCloseMenu}>Filter Option 2</MenuItem>
-        <MenuItem onClick={handleCloseMenu}>Filter Option 3</MenuItem>
+        <MenuItem onClick={handleCloseMenu}>Par nom : A - Z</MenuItem>
+        <MenuItem onClick={handleCloseMenu}>Par nom : Z - A</MenuItem>
+        <MenuItem onClick={handleCloseMenu}>Par date : Plus récent</MenuItem>
+        <MenuItem onClick={handleCloseMenu}>Par date : Plus ancien</MenuItem>
       </Menu>
     </Box>
   );

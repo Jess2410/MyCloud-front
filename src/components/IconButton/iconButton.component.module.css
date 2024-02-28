@@ -3,7 +3,7 @@
   border: none;
 }
 .icon-button:hover {
-  color: #49d4db;
+  color: var(--primary-hover);
 }
 
 .icon-button--img {

@@ -66,7 +66,11 @@ const GenericForm: FC<GenericFormProps> = ({
           {spanText}
           <Link
             to={href}
-            style={{ textDecoration: "none", padding: 1, color: "#7CD2D7" }}
+            style={{
+              textDecoration: "none",
+              padding: 1,
+              color: "var(--primary)",
+            }}
           >
             {linkText}
           </Link>

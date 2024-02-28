@@ -22,7 +22,13 @@ const LayoutForm: React.FC<LayoutProps> = ({ children, image }) => {
         component="main"
         className={styles["layoutForm__container"]}
       >
-        <Navbar />
+        <Box
+          sx={{
+            padding: ["40px 0", "80px"],
+          }}
+        >
+          <Navbar />
+        </Box>
         <Grid
           item
           container

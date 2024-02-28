@@ -11,3 +11,25 @@ body {
   padding: 0;
   box-sizing: border-box;
 }
+
+:root {
+  --spacing-unit: 8px;
+  --spacing-1x: var(--spacing-unit);
+  --spacing-2x: calc(2 * var(--spacing-unit));
+  --spacing-3x: calc(3 * var(--spacing-unit));
+  --spacing-4x: calc(4 * var(--spacing-unit));
+  --spacing-5x: calc(5 * var(--spacing-unit));
+  --spacing-6x: calc(6 * var(--spacing-unit));
+
+  --primary: #7cd2d7;
+  --secondary: #9b61f5;
+  --tertiary: #e6dcf5;
+  --text: #4a546c;
+  --primary-hover: #49d4db;
+  --secondary-hover: #8d48f5;
+  --tertiary-hover: #fff;
+  --text: #6a6369;
+  --text-white: #fff;
+
+  --poppins-font: Poppins;
+}

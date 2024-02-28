@@ -11,8 +11,8 @@ import iconFile from "../../assets/icons/file.png";
 import Checkbox from "@mui/material/Checkbox";
 import starChecked from "../../assets/icons/Vectorstar-checked.svg";
 import starUnchecked from "../../assets/icons/Vectorstar-no-checked.svg";
-import checkboxChecked from "../../assets/icons/Vectorcheckbox-checked.svg";
-import checkboxUnchecked from "../../assets/icons/Vectorcheckbox-no-checked.svg";
+import checkboxChecked from "../../assets/icons/Vectorcheckbox-checked.png";
+import checkboxUnchecked from "../../assets/icons/Vectorcheckbox-no-checked.png";
 import styles from "./card.component.module.css";
 
 type CardProps = {
@@ -69,7 +69,7 @@ const Card: FC<CardProps> = ({
           checkedIcon={<img src={checkboxChecked} alt="Checked" />}
           checked={isSelected}
           onChange={() => onAddSelectedCards(id)}
-          inputProps={{ "aria-label": "favorite" }}
+          inputProps={{ "aria-label": "selected" }}
         />
       </CardActions>
       <CardMedia className={styles["card__media"]}>{displayIcon()}</CardMedia>

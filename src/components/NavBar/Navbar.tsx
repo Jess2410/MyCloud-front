@@ -9,7 +9,7 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import logo from "../../assets/images/logo-le-nuage.webp";
-import logoResponsiveBurger from "../../assets/icons/logo-burger-svg.svg";
+import logoResponsiveBurger from "../../assets/icons/logo-burger.png";
 import LoginIcon from "@mui/icons-material/Login";
 import IconButton from "../IconButton/IconButton";
 import { Box } from "@mui/material";
@@ -55,10 +55,12 @@ const Navbar: React.FC = () => {
         backgroundColor: "transparent",
         padding: "0",
         boxShadow: "none",
-        height: "fit-content",
       }}
     >
-      <Container maxWidth="xl">
+      <Container
+        maxWidth="xl"
+        sx={{ p: "0 !important", m: "inherit !important" }}
+      >
         <Toolbar disableGutters>
           <Link to="/">
             <Box
@@ -78,7 +80,7 @@ const Navbar: React.FC = () => {
                 style={{
                   width: 200,
                   height: "auto",
-                  marginRight: 24,
+                  marginRight: "var(--spacing-3x)",
                 }}
               />
             </Box>
@@ -98,6 +100,7 @@ const Navbar: React.FC = () => {
               color="inherit"
               sx={{
                 p: 0,
+                zIndex: 10000,
                 "&:hover": {
                   background: "RGBA(73,212,219,0.1)",
                 },
@@ -137,7 +140,7 @@ const Navbar: React.FC = () => {
                         fontFamily: "Poppins",
                         color: "#6A6369",
                         "&:hover": {
-                          color: "#49d4db",
+                          color: "var(--primary-hover)",
                         },
                       }}
                     >
@@ -164,7 +167,7 @@ const Navbar: React.FC = () => {
                 mx: "16px",
                 fontSize: "1.5em",
                 fontWeight: "semi-bold",
-                color: "#9B61F5",
+                color: "var(--secondary)",
               }}
             >
               LE NUAGE
@@ -185,7 +188,7 @@ const Navbar: React.FC = () => {
                     my: 2,
                     display: "block",
                     "&:hover": {
-                      color: "#49d4db",
+                      color: "var(--primary-hover)",
                     },
                   }}
                 >
@@ -198,7 +201,7 @@ const Navbar: React.FC = () => {
                       fontSize: 17,
                       color: "#6A6369",
                       "&:hover": {
-                        color: "#49d4db",
+                        color: "var(--primary-hover)",
                       },
                     }}
                   >
@@ -212,7 +215,7 @@ const Navbar: React.FC = () => {
           <Box
             sx={{
               flexGrow: 0,
-              border: "2px solid #49d4db ",
+              border: "2px solid var(--primary-hover) ",
               background: "#fff",
               borderRadius: "50%",
               "&:hover": {
@@ -222,7 +225,7 @@ const Navbar: React.FC = () => {
           >
             <Tooltip title="Open settings">
               <IconButtonMui onClick={handleOpenUserMenu}>
-                <LoginIcon sx={{ color: "#49d4db" }} />
+                <LoginIcon sx={{ color: "var(--primary-hover)" }} />
               </IconButtonMui>
             </Tooltip>
             <Menu
@@ -254,7 +257,7 @@ const Navbar: React.FC = () => {
                         fontFamily: "Poppins",
                         color: "#6A6369",
                         "&:hover": {
-                          color: "#9B61F5",
+                          color: "var(--secondary)",
                         },
                       }}
                     >

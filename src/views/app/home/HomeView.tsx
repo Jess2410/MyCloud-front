@@ -2,62 +2,67 @@ import Navbar from "../../../components/NavBar/Navbar";
 import Button from "../../../components/Button/Button";
 import background from "../../../assets/images/Homebackground-home.png";
 import { Link } from "react-router-dom";
+import { Box, Typography } from "@mui/material";
 
 export default function HomeView() {
   return (
-    <div
-      style={{
-        height: "100vh",
-        margin: "-8px",
+    <Box
+      sx={{
+        minHeight: "100vh",
         backgroundImage: `url(${background})`,
         backgroundSize: "cover",
-        backgroundPosition: "center",
+        backgroundPosition: ["left", "left", "center"],
         backgroundRepeat: "no-repeat",
       }}
     >
-      <div
-        style={{
-          padding: "60px",
+      <Box
+        sx={{
+          padding: ["40px", "80px"],
         }}
       >
         <Navbar />
-        <div
-          style={{
-            width: "601px",
-            height: "469px",
-            padding: "70px, 0px, 40px, 0px",
+        <Box
+          sx={{
+            padding: ["40px 0", "80px 0"],
+            maxWidth: "500px",
             gap: "40px",
           }}
         >
-          <h1
-            style={{
+          <Typography
+            sx={{
               fontFamily: "Poppins",
               fontWeight: 500,
-              fontSize: "48px",
-              lineHeight: "72px",
+              fontSize: ["40px", "44px"],
+              lineHeight: ["48px", "64px"],
               color: "#6A6369",
+              textAlign: { xs: "center", sm: "left" },
             }}
           >
-            Et si vos dossiers avaient la tête dans Le Nuage ?
-          </h1>
-          <p
-            style={{
-              fontSize: "20px",
+            Et si vos dossiers avaient la tête dans
+            <span style={{ color: "var(--secondary)" }}> Le Nuage ?</span>
+          </Typography>
+          <Typography
+            sx={{
+              my: 3,
+              fontSize: ["16px", "18px"],
               fontFamily: "Poppins",
               fontWeight: 400,
               lineHeight: "31px",
-              textAlign: "justify",
+              textAlign: ["center", "left"],
               color: "#6A6369",
             }}
           >
             Laissez vos données voguer vers de nouveaux horizons avec notre
             système de cloud!
-          </p>
+          </Typography>
 
-          <div
-            style={{
+          <Box
+            sx={{
               display: "flex",
-              justifyContent: "space-between",
+              flexWrap: "wrap",
+              my: 3,
+              gap: "16px",
+              justifyContent: ["center", "inherit"],
             }}
           >
             <Link to="/login">
@@ -66,9 +71,9 @@ export default function HomeView() {
             <Link to="/signin">
               <Button label={"Inscrivez-vous"} variant="outlined" />
             </Link>
-          </div>
-        </div>
-      </div>
-    </div>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
   );
 }

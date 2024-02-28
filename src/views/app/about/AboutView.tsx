@@ -19,10 +19,15 @@ const AboutView = () => {
         zIndex: -1,
       }}
     >
-      <Navbar />
       <Box
         sx={{
-          py: 4,
+          padding: ["40px 0", "80px"],
+        }}
+      >
+        <Navbar />
+      </Box>
+      <Box
+        sx={{
           m: "auto",
           textAlign: "center",
         }}
@@ -45,7 +50,8 @@ const AboutView = () => {
             position: "relative",
             textAlign: "center",
             zIndex: 1,
-            background: "linear-gradient(to right, #E4B8FD, #49d4db)",
+            background:
+              "linear-gradient(to right, #E4B8FD, var(--primary-hover))",
             borderRadius: "20px",
             height: "100%",
             p: 2,
@@ -55,24 +61,23 @@ const AboutView = () => {
             sx={{
               background: "#fff",
               borderRadius: "20px",
-              p: 3,
+              p: [2, 3],
             }}
           >
-            <img
-              style={{
-                height: "50%",
-                position: "absolute",
+            <Box
+              sx={{
+                position: ["absolute", "fixed", "absolute"],
                 top: "100%",
                 right: 0,
-                transform: "translate(50%,-50%)",
+                transform: ["translate(0%,-30%)", "translate(50%,-50%)"],
               }}
-              src={vector}
-              alt="Cloud logo"
-            />
+            >
+              <img style={{ height: "200px" }} src={vector} alt="Cloud logo" />
+            </Box>
             <Typography
               sx={{
                 fontFamily: "Poppins",
-                color: "#9B61F5",
+                color: "var(--secondary)",
               }}
               variant="h2"
               gutterBottom
@@ -85,7 +90,7 @@ const AboutView = () => {
                 fontFamily: "Poppins",
                 color: "#a0a0a0",
                 mb: 4,
-                px: 8,
+                px: [2, 8],
               }}
               variant="body1"
               gutterBottom

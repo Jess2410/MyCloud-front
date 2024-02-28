@@ -16,18 +16,24 @@
   position: absolute;
   top: 50%;
   right: 0;
-  transform: translate(70%, -50%) rotate(10deg);
-  max-height: 80%;
+  transform: translate(50%, -50%) rotate(10deg);
+  /* max-height: 80%; */
   max-width: 100%;
   display: block;
   overflow: hidden;
 }
 .layoutForm__image {
   max-width: 100%;
-  height: auto;
+
+  max-height: 350px;
   object-fit: contain;
 }
 
+@media (max-width: 1200px) {
+  .layoutForm__imageBox {
+    transform: translate(70%, -50%) rotate(10deg);
+  }
+}
 @media (max-width: 900px) {
   .layoutForm__image {
     display: none;

@@ -12,39 +12,39 @@ import image from "../../../assets/images/cloud-data.png";
 const ContactView = () => {
   return (
     <>
-      <Navbar />
+      <Box
+        sx={{
+          padding: ["40px 0", "80px"],
+        }}
+      >
+        <Navbar />
+      </Box>
       <Box
         sx={{
           p: 4,
-          pt: 10,
-          ml: "auto",
-          mr: "auto",
+          m: "auto",
           maxWidth: 1200,
 
           position: "relative",
-          "&::after": {
-            content: '""',
-            position: "absolute",
-            top: 100,
-            right: "-300px",
-            bottom: 0,
-            width: "400px",
-            backgroundColor: "#E4B8FD",
-            opacity: 0.4,
-            filter: "blur(100px)",
-            zIndex: -1,
-          },
         }}
       >
-        <img
-          style={{ position: "absolute", zIndex: -1, left: -600, opacity: 0.7 }}
-          src={image}
-        />
-        <Box sx={{ p: 4 }}>
+        <Box sx={{ opacity: { xs: 0.2 }, position: "absolute", zIndex: -1 }}>
+          <img
+            style={{
+              position: "fixed",
+              zIndex: -1,
+              left: -600,
+              opacity: 0.7,
+              bottom: 0,
+            }}
+            src={image}
+          />
+        </Box>
+        <Box sx={{ p: { xs: 2 } }}>
           <Typography
             sx={{
               fontFamily: "Poppins",
-              color: "#49d4db",
+              color: "var(--primary-hover)",
             }}
             variant="h2"
             gutterBottom
@@ -90,7 +90,7 @@ const ContactView = () => {
                     component="div"
                     sx={{
                       fontFamily: "Poppins",
-                      color: "#49d4db",
+                      color: "var(--primary-hover)",
                     }}
                   >
                     Appelez-nous
@@ -137,7 +137,7 @@ const ContactView = () => {
                     component="div"
                     sx={{
                       fontFamily: "Poppins",
-                      color: "#49d4db",
+                      color: "var(--primary-hover)",
                       textAlign: "center",
                     }}
                   >
@@ -184,10 +184,10 @@ const ContactView = () => {
                     gutterBottom
                     variant="h5"
                     component="div"
-                    color="#49d4db"
+                    color="var(--primary-hover)"
                     sx={{
                       fontFamily: "Poppins",
-                      color: "#49d4db",
+                      color: "var(--primary-hover)",
                     }}
                   >
                     LinkedIn

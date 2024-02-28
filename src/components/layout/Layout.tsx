@@ -1,6 +1,5 @@
 import Box from "@mui/material/Box";
 import Navbar from "../NavBar/Navbar";
-import backgroundHome from "../assets/images/Homebackground-home.png";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -15,7 +14,13 @@ const Layout = ({ children, image }: LayoutProps) => {
           backgroundImage: "/src/assets/images/Homebackground-home.png",
         }}
       >
-        <Navbar />
+        <Box
+          sx={{
+            padding: ["40px 0", "80px"],
+          }}
+        >
+          <Navbar />
+        </Box>
       </Box>
       <Box sx={{ pb: 4, px: "80px" }}>{children}</Box>
     </>
