@@ -31,7 +31,6 @@ const Layout: React.FC<DashboardMainProps> = ({ children }) => {
         <Box sx={{ maxWidth: "1200px" }}>
           <Box sx={{ display: "flex", flexGrow: 1, flexDirection: "column" }}>
             <DashboardHeader onLogout={logout} username={getUserName()} />
-            {/*TODO move header ici et retravailler*/}
             {children}
           </Box>
         </Box>

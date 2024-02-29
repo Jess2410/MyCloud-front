@@ -1,16 +1,16 @@
 import { Box } from "@mui/material";
 import { CloudData } from "./DashboardMain.component";
-import FilesList from "./FilesList.component";
-import useSelectCards from "./hooks/useSelectCards";
+// import FilesList from "./FilesList.component";
+// import useSelectCards from "./hooks/useSelectCards";
 
 type FavoritesTabProps = {
   cloudData: CloudData[];
 };
 const FavoritesTab: React.FC<FavoritesTabProps> = ({ cloudData }) => {
-  const { onAddSelectedCards, idCardsSelected } = useSelectCards({
-    tabActive: 2,
-    cloudData,
-  });
+  // const { onAddSelectedCards, idCardsSelected } = useSelectCards({
+  //   tabActive: 2,
+  //   cloudData,
+  // });
 
   // console.log(cloudData);
 
@@ -26,7 +26,7 @@ const FavoritesTab: React.FC<FavoritesTabProps> = ({ cloudData }) => {
         alignItems: "flex-start",
       }}
     >
-      <FilesList
+      {/* <FilesList
         cloudData={cloudData}
         filterType={"folder"}
         isFavorite={true}
@@ -41,7 +41,7 @@ const FavoritesTab: React.FC<FavoritesTabProps> = ({ cloudData }) => {
         isTrash={false}
         idCardsSelected={idCardsSelected}
         onAddSelectedCards={onAddSelectedCards}
-      />
+      /> */}
     </Box>
   );
 };

@@ -28,12 +28,13 @@ export const sendPostRequest = async (
   }
 };
 
-export const sendGetRequest = async (url: string) => {
+export const sendGetRequest = async (url: string, headers: OptionalHeaders) => {
   try {
     const request = await fetch(url, {
       headers: {
         "Content-type": "application/json",
         Accept: "application/json",
+        ...headers,
       },
     });
     const data = await request.json();

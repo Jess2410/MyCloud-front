@@ -121,7 +121,7 @@ export default function DashboardDrawer() {
           {open ? (
             <>
               <Box sx={{ py: 4 }}>
-                <Link to="/dashboard" style={{ textDecoration: "none" }}>
+                <Link to="/dashboard-cloud" style={{ textDecoration: "none" }}>
                   <div style={{ display: "flex", justifyContent: "center" }}>
                     <img
                       src={logoCloud}
@@ -163,7 +163,7 @@ export default function DashboardDrawer() {
           ) : (
             <>
               <Box sx={{ py: 4, opacity: "0" }}>
-                <Link to="/dashboard" style={{ textDecoration: "none" }}>
+                <Link to="/dashboard-cloud" style={{ textDecoration: "none" }}>
                   <div style={{ display: "flex", justifyContent: "center" }}>
                     <img
                       src={logoCloud}

@@ -9,8 +9,13 @@ import DialogTitle from "@mui/material/DialogTitle";
 type FormDialogProps = {
   title: string;
   handleClose: () => void;
+  handleCreateFolder: (name: string) => void;
 };
-export default function FormDialog({ title, handleClose }: FormDialogProps) {
+export default function FormDialog({
+  title,
+  handleClose,
+  handleCreateFolder,
+}: FormDialogProps) {
   return (
     <>
       <Dialog
@@ -23,7 +28,7 @@ export default function FormDialog({ title, handleClose }: FormDialogProps) {
             const formData = new FormData(event.currentTarget);
             const formJson = Object.fromEntries((formData as any).entries());
             const nameFolder = formJson.name;
-            console.log("🚀 ~ FormDialog ~ nameFolder:", nameFolder);
+            handleCreateFolder(nameFolder);
             handleClose();
           },
         }}

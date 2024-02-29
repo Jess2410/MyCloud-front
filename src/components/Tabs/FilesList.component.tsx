@@ -1,43 +1,57 @@
-import { Box } from "@mui/material";
 import Card from "../Card/Card";
-import { CloudData } from "./DashboardMain.component";
+import {
+  FileData,
+  FolderData,
+} from "../../views/auth/dashboard/DashboardCloudView";
 
 type FilesListProps = {
-  filterType: string;
   isFavorite: boolean;
   isTrash: boolean;
-  cloudData: CloudData[];
-  idCardsSelected: number[];
-  onAddSelectedCards: (id: number) => void;
+  filesData: FileData[];
+  foldersData: FolderData[];
+  // idCardsSelected: number[];
+  // onAddSelectedCards: (id: number) => void;
 };
 
 const FilesList: React.FC<FilesListProps> = ({
-  cloudData,
-  filterType,
+  filesData,
+  foldersData,
   isFavorite,
   isTrash,
-  idCardsSelected,
-  onAddSelectedCards,
+  // idCardsSelected,
+  // onAddSelectedCards,
 }) => {
+  console.log("🚀 ~ foldersData:", foldersData);
+
   return (
     <>
-      {cloudData.map((data) => {
-        if (
-          data.type === filterType &&
-          data.isFavorite === isFavorite &&
-          data.isTrash === isTrash
-        ) {
+      {foldersData.map((data: FolderData) => {
+        if (data.isFavorite === isFavorite && data.isTrash === isTrash) {
           return (
             <Card
               key={data.id}
               id={data.id}
-              type={data.type}
-              extension={data.extension}
-              isSelected={idCardsSelected.includes(data.id)}
+              // isSelected={idCardsSelected.includes(data.id)}
               creation_date={data.creation_date}
               isFavorite={data.isFavorite}
               name={data.name}
-              onAddSelectedCards={() => onAddSelectedCards(data.id)}
+              // onAddSelectedCards={() => onAddSelectedCards(data.id)}
+            />
+          );
+        }
+        return null;
+      })}
+      {filesData.map((data: FileData) => {
+        if (data.isFavorite === isFavorite && data.isTrash === isTrash) {
+          return (
+            <Card
+              key={data.id}
+              id={data.id}
+              // isSelected={idCardsSelected.includes(data.id)}
+              creation_date={data.creation_date}
+              isFavorite={data.isFavorite}
+              name={data.name}
+              // onAddSelectedCards={() => onAddSelectedCards(data.id)}
             />
           );
         }

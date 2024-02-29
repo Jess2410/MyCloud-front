@@ -1,16 +1,16 @@
 import { Box } from "@mui/material";
 import { CloudData } from "./DashboardMain.component";
-import FilesList from "./FilesList.component";
-import useSelectCards from "./hooks/useSelectCards";
+// import FilesList from "./FilesList.component";
+// import useSelectCards from "./hooks/useSelectCards";
 
 type TrashTabProps = {
   cloudData: CloudData[];
 };
 const TrashTab: React.FC<TrashTabProps> = ({ cloudData }) => {
-  const { onAddSelectedCards, idCardsSelected } = useSelectCards({
-    tabActive: 2,
-    cloudData,
-  });
+  // const { onAddSelectedCards, idCardsSelected } = useSelectCards({
+  //   tabActive: 2,
+  //   cloudData,
+  // });
   return (
     <Box
       sx={{
@@ -23,7 +23,7 @@ const TrashTab: React.FC<TrashTabProps> = ({ cloudData }) => {
         alignItems: "flex-start",
       }}
     >
-      <FilesList
+      {/* <FilesList
         cloudData={cloudData}
         filterType={"folder"}
         isFavorite={false}
@@ -38,7 +38,7 @@ const TrashTab: React.FC<TrashTabProps> = ({ cloudData }) => {
         isTrash={true}
         idCardsSelected={idCardsSelected}
         onAddSelectedCards={onAddSelectedCards}
-      />
+      /> */}
     </Box>
   );
 };

@@ -48,7 +48,7 @@ export default function DashboardFavoritesView() {
       sx={{ flexGrow: 1, px: 2, display: "flex", flexDirection: "column" }}
     >
       <ToolBar
-        // handleSelectAllCards={}
+        handleSelectAllCards={() => console.log("à changer")}
         displayForm={displayForm}
         displayDeleteModale={displayDeleteModale}
         def={true}

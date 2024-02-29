@@ -17,13 +17,12 @@ import styles from "./card.component.module.css";
 
 type CardProps = {
   extension?: string;
-  type: string;
   isFavorite: boolean;
   isSelected?: boolean;
   id: number;
   name: string;
   creation_date: string;
-  onAddSelectedCards: (id: number) => void;
+  // onAddSelectedCards: (id: number) => void;
 };
 
 const Card: FC<CardProps> = ({
@@ -31,21 +30,21 @@ const Card: FC<CardProps> = ({
   isFavorite,
   isSelected,
   id,
-  onAddSelectedCards,
+  // onAddSelectedCards,
   name,
-  type,
+  // type,
   creation_date,
 }) => {
   const displayIcon = () => {
-    if (type === "file" && extension === "mp3") {
+    if (extension === "mp3") {
       return <img src={iconFileAudio} alt="audio-file-icon" />;
     }
-    if (type === "file" && (extension === "png" || extension === "jpeg")) {
+    if (extension === "png" || extension === "jpeg") {
       return <img src={iconFileImage} alt="icon" />;
     }
-    if (type === "folder") {
-      return <img src={iconFolder} alt="icon" />;
-    }
+    // if (type === "folder") {
+    //   return <img src={iconFolder} alt="icon" />;
+    // }
     return <img src={iconFile} alt="icon" />;
   };
 
@@ -68,7 +67,7 @@ const Card: FC<CardProps> = ({
           icon={<img src={checkboxUnchecked} alt="Unchecked" />}
           checkedIcon={<img src={checkboxChecked} alt="Checked" />}
           checked={isSelected}
-          onChange={() => onAddSelectedCards(id)}
+          // onChange={() => onAddSelectedCards(id)}
           inputProps={{ "aria-label": "selected" }}
         />
       </CardActions>

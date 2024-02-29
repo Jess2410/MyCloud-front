@@ -12,6 +12,10 @@ import TrashTab from "./TrashTab.component";
 import MyCloudTab from "./MyCloudTab.component";
 import ToolBar from "./ToolBar.component";
 import DeleteDialog from "../Dialog/DeleteDialog.component";
+import {
+  FileData,
+  FolderData,
+} from "../../views/auth/dashboard/DashboardCloudView";
 
 export type CloudData = {
   id: number;
@@ -33,14 +37,16 @@ type DashboardMainProps = {
   showForm?: boolean;
   typeForm?: string;
   setShowForm?: (value: boolean) => void;
-  data: CloudData[];
+  filesData: FileData[];
+  foldersData: FolderData[];
 };
 const DashboardMain: React.FC<DashboardMainProps> = ({
   tabActive,
   //   showForm,
   //   typeForm,
   //   setShowForm,
-  data,
+  filesData,
+  foldersData,
 }) => {
   const [showForm, setShowForm] = useState(false);
   const [typeForm, setTypeForm] = useState("");
@@ -84,14 +90,14 @@ const DashboardMain: React.FC<DashboardMainProps> = ({
       }}
     >
       <DashboardHeader onLogout={logout} username={getUserName()} />
-      <ToolBar
+      {/* <ToolBar
         tabActive={tabActive}
         // handleSelectAllCards={}
         displayForm={displayForm}
         displayDeleteModale={displayDeleteModale}
         def={true}
         restore={true}
-      />
+      /> */}
       <Grid sx={{ px: 4 }}>
         <Box
           sx={{
@@ -104,14 +110,15 @@ const DashboardMain: React.FC<DashboardMainProps> = ({
           }}
         >
           {tabActive === 1 ? (
-            <MyCloudTab cloudData={data} />
-          ) : tabActive === 2 ? (
-            <FavoritesTab cloudData={data} />
-          ) : tabActive === 3 ? (
-            <TrashTab cloudData={data} />
-          ) : null}
+            <MyCloudTab filesData={filesData} foldersData={foldersData} />
+          ) : // ) : tabActive === 2 ? (
+          //   <FavoritesTab cloudData={data} />
+          // ) : tabActive === 3 ? (
+          //   <TrashTab cloudData={data} />
+          null}
           {showForm && (
             <FormDialog
+              handleCreateFolder={() => console.log("à changer")}
               handleClose={() => setShowForm(false)}
               title={
                 typeForm === "folder" ? "Nouveau dossier" : "Nouveau fichier"

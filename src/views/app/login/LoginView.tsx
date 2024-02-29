@@ -51,7 +51,7 @@ export default function LoginView() {
         const { firstname, lastname, email, id } = response;
         userContext.login({ firstname, lastname, email, id });
         setTimeout(() => {
-          navigate("/dashboard");
+          navigate("/dashboard-cloud");
         }, 2000);
 
         return;
