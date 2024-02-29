@@ -13,9 +13,34 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import logoCloud from "../../assets/icons/logoResponsive.png";
-import { Link } from "react-router-dom";
+import { Link, redirect, useLocation, useNavigate } from "react-router-dom";
 import { Box } from "@mui/material";
 import { useState } from "react";
+
+import fileIcon from "../../assets/icons/file-drawer.svg";
+import starIcon from "../../assets/icons/star-drawer.svg";
+import trashIcon from "../../assets/icons/trash-drawer.svg";
+
+const tabsList = [
+  {
+    name: "Mon Cloud",
+    key: 1,
+    icon: fileIcon,
+    url: "/dashboard-cloud",
+  },
+  {
+    name: "Mes favoris",
+    key: 2,
+    icon: starIcon,
+    url: "/dashboard-favorites",
+  },
+  {
+    name: "Corbeille",
+    key: 3,
+    icon: trashIcon,
+    url: "/dashboard-trash",
+  },
+];
 
 const drawerWidth = 240;
 
@@ -65,21 +90,14 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export type DashboardDrawerProps = {
-  tabsList: TabsListProps[];
-  setTabActive: (key: number) => void;
-};
-
 export interface TabsListProps {
   name: string;
   key: number;
   icon: string;
+  url: string;
 }
 
-export default function DashboardDrawer({
-  tabsList,
-  setTabActive,
-}: DashboardDrawerProps) {
+export default function DashboardDrawer() {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
 
@@ -90,6 +108,10 @@ export default function DashboardDrawer({
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const tabActive = tabsList.find((tab) => pathname.includes(tab.url));
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -196,7 +218,9 @@ export default function DashboardDrawer({
                   justifyContent: open ? "initial" : "center",
                   px: 2.5,
                 }}
-                onClick={() => setTabActive(item.key)}
+                onClick={() => {
+                  navigate(item?.url);
+                }}
               >
                 <ListItemIcon
                   sx={{
@@ -207,7 +231,12 @@ export default function DashboardDrawer({
                 >
                   <img src={item.icon} alt={item.name} />
                 </ListItemIcon>
-                <ListItemText sx={{ opacity: open ? 1 : 0 }}>
+                <ListItemText
+                  sx={{
+                    opacity: open ? 1 : 0,
+                    color: tabActive?.key === item.key ? "red" : "inherit",
+                  }}
+                >
                   <Typography
                     sx={{
                       fontFamily: "Poppins",

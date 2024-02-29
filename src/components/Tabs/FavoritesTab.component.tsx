@@ -11,10 +11,13 @@ const FavoritesTab: React.FC<FavoritesTabProps> = ({ cloudData }) => {
     tabActive: 2,
     cloudData,
   });
+
+  // console.log(cloudData);
+
   return (
     <Box
       sx={{
-        p: 4,
+        pt: 4,
         display: "flex",
         flexWrap: "wrap",
         gap: "16px",

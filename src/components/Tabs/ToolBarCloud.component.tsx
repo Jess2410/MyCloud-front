@@ -4,28 +4,25 @@ import SearchWithFilter from "../SearchBarFilter/SearchBarFilter.component";
 
 import addFile from "../../assets/icons/add-file-icon.png";
 import addFolder from "../../assets/icons/add-folder-icon.png";
-import trash from "../../assets/icons/trash-icon.png";
 import checkBox from "../../assets/icons/checkbox.png";
 import checkBoxNoChecked from "../../assets/icons/checkbox-checked-tool.png";
 import deftrashIcon from "../../assets/icons/trash-definitive-icon.png";
 import React from "react";
 
 type ToolBarProps = {
-  handleSelectAllCards: () => void;
-  tabActive?: number;
+  //   handleSelectAllCards: () => void;
+
   displayForm: (type: string) => void;
   allCheckboxesChecked?: boolean;
-  isTrash: boolean;
   displayDeleteModale: (actionType?: string | null | undefined) => void;
   def: boolean;
   restore: boolean;
 };
-const ToolBar: React.FC<ToolBarProps> = ({
-  handleSelectAllCards,
+const ToolBarCloud: React.FC<ToolBarProps> = ({
+  //   handleSelectAllCards,
   allCheckboxesChecked,
   displayForm,
   displayDeleteModale,
-  isTrash = false,
 }) => {
   return (
     <Box
@@ -76,7 +73,7 @@ const ToolBar: React.FC<ToolBarProps> = ({
             borderRight: "1px solid var(--primary)",
           }}
           //   onClick={() => onSelected()}
-          onClick={() => handleSelectAllCards()}
+          //   onClick={() => handleSelectAllCards()}
         >
           {allCheckboxesChecked ? (
             <IconButton icon={checkBoxNoChecked} />
@@ -84,34 +81,27 @@ const ToolBar: React.FC<ToolBarProps> = ({
             <IconButton icon={checkBox} />
           )}
         </Box>
-        {isTrash ? (
-          <>
-            <IconButton
-              icon={deftrashIcon}
-              onClick={() => displayDeleteModale("def")}
-            />
-            <ButtonBase
-              style={{
-                border: "1.5px solid var(--primary-hover)",
-                padding: "5px",
-                borderRadius: "10px",
-                color: "var(--primary-hover)",
-                fontWeight: "bold",
-              }}
-              onClick={() => displayDeleteModale("restore")}
-            >
-              Restaurer
-            </ButtonBase>
-          </>
-        ) : (
+        <>
           <IconButton
-            icon={trash}
-            onClick={() => displayDeleteModale("none")}
+            icon={deftrashIcon}
+            onClick={() => displayDeleteModale("def")}
           />
-        )}
+          <ButtonBase
+            style={{
+              border: "1.5px solid var(--primary-hover)",
+              padding: "5px",
+              borderRadius: "10px",
+              color: "var(--primary-hover)",
+              fontWeight: "bold",
+            }}
+            onClick={() => displayDeleteModale("restore")}
+          >
+            Restaurer
+          </ButtonBase>
+        </>
       </Box>
     </Box>
   );
 };
 
-export default ToolBar;
+export default ToolBarCloud;

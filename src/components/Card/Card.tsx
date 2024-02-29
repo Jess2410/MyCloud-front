@@ -55,7 +55,7 @@ const Card: FC<CardProps> = ({
   };
 
   return (
-    <CardMui className={styles["card"]}>
+    <CardMui className={isSelected ? styles["card-selected"] : styles["card"]}>
       <CardActions className={styles["card__actions"]}>
         <Checkbox
           icon={<img src={starUnchecked} alt="Unchecked" />}

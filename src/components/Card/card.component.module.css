@@ -6,6 +6,12 @@
   /* margin-bottom: 16px;
   margin-right: 16px; */
 }
+.card-selected {
+  min-width: 184px;
+  height: 232px;
+  background-color: #fff;
+  border: 2px solid var(--primary-hover);
+}
 .card:hover {
   border: 2px solid var(--primary-hover);
 }

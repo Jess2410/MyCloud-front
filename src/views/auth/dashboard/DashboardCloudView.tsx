@@ -1,17 +1,37 @@
-import { Box, Grid } from "@mui/material";
+import Grid from "@mui/material/Grid";
 
-import DashboardHeader from "./DashboardHeader.component";
+import trashIcon from "../../../assets/icons/trash-drawer.svg";
+import starIcon from "../../../assets/icons/star-drawer.svg";
+import fileIcon from "../../../assets/icons/file-drawer.svg";
 import { useContext, useState } from "react";
-import { UserContext } from "../../context/UserContext";
-// import { sendPostRequest } from "../../utils/data";
-// import { DEV_DOMAIN } from "../../constants/url";
-import useLogout from "./hooks/useLogout";
-import FormDialog from "../Dialog/FormDialog.component";
-import FavoritesTab from "./FavoritesTab.component";
-import TrashTab from "./TrashTab.component";
-import MyCloudTab from "./MyCloudTab.component";
-import ToolBar from "./ToolBar.component";
-import DeleteDialog from "../Dialog/DeleteDialog.component";
+import { Box } from "@mui/material";
+import { mockDataCloud } from "./mockDataCloud";
+import { UserContext } from "../../../context/UserContext";
+import DeleteDialog from "../../../components/Dialog/DeleteDialog.component";
+import FormDialog from "../../../components/Dialog/FormDialog.component";
+import MyCloudTab from "../../../components/Tabs/MyCloudTab.component";
+import ToolBar from "../../../components/Tabs/ToolBar.component";
+
+export const tabsList = [
+  {
+    name: "Mon Cloud",
+    key: 1,
+    icon: fileIcon,
+    url: "/dashboard-cloud",
+  },
+  {
+    name: "Mes favoris",
+    key: 2,
+    icon: starIcon,
+    url: "/dashboard-favorites",
+  },
+  {
+    name: "Corbeille",
+    key: 3,
+    icon: trashIcon,
+    url: "/dashboard-trash",
+  },
+];
 
 export type CloudData = {
   id: number;
@@ -28,43 +48,17 @@ export type CloudData = {
   parent_folder_id?: number;
 };
 
-type DashboardMainProps = {
-  tabActive: number;
-  showForm?: boolean;
-  typeForm?: string;
-  setShowForm?: (value: boolean) => void;
-  data: CloudData[];
-};
-const DashboardMain: React.FC<DashboardMainProps> = ({
-  tabActive,
-  //   showForm,
-  //   typeForm,
-  //   setShowForm,
-  data,
-}) => {
+export default function DashboardCloudView() {
   const [showForm, setShowForm] = useState(false);
   const [typeForm, setTypeForm] = useState("");
   const userContext = useContext(UserContext);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [actionType, setActionType] = useState("");
-  const [allCardsSelectedCloud, setAllCardsSelectedCloud] = useState([]);
-  const logout = useLogout();
 
-  const getUserName = () => {
-    if (userContext?.user) {
-      const { firstname, lastname } = userContext.user;
-      return `${firstname} ${lastname}`;
-    }
-    return "stranger";
-  };
-
-  // const onSelectedCardsCloud = () => {
-  //   setAllCardsSelectedCloud(data.map((d)=>d.id))
-  // };
   const displayForm = (type: string) => {
     setShowForm(!showForm);
     setTypeForm(type);
-  };
+  }; //TODO sortir dans un composant a part car réutilisés sur les 3 pages (peu etre directement dan sla toolbar en fait)
 
   const displayDeleteModale = (actionType: string | null | undefined) => {
     setShowDeleteModal(!showDeleteModal);
@@ -72,39 +66,32 @@ const DashboardMain: React.FC<DashboardMainProps> = ({
       setActionType(actionType);
     }
   };
-
   return (
     <Box
       component="main"
       sx={{ flexGrow: 1, px: 2, display: "flex", flexDirection: "column" }}
     >
-      <DashboardHeader onLogout={logout} username={getUserName()} />
       <ToolBar
-        tabActive={tabActive}
         // handleSelectAllCards={}
         displayForm={displayForm}
         displayDeleteModale={displayDeleteModale}
         def={true}
         restore={true}
+        isTrash={false}
       />
-      <Grid sx={{ px: 4 }}>
+      <Grid>
         <Box
           sx={{
-            pt: 4,
+            // pt: 4,
             display: "flex",
             flexWrap: "wrap",
             gap: "16px",
-            justifyContent: "flex-start",
+            justifyContent: "center",
             alignItems: "flex-start",
           }}
         >
-          {tabActive === 1 ? (
-            <MyCloudTab cloudData={data} />
-          ) : tabActive === 2 ? (
-            <FavoritesTab cloudData={data} />
-          ) : tabActive === 3 ? (
-            <TrashTab cloudData={data} />
-          ) : null}
+          <MyCloudTab cloudData={mockDataCloud} />
+          {/* TODO Les 3 tabs se servent à rien je pense, meme cdoe dans les 3 remettre directement le code ici dans les 3 pages ou fair eun composant "CardList" réutilsié dans les 3 */}
           {showForm && (
             <FormDialog
               handleClose={() => setShowForm(false)}
@@ -123,7 +110,4 @@ const DashboardMain: React.FC<DashboardMainProps> = ({
       </Grid>
     </Box>
   );
-};
-
-export default DashboardMain;
-//TODO unused
+}
