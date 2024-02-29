@@ -26,12 +26,14 @@ const Layout: React.FC<DashboardMainProps> = ({ children }) => {
       sx={{ display: "flex", flexDirection: "column", height: "100vh", px: 6 }}
     >
       <CssBaseline />
-      <Box sx={{ display: "flex", flexGrow: 1 }}>
+      <Box sx={{ display: "flex", flexGrow: 1, justifyContent: "center" }}>
         <DashboardDrawer />
-        <Box sx={{ display: "flex", flexGrow: 1, flexDirection: "column" }}>
-          <DashboardHeader onLogout={logout} username={getUserName()} />
-          {/*TODO move header ici et retravailler*/}
-          {children}
+        <Box sx={{ maxWidth: "1200px" }}>
+          <Box sx={{ display: "flex", flexGrow: 1, flexDirection: "column" }}>
+            <DashboardHeader onLogout={logout} username={getUserName()} />
+            {/*TODO move header ici et retravailler*/}
+            {children}
+          </Box>
         </Box>
       </Box>
     </Box>

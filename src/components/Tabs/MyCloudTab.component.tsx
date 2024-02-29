@@ -16,6 +16,7 @@ const MyCloudTab: React.FC<MyCloudTabProps> = ({ cloudData }) => {
     <Box
       sx={{
         pt: 4,
+        maxWidth: "800px",
         display: "flex",
         flexWrap: "wrap",
         gap: "16px",

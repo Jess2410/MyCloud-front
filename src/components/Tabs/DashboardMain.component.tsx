@@ -76,7 +76,12 @@ const DashboardMain: React.FC<DashboardMainProps> = ({
   return (
     <Box
       component="main"
-      sx={{ flexGrow: 1, px: 2, display: "flex", flexDirection: "column" }}
+      sx={{
+        flexGrow: 1,
+        px: 2,
+        display: "flex",
+        flexDirection: "column",
+      }}
     >
       <DashboardHeader onLogout={logout} username={getUserName()} />
       <ToolBar

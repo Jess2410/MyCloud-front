@@ -18,6 +18,7 @@ const FavoritesTab: React.FC<FavoritesTabProps> = ({ cloudData }) => {
     <Box
       sx={{
         pt: 4,
+        maxWidth: "800px",
         display: "flex",
         flexWrap: "wrap",
         gap: "16px",

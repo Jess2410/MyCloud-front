@@ -211,7 +211,17 @@ export default function DashboardDrawer() {
         <Divider />
         <List>
           {tabsList.map((item) => (
-            <ListItem key={item.key} disablePadding sx={{ display: "block" }}>
+            <ListItem
+              key={item.key}
+              disablePadding
+              sx={{
+                display: "block",
+                boxShadow:
+                  tabActive?.key === item.key
+                    ? "rgba(229, 246, 247, 0.4)  0px 30px 60px -12px inset, rgba(229, 246, 247, 0.2)  0px 18px 36px -18px inset;"
+                    : "inherit",
+              }}
+            >
               <ListItemButton
                 sx={{
                   minHeight: 48,
@@ -234,7 +244,6 @@ export default function DashboardDrawer() {
                 <ListItemText
                   sx={{
                     opacity: open ? 1 : 0,
-                    color: tabActive?.key === item.key ? "red" : "inherit",
                   }}
                 >
                   <Typography
