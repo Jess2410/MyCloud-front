@@ -5,6 +5,7 @@ import {
 import FilesList from "./FilesList.component";
 // import useSelectCards from "./hooks/useSelectCards";
 import { Box } from "@mui/material";
+import FoldersList from "./FoldersList.component";
 
 type MyCloudTabProps = {
   filesData: FileData[];
@@ -30,7 +31,7 @@ const MyCloudTab: React.FC<MyCloudTabProps> = ({ filesData, foldersData }) => {
         alignItems: "flex-start",
       }}
     >
-      <FilesList
+      <FoldersList
         foldersData={foldersData}
         isFavorite={false}
         isTrash={false}

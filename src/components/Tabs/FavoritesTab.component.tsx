@@ -1,12 +1,23 @@
 import { Box } from "@mui/material";
-import { CloudData } from "./DashboardMain.component";
+import {
+  FileData,
+  FolderData,
+} from "../../views/auth/dashboard/DashboardCloudView";
+// import FoldersList from "./FoldersList.component";
+// import FilesList from "./FilesList.component";
 // import FilesList from "./FilesList.component";
 // import useSelectCards from "./hooks/useSelectCards";
 
 type FavoritesTabProps = {
-  cloudData: CloudData[];
+  filesData: FileData[];
+  foldersData: FolderData[];
 };
-const FavoritesTab: React.FC<FavoritesTabProps> = ({ cloudData }) => {
+const FavoritesTab: React.FC<FavoritesTabProps> = (
+  {
+    // filesData,
+    // foldersData,
+  }
+) => {
   // const { onAddSelectedCards, idCardsSelected } = useSelectCards({
   //   tabActive: 2,
   //   cloudData,
@@ -26,21 +37,19 @@ const FavoritesTab: React.FC<FavoritesTabProps> = ({ cloudData }) => {
         alignItems: "flex-start",
       }}
     >
-      {/* <FilesList
-        cloudData={cloudData}
-        filterType={"folder"}
-        isFavorite={true}
+      {/* <FoldersList
+        foldersData={foldersData}
+        isFavorite={false}
         isTrash={false}
-        idCardsSelected={idCardsSelected}
-        onAddSelectedCards={onAddSelectedCards}
+        // idCardsSelected={idCardsSelected}
+        // onAddSelectedCards={onAddSelectedCards}
       />
       <FilesList
-        cloudData={cloudData}
-        filterType={"file"}
-        isFavorite={true}
+        filesData={filesData}
+        isFavorite={false}
         isTrash={false}
-        idCardsSelected={idCardsSelected}
-        onAddSelectedCards={onAddSelectedCards}
+        // idCardsSelected={idCardsSelected}
+        // onAddSelectedCards={onAddSelectedCards}
       /> */}
     </Box>
   );
