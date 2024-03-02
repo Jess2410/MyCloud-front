@@ -12,8 +12,6 @@ type FilesListProps = {
 
 const FilesList: React.FC<FilesListProps> = ({
   filesData,
-  isFavorite,
-  isTrash,
   // idCardsSelected,
   // onAddSelectedCards,
 }) => {
@@ -24,7 +22,7 @@ const FilesList: React.FC<FilesListProps> = ({
           <Card
             key={data.id}
             id={data.id}
-            // isSelected={idCardsSelected.includes(data.id)}
+            // allFoldersSelected={idCardsSelected.includes(data.id)}
             creation_date={data.creation_date}
             isFavorite={data.isFavorite}
             name={data.name}

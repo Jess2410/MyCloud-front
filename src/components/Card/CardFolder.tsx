@@ -4,10 +4,7 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import iconFileImage from "../../assets/icons/file-img.png";
 import iconFolder from "../../assets/icons/folder.png";
-import iconFileAudio from "../../assets/icons/file-audio.png";
-import iconFile from "../../assets/icons/file.png";
 import Checkbox from "@mui/material/Checkbox";
 import starChecked from "../../assets/icons/Vectorstar-checked.svg";
 import starUnchecked from "../../assets/icons/Vectorstar-no-checked.svg";
@@ -18,17 +15,19 @@ import styles from "./card.component.module.css";
 type CardFolderProps = {
   extension?: string;
   isFavorite: boolean;
-  isSelected?: boolean;
+  allFoldersSelected?: boolean;
   id: number;
   name: string;
   creation_date: string;
+  setAllFoldersSelected: () => void;
+  // handleFolderDoubleClick: (id: number) => void;
   // onAddSelectedCards: (id: number) => void;
 };
 
 const CardFolder: FC<CardFolderProps> = ({
-  extension,
   isFavorite,
-  isSelected,
+  allFoldersSelected,
+  setAllFoldersSelected,
   id,
   // onAddSelectedCards,
   name,
@@ -45,7 +44,9 @@ const CardFolder: FC<CardFolderProps> = ({
   };
 
   return (
-    <CardMui className={isSelected ? styles["card-selected"] : styles["card"]}>
+    <CardMui
+      className={allFoldersSelected ? styles["card-selected"] : styles["card"]}
+    >
       <CardActions className={styles["card__actions"]}>
         <Checkbox
           icon={<img src={starUnchecked} alt="Unchecked" />}
@@ -57,8 +58,9 @@ const CardFolder: FC<CardFolderProps> = ({
         <Checkbox
           icon={<img src={checkboxUnchecked} alt="Unchecked" />}
           checkedIcon={<img src={checkboxChecked} alt="Checked" />}
-          checked={isSelected}
+          checked={allFoldersSelected}
           // onChange={() => onAddSelectedCards(id)}
+          // onChange={setAllFoldersSelected}
           inputProps={{ "aria-label": "selected" }}
         />
       </CardActions>

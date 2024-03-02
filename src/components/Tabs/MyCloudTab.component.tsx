@@ -10,9 +10,16 @@ import FoldersList from "./FoldersList.component";
 type MyCloudTabProps = {
   filesData: FileData[];
   foldersData: FolderData[];
+  setAllFoldersSelected: () => void;
+  allFoldersSelected: boolean;
 };
-const MyCloudTab: React.FC<MyCloudTabProps> = ({ filesData, foldersData }) => {
-  console.log("🚀 ~ foldersData:", foldersData);
+const MyCloudTab: React.FC<MyCloudTabProps> = ({
+  filesData,
+  foldersData,
+  setAllFoldersSelected,
+  allFoldersSelected,
+}) => {
+  // console.log("🚀 ~ foldersData:", foldersData);
   // const { onAddSelectedCards, idCardsSelected } = useSelectCards({
   //   tabActive: 2,
   //   filesData,
@@ -35,6 +42,8 @@ const MyCloudTab: React.FC<MyCloudTabProps> = ({ filesData, foldersData }) => {
         foldersData={foldersData}
         isFavorite={false}
         isTrash={false}
+        allFoldersSelected={allFoldersSelected}
+        setAllFoldersSelected={setAllFoldersSelected}
         // idCardsSelected={idCardsSelected}
         // onAddSelectedCards={onAddSelectedCards}
       />

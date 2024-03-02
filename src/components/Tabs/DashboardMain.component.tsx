@@ -39,6 +39,8 @@ type DashboardMainProps = {
   setShowForm?: (value: boolean) => void;
   filesData: FileData[];
   foldersData: FolderData[];
+  setAllFoldersSelected: () => void;
+  allFoldersSelected: boolean;
 };
 const DashboardMain: React.FC<DashboardMainProps> = ({
   tabActive,
@@ -47,6 +49,8 @@ const DashboardMain: React.FC<DashboardMainProps> = ({
   //   setShowForm,
   filesData,
   foldersData,
+  setAllFoldersSelected,
+  allFoldersSelected,
 }) => {
   const [showForm, setShowForm] = useState(false);
   const [typeForm, setTypeForm] = useState("");
@@ -110,7 +114,12 @@ const DashboardMain: React.FC<DashboardMainProps> = ({
           }}
         >
           {tabActive === 1 ? (
-            <MyCloudTab filesData={filesData} foldersData={foldersData} />
+            <MyCloudTab
+              filesData={filesData}
+              foldersData={foldersData}
+              allFoldersSelected={allFoldersSelected}
+              setAllFoldersSelected={setAllFoldersSelected}
+            />
           ) : // ) : tabActive === 2 ? (
           //   <FavoritesTab cloudData={data} />
           // ) : tabActive === 3 ? (

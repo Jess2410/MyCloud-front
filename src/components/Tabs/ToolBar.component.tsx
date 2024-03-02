@@ -19,10 +19,14 @@ type ToolBarProps = {
   displayDeleteModale: (actionType?: string | null | undefined) => void;
   def: boolean;
   restore: boolean;
+  setAllFoldersSelected: () => void;
+  allFoldersSelected: boolean;
 };
 const ToolBar: React.FC<ToolBarProps> = ({
-  handleSelectAllCards,
+  // handleSelectAllCards,
   allCheckboxesChecked,
+  allFoldersSelected,
+  setAllFoldersSelected,
   displayForm,
   displayDeleteModale,
   isTrash = false,
@@ -75,10 +79,10 @@ const ToolBar: React.FC<ToolBarProps> = ({
           sx={{
             borderRight: "1px solid var(--primary)",
           }}
-          //   onClick={() => onSelected()}
-          onClick={() => handleSelectAllCards()}
+          onClick={setAllFoldersSelected}
+          // onClick={() => handleSelectAllCards()}
         >
-          {allCheckboxesChecked ? (
+          {allFoldersSelected ? (
             <IconButton icon={checkBoxNoChecked} />
           ) : (
             <IconButton icon={checkBox} />

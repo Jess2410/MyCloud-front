@@ -4,23 +4,30 @@ import {
   FolderData,
 } from "../../views/auth/dashboard/DashboardCloudView";
 import CardFolder from "../Card/CardFolder";
+import { useNavigate } from "react-router-dom";
 
 type FoldersListProps = {
   isFavorite: boolean;
   isTrash: boolean;
   foldersData: FolderData[];
+  setAllFoldersSelected: () => void;
+  allFoldersSelected: boolean;
   // idCardsSelected: number[];
   // onAddSelectedCards: (id: number) => void;
 };
 
 const FoldersList: React.FC<FoldersListProps> = ({
   foldersData,
-  isFavorite,
-  isTrash,
+  setAllFoldersSelected,
+  allFoldersSelected,
   // idCardsSelected,
   // onAddSelectedCards,
 }) => {
-  console.log("🚀 ~ foldersData:", foldersData);
+  const navigate = useNavigate();
+
+  const handleFolderDoubleClick = (folderId: number) => {
+    navigate(`/dashboard-folder/${folderId}`);
+  };
 
   return (
     <>
@@ -28,10 +35,13 @@ const FoldersList: React.FC<FoldersListProps> = ({
         <CardFolder
           key={data.id}
           id={data.id}
-          // isSelected={idCardsSelected.includes(data.id)}
+          allFoldersSelected={allFoldersSelected}
+          setAllFoldersSelected={setAllFoldersSelected}
+          // allFoldersSelected={idCardsSelected.includes(data.id)}
           creation_date={data.creation_date}
           isFavorite={data.isFavorite}
           name={data.name}
+          // onDoubleClick={() => handleFolderDoubleClick(data.id)}
           // onAddSelectedCards={() => onAddSelectedCards(data.id)}
         />
       ))}

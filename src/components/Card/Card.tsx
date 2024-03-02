@@ -18,7 +18,7 @@ import styles from "./card.component.module.css";
 type CardProps = {
   extension?: string;
   isFavorite: boolean;
-  isSelected?: boolean;
+  allFoldersSelected?: boolean;
   id: number;
   name: string;
   creation_date: string;
@@ -28,7 +28,7 @@ type CardProps = {
 const Card: FC<CardProps> = ({
   extension,
   isFavorite,
-  isSelected,
+  allFoldersSelected,
   id,
   // onAddSelectedCards,
   name,
@@ -54,7 +54,9 @@ const Card: FC<CardProps> = ({
   };
 
   return (
-    <CardMui className={isSelected ? styles["card-selected"] : styles["card"]}>
+    <CardMui
+      className={allFoldersSelected ? styles["card-selected"] : styles["card"]}
+    >
       <CardActions className={styles["card__actions"]}>
         <Checkbox
           icon={<img src={starUnchecked} alt="Unchecked" />}
@@ -66,7 +68,7 @@ const Card: FC<CardProps> = ({
         <Checkbox
           icon={<img src={checkboxUnchecked} alt="Unchecked" />}
           checkedIcon={<img src={checkboxChecked} alt="Checked" />}
-          checked={isSelected}
+          checked={allFoldersSelected}
           // onChange={() => onAddSelectedCards(id)}
           inputProps={{ "aria-label": "selected" }}
         />

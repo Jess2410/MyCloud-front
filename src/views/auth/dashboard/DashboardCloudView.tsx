@@ -5,7 +5,6 @@ import starIcon from "../../../assets/icons/star-drawer.svg";
 import fileIcon from "../../../assets/icons/file-drawer.svg";
 import { useContext, useEffect, useState } from "react";
 import { Box } from "@mui/material";
-import { mockDataCloud } from "./mockDataCloud";
 import { UserContext } from "../../../context/UserContext";
 import DeleteDialog from "../../../components/Dialog/DeleteDialog.component";
 import FormDialog from "../../../components/Dialog/FormDialog.component";
@@ -14,7 +13,6 @@ import ToolBar from "../../../components/Tabs/ToolBar.component";
 import { toast } from "react-toastify";
 import { sendGetRequest, sendPostRequest } from "../../../utils/data";
 import { API_BASE_URL } from "../../../constants/url";
-import { useNavigate } from "react-router-dom";
 
 export const tabsList = [
   {
@@ -60,6 +58,8 @@ export default function DashboardCloudView() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [actionType, setActionType] = useState("");
   const [folders, setFolders] = useState([]);
+  const [allFoldersSelected, setAllFoldersSelected] = useState(false);
+  const [selectedFoldersIds, setSelectedFoldersIds] = useState<number[]>([]);
 
   const [files, setFiles] = useState([]);
 
@@ -124,7 +124,20 @@ export default function DashboardCloudView() {
     };
     getFolders();
   }, []);
-  console.log("🚀 ~ DashboardCloudView ~ folders:", folders);
+
+  useEffect(() => {
+    if (allFoldersSelected) {
+      setSelectedFoldersIds(folders?.map((folder: FolderData) => folder.id));
+    } else {
+      setSelectedFoldersIds([]);
+    }
+  }, [allFoldersSelected]);
+  console.log(
+    "🚀 ~ DashboardCloudView ~ allFoldersSelected:",
+    allFoldersSelected
+  );
+
+  console.log("🚀 ~ useEffect ~ selectedFoldersIds:", selectedFoldersIds);
   return (
     <Box
       component="main"
@@ -132,6 +145,8 @@ export default function DashboardCloudView() {
     >
       <ToolBar
         handleSelectAllCards={() => console.log("à changer")}
+        setAllFoldersSelected={() => setAllFoldersSelected(!allFoldersSelected)}
+        allFoldersSelected={allFoldersSelected}
         displayForm={displayForm}
         displayDeleteModale={displayDeleteModale}
         def={true}
@@ -149,7 +164,14 @@ export default function DashboardCloudView() {
             alignItems: "flex-start",
           }}
         >
-          <MyCloudTab foldersData={folders} filesData={files} />
+          <MyCloudTab
+            foldersData={folders}
+            filesData={files}
+            allFoldersSelected={allFoldersSelected}
+            setAllFoldersSelected={() =>
+              setAllFoldersSelected(!allFoldersSelected)
+            }
+          />
           {/* TODO Les 3 tabs se servent à rien je pense, meme cdoe dans les 3 remettre directement le code ici dans les 3 pages ou fair eun composant "CardList" réutilsié dans les 3 */}
           {showForm && (
             <FormDialog
