@@ -76,7 +76,7 @@ const CardFolder: FC<CardFolderProps> = ({
           icon={<img src={checkboxUnchecked} alt="Unchecked" />}
           checkedIcon={<img src={checkboxChecked} alt="Checked" />}
           checked={isFolderSelected}
-          onChange={() => handleSelect}
+          onChange={handleSelect}
           inputProps={{ "aria-label": "selected" }}
         />
       </CardActions>
