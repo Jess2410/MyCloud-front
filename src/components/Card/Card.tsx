@@ -18,6 +18,7 @@ import styles from "./card.component.module.css";
 type CardProps = {
   extension?: string;
   isFavorite: boolean;
+  moveToFavorites: () => void;
   allFoldersSelected?: boolean;
   id: number;
   name: string;
@@ -28,6 +29,7 @@ type CardProps = {
 const Card: FC<CardProps> = ({
   extension,
   isFavorite,
+  moveToFavorites,
   allFoldersSelected,
   id,
   // onAddSelectedCards,
@@ -48,11 +50,6 @@ const Card: FC<CardProps> = ({
     return <img src={iconFile} alt="icon" />;
   };
 
-  const onFavorite = (event: ChangeEvent<HTMLInputElement>) => {
-    isFavorite = !isFavorite;
-    //TODO call API
-  };
-
   return (
     <CardMui
       className={allFoldersSelected ? styles["card-selected"] : styles["card"]}
@@ -62,7 +59,7 @@ const Card: FC<CardProps> = ({
           icon={<img src={starUnchecked} alt="Unchecked" />}
           checkedIcon={<img src={starChecked} alt="Checked" />}
           checked={isFavorite}
-          onChange={onFavorite}
+          onChange={moveToFavorites}
           inputProps={{ "aria-label": "favorite" }}
         />
         <Checkbox

@@ -35,24 +35,24 @@ const AppRouter = () => {
         </Layout>
       ),
     },
-    {
-      path: "/dashboard-favorites",
-      // element: user ? <DashboardCloudView /> : <LoginView />,
-      element: (
-        <Layout>
-          <DashboardFavoritesView />
-        </Layout>
-      ),
-    },
-    {
-      path: "/dashboard-trash",
-      // element: user ? <DashboardCloudView /> : <LoginView />,
-      element: (
-        <Layout>
-          <DashboardTrashView />
-        </Layout>
-      ),
-    },
+    // {
+    //   path: "/dashboard-favorites",
+    //   // element: user ? <DashboardCloudView /> : <LoginView />,
+    //   element: (
+    //     <Layout>
+    //       <DashboardFavoritesView />
+    //     </Layout>
+    //   ),
+    // },
+    // {
+    //   path: "/dashboard-trash",
+    //   // element: user ? <DashboardCloudView /> : <LoginView />,
+    //   element: (
+    //     <Layout>
+    //       <DashboardTrashView />
+    //     </Layout>
+    //   ),
+    // },
     {
       path: "/about",
       element: <AboutView />,

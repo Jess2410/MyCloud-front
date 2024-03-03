@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useState } from "react";
+import { ChangeEvent, Dispatch, FC, SetStateAction } from "react";
 import { Card as CardMui } from "@mui/material";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -13,9 +13,16 @@ import checkboxUnchecked from "../../assets/icons/Vectorcheckbox-no-checked.png"
 import styles from "./card.component.module.css";
 
 type CardFolderProps = {
-  extension?: string;
   isFavorite: boolean;
-  allFoldersSelected?: boolean;
+  isFolderSelected: boolean;
+  onSelectFolder: (folderId: number, isFolderSelected: boolean) => void;
+  handleSelectFolder: () => void;
+  setIsFolderSelected: Dispatch<SetStateAction<boolean>>;
+  moveToFavorites: (
+    e: React.ChangeEvent<HTMLInputElement>,
+    id: number
+  ) => Promise<void>;
+  allFoldersSelected: boolean;
   id: number;
   name: string;
   creation_date: string;
@@ -26,6 +33,11 @@ type CardFolderProps = {
 
 const CardFolder: FC<CardFolderProps> = ({
   isFavorite,
+  isFolderSelected,
+  onSelectFolder,
+  handleSelectFolder,
+  setIsFolderSelected,
+  moveToFavorites,
   allFoldersSelected,
   setAllFoldersSelected,
   id,
@@ -34,13 +46,18 @@ const CardFolder: FC<CardFolderProps> = ({
   // type,
   creation_date,
 }) => {
-  const displayIcon = () => {
-    return <img src={iconFolder} alt="icon" />;
+  const handleMoveToFavoritesChange = (
+    event: ChangeEvent<HTMLInputElement>
+  ) => {
+    moveToFavorites(event, id);
   };
 
-  const onFavorite = (event: ChangeEvent<HTMLInputElement>) => {
-    isFavorite = !isFavorite;
-    //TODO call API
+  const handleSelect = () => {
+    onSelectFolder(id, !isFolderSelected);
+  };
+
+  const displayIcon = () => {
+    return <img src={iconFolder} alt="icon" />;
   };
 
   return (
@@ -52,15 +69,14 @@ const CardFolder: FC<CardFolderProps> = ({
           icon={<img src={starUnchecked} alt="Unchecked" />}
           checkedIcon={<img src={starChecked} alt="Checked" />}
           checked={isFavorite}
-          onChange={onFavorite}
+          onChange={handleMoveToFavoritesChange}
           inputProps={{ "aria-label": "favorite" }}
         />
         <Checkbox
           icon={<img src={checkboxUnchecked} alt="Unchecked" />}
           checkedIcon={<img src={checkboxChecked} alt="Checked" />}
-          checked={allFoldersSelected}
-          // onChange={() => onAddSelectedCards(id)}
-          // onChange={setAllFoldersSelected}
+          checked={isFolderSelected}
+          onChange={() => handleSelect}
           inputProps={{ "aria-label": "selected" }}
         />
       </CardActions>

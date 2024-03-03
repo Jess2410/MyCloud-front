@@ -28,6 +28,28 @@ export const sendPostRequest = async (
   }
 };
 
+export const sendPatchRequest = async (
+  url: string,
+  headers?: OptionalHeaders,
+  body?: PostBody
+) => {
+  try {
+    const request = await fetch(url, {
+      method: "PATCH",
+      headers: {
+        "Content-type": "application/json",
+        Accept: "application/json",
+        ...headers,
+      },
+      body: JSON.stringify(body),
+    });
+    const data = await request.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const sendGetRequest = async (url: string, headers: OptionalHeaders) => {
   try {
     const request = await fetch(url, {
