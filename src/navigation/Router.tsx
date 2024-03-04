@@ -13,6 +13,7 @@ import DashboardCloudView from "../views/auth/dashboard/DashboardCloudView";
 import DashboardFavoritesView from "../views/auth/dashboard/DashboardFavoritesView";
 import DashboardTrashView from "../views/auth/dashboard/DashboardTrashView";
 import Layout from "../views/Layout.component";
+import DashboardFolderView from "../views/auth/dashboard/DashboardFolderView";
 
 const AppRouter = () => {
   const { user } = useContext(UserContext);
@@ -35,24 +36,32 @@ const AppRouter = () => {
         </Layout>
       ),
     },
-    // {
-    //   path: "/dashboard-favorites",
-    //   // element: user ? <DashboardCloudView /> : <LoginView />,
-    //   element: (
-    //     <Layout>
-    //       <DashboardFavoritesView />
-    //     </Layout>
-    //   ),
-    // },
-    // {
-    //   path: "/dashboard-trash",
-    //   // element: user ? <DashboardCloudView /> : <LoginView />,
-    //   element: (
-    //     <Layout>
-    //       <DashboardTrashView />
-    //     </Layout>
-    //   ),
-    // },
+    {
+      path: "/dashboard/folders/:id",
+      element: (
+        <Layout>
+          <DashboardFolderView />
+        </Layout>
+      ),
+    },
+    {
+      path: "/dashboard-favorites",
+      // element: user ? <DashboardCloudView /> : <LoginView />,
+      element: (
+        <Layout>
+          <DashboardFavoritesView />
+        </Layout>
+      ),
+    },
+    {
+      path: "/dashboard-trash",
+      // element: user ? <DashboardCloudView /> : <LoginView />,
+      element: (
+        <Layout>
+          <DashboardTrashView />
+        </Layout>
+      ),
+    },
     {
       path: "/about",
       element: <AboutView />,

@@ -17,7 +17,14 @@ const FilterButton = styled(IconButton)`
   padding: 0 8px;
 `;
 
-const SearchWithFilter = () => {
+type SearchBarProps = {
+  handleSearchInputChange: any;
+  searchValue: string;
+};
+const SearchWithFilter = ({
+  handleSearchInputChange,
+  searchValue,
+}: SearchBarProps) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleOpenMenu = (event: any) => {
@@ -45,6 +52,8 @@ const SearchWithFilter = () => {
       <SearchInput
         placeholder="Recherche..."
         inputProps={{ "aria-label": "search" }}
+        value={searchValue}
+        onChange={(e) => handleSearchInputChange(e)}
       />
       <IconButton>
         <SearchIcon />

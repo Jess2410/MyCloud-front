@@ -13,7 +13,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import logoCloud from "../../assets/icons/logoResponsive.png";
-import { Link, redirect, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Box } from "@mui/material";
 import { useState } from "react";
 
@@ -21,7 +21,7 @@ import fileIcon from "../../assets/icons/file-drawer.svg";
 import starIcon from "../../assets/icons/star-drawer.svg";
 import trashIcon from "../../assets/icons/trash-drawer.svg";
 
-const tabsList = [
+export const tabsList = [
   {
     name: "Mon Cloud",
     key: 1,

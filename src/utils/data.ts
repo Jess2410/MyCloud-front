@@ -28,6 +28,31 @@ export const sendPostRequest = async (
   }
 };
 
+export const sendPostFileRequest = async (
+  url: string,
+  headers?: OptionalHeaders,
+  body?: PostBody
+) => {
+  try {
+    const formData = new FormData();
+    for (const key in body) {
+      formData.append(key, body[key]);
+    }
+
+    const request = await fetch(url, {
+      method: "POST",
+      headers: {
+        ...headers,
+      },
+      body: formData,
+    });
+    const data = await request.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const sendPatchRequest = async (
   url: string,
   headers?: OptionalHeaders,

@@ -10,38 +10,38 @@ import { API_BASE_URL } from "../../constants/url";
 import { sendPatchRequest } from "../../utils/data";
 import { useNavigate } from "react-router-dom";
 
-type DeleteDialogProps = {
+type DeleteDialogTrashProps = {
   handleClose: () => void;
   actionType?: string | null | undefined;
   deletedFolders: FolderData[];
 };
 
-const DeleteDialog: FC<DeleteDialogProps> = ({
+const DeleteDialogTrash: FC<DeleteDialogTrashProps> = ({
   handleClose,
   actionType,
   deletedFolders,
 }) => {
   const navigate = useNavigate();
 
-  const moveFoldersInTrash = async () => {
+  const deleteFoldersDefinitively = async () => {
     const loader = toast.loading("Veuillez patienter...");
     try {
       const token = localStorage.getItem("@userToken");
-      const response = await sendPatchRequest(
-        `${API_BASE_URL}/folders/isTrash`,
-        { Authorization: `Bearer ${token}` },
-        { id: deletedFolders }
-      );
-      if (response.status === 200) {
-        toast.update(loader, {
-          render: response.message,
-          type: "success",
-          autoClose: 2000,
-          isLoading: false,
-        });
-        navigate("/dashboard-trash"); //TODO implémentation à refaire
-        return;
-      }
+      // const response = await sendDeleteRequest(
+      //   `${API_BASE_URL}/folders/isTrash`,
+      //   { Authorization: `Bearer ${token}` },
+      //   { id: deletedFolders }
+      // );
+      // if (response.status === 200) {
+      //   toast.update(loader, {
+      //     render: response.message,
+      //     type: "success",
+      //     autoClose: 2000,
+      //     isLoading: false,
+      //   });
+      //   navigate("/dashboard-trash"); //TODO implémentation à refaire
+      //   return;
+      // }
     } catch (error) {
       console.log(error);
     }
@@ -55,18 +55,12 @@ const DeleteDialog: FC<DeleteDialogProps> = ({
     >
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          {actionType === "def"
-            ? "Êtes-vous sûr(e) de vouloir supprimer définitivement ce(s) élément(s) ?"
-            : actionType === "restore"
-            ? "Êtes-vous sûr(e) de vouloir restaurer ce(s) élément(s) ?"
-            : actionType === "none"
-            ? "Êtes-vous sûr(e) de vouloir supprimer ce(s) élément(s) ?"
-            : null}
+          "Êtes-vous sûr(e) de vouloir supprimer ce(s) élément(s) ?"
         </DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Retour</Button>
-        <Button onClick={moveFoldersInTrash} autoFocus>
+        <Button onClick={deleteFoldersDefinitively} autoFocus>
           {actionType === "restore" ? "Restaurer" : "Supprimer"}
         </Button>
       </DialogActions>
@@ -74,4 +68,4 @@ const DeleteDialog: FC<DeleteDialogProps> = ({
   );
 };
 
-export default DeleteDialog;
+export default DeleteDialogTrash;

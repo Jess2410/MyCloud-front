@@ -49,7 +49,7 @@ const ToolBarCloud: React.FC<ToolBarProps> = ({
         <IconButton icon={addFolder} onClick={() => displayForm("folder")} />
         <IconButton icon={addFile} onClick={() => displayForm("file")} />
       </Box>
-      <SearchWithFilter />
+      {/* <SearchWithFilter /> */}
       <Box
         sx={{
           display: "flex",

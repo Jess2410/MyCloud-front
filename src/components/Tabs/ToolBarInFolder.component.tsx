@@ -10,7 +10,7 @@ import checkBoxNoChecked from "../../assets/icons/checkbox-checked-tool.png";
 import deftrashIcon from "../../assets/icons/trash-definitive-icon.png";
 import React from "react";
 
-type ToolBarProps = {
+type ToolBarInFolderProps = {
   handleSelectAllCards: () => void;
   tabActive?: number;
   allCheckboxesChecked?: boolean;
@@ -21,12 +21,8 @@ type ToolBarProps = {
   allFoldersSelected: boolean;
   handleSearchInputChange: (event: any) => void;
   searchValue: string;
-  setShowFormFolder: () => void;
-  setShowFormFile: () => void;
 };
-const ToolBar: React.FC<ToolBarProps> = ({
-  setShowFormFolder,
-  setShowFormFile,
+const ToolBarInFolder: React.FC<ToolBarInFolderProps> = ({
   handleSelectAllCards,
   allFoldersSelected,
   displayDeleteModale,
@@ -56,8 +52,8 @@ const ToolBar: React.FC<ToolBarProps> = ({
           alignItems: "center",
         }}
       >
-        <IconButton icon={addFolder} onClick={setShowFormFolder} />
-        <IconButton icon={addFile} onClick={setShowFormFile} />
+        <IconButton icon={addFolder} onClick={""} />
+        <IconButton icon={addFile} onClick={""} />
       </Box>
       <SearchWithFilter
         searchValue={searchValue}
@@ -124,4 +120,4 @@ const ToolBar: React.FC<ToolBarProps> = ({
   );
 };
 
-export default ToolBar;
+export default ToolBarInFolder;

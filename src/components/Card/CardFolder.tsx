@@ -1,4 +1,9 @@
-import { ChangeEvent, Dispatch, FC, SetStateAction } from "react";
+import {
+  ChangeEvent,
+  // Dispatch,  SetStateAction,
+  FC,
+  useState,
+} from "react";
 import { Card as CardMui } from "@mui/material";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -11,14 +16,13 @@ import starUnchecked from "../../assets/icons/Vectorstar-no-checked.svg";
 import checkboxChecked from "../../assets/icons/Vectorcheckbox-checked.png";
 import checkboxUnchecked from "../../assets/icons/Vectorcheckbox-no-checked.png";
 import styles from "./card.component.module.css";
+import { useNavigate } from "react-router-dom";
 
 type CardFolderProps = {
   isFavorite: boolean;
   isFolderSelected: boolean;
   onSelectFolder: (folderId: number, isFolderSelected: boolean) => void;
-  handleSelectFolder: () => void;
-  setIsFolderSelected: Dispatch<SetStateAction<boolean>>;
-  moveToFavorites: (
+  moveToFavorites?: (
     e: React.ChangeEvent<HTMLInputElement>,
     id: number
   ) => Promise<void>;
@@ -26,30 +30,26 @@ type CardFolderProps = {
   id: number;
   name: string;
   creation_date: string;
-  setAllFoldersSelected: () => void;
-  // handleFolderDoubleClick: (id: number) => void;
-  // onAddSelectedCards: (id: number) => void;
 };
 
 const CardFolder: FC<CardFolderProps> = ({
   isFavorite,
   isFolderSelected,
   onSelectFolder,
-  handleSelectFolder,
-  setIsFolderSelected,
   moveToFavorites,
   allFoldersSelected,
-  setAllFoldersSelected,
   id,
-  // onAddSelectedCards,
   name,
-  // type,
   creation_date,
 }) => {
+  const navigate = useNavigate();
+
   const handleMoveToFavoritesChange = (
     event: ChangeEvent<HTMLInputElement>
   ) => {
-    moveToFavorites(event, id);
+    if (moveToFavorites) {
+      moveToFavorites(event, id);
+    }
   };
 
   const handleSelect = () => {
@@ -60,9 +60,22 @@ const CardFolder: FC<CardFolderProps> = ({
     return <img src={iconFolder} alt="icon" />;
   };
 
+  const handleDoubleClick = () => {
+    navigate(`/dashboard/folders/${id}`);
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
+
   return (
     <CardMui
       className={allFoldersSelected ? styles["card-selected"] : styles["card"]}
+      onDoubleClick={handleDoubleClick}
     >
       <CardActions className={styles["card__actions"]}>
         <Checkbox
@@ -94,7 +107,7 @@ const CardFolder: FC<CardFolderProps> = ({
           color="text.secondary"
           className={styles["card__date"]}
         >
-          {creation_date}
+          {formatDate(creation_date)}
         </Typography>
       </CardContent>
     </CardMui>
