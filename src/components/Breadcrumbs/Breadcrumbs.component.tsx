@@ -4,6 +4,7 @@ import { useLocation, useParams, Link as RouterLink } from "react-router-dom";
 import { sendGetRequest } from "../../utils/data";
 import { API_BASE_URL } from "../../constants/url";
 import { arraysAreEqual } from "../../utils/array";
+import { tabsList } from "../Drawer/DashboardDrawer.component";
 
 type BreadcrumbsProps = {
   link: string;
@@ -11,30 +12,34 @@ type BreadcrumbsProps = {
 };
 
 const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ link, label }) => {
+  console.log("🚀 ~ label:", label);
+  console.log("🚀 ~ link:", link);
   const location = useLocation();
   const params = useParams();
 
   const pathnames = params ? (params["*"] ? params["*"].split("/") : []) : [];
   const [listNamesFolders, setListNamesFolders] = useState<string[]>([]);
+  console.log("🚀 ~ listNamesFolders:", listNamesFolders);
 
   const [navigationItems, setNavigationItems] = useState<string[]>([]);
+  console.log("🚀 ~ navigationItems:", navigationItems);
 
-  const getFoldersAndFilesByParentId = async () => {
+  const getFoldersNames = async () => {
     try {
       const token = localStorage.getItem("@userToken");
       const response = await sendGetRequest(`${API_BASE_URL}/folders/names`, {
         Authorization: `Bearer ${token}`,
       });
-      if (!arraysAreEqual(listNamesFolders, response)) {
+      if (JSON.stringify(listNamesFolders) !== JSON.stringify(response)) {
         setListNamesFolders(response);
       }
     } catch (error) {
-      console.log("error");
+      throw new Error("Erreur lors de la récupération des noms.");
     }
   };
 
   useEffect(() => {
-    getFoldersAndFilesByParentId();
+    getFoldersNames();
   }, [location.pathname]);
 
   useEffect(() => {
@@ -50,7 +55,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ link, label }) => {
         }
       });
     }
-  }, [location.pathname]);
+  }, [location.pathname, listNamesFolders]);
 
   function findKeyByValue(value: any) {
     for (const key in listNamesFolders) {
@@ -61,13 +66,27 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ link, label }) => {
     return null;
   }
 
+  function getUrl(label: string | undefined) {
+    switch (label) {
+      case tabsList[0].name:
+        return tabsList[0].url;
+      case tabsList[1].name:
+        return tabsList[1].url;
+      case tabsList[2].name:
+        return tabsList[2].url;
+      default:
+        return null;
+    }
+  }
+
+  const url = getUrl(label);
   return (
     <Box sx={{ pt: 2, pb: 1 }}>
       <BreadcrumbsMUI aria-label="breadcrumb">
         <Link
           color="inherit"
           component={RouterLink}
-          to={link}
+          to={url ? url : ""}
           onClick={() => setNavigationItems([])}
         >
           {label}

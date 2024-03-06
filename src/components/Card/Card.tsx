@@ -69,7 +69,6 @@ const CardFile: FC<CardProps> = ({
           autoClose: 2000,
           isLoading: false,
         });
-        navigate("/dashboard-cloud");
         return;
       }
     } catch (error) {

@@ -15,18 +15,22 @@ import {
   sendPostRequest,
 } from "../../../utils/data";
 import { API_BASE_URL } from "../../../constants/url";
-import { FileData, FolderData } from "./DashboardCloudView";
+import { FileData, FolderData, tabsList } from "./DashboardCloudView";
 import CardFolder from "../../../components/Card/CardFolder";
 import FormDialogFolder from "../../../components/Dialog/FormDialogFolder.component";
 import FormDialogFile from "../../../components/Dialog/FormDialogFile.component";
 import { arraysAreEqual } from "../../../utils/array";
 import Breadcrumbs from "../../../components/Breadcrumbs/Breadcrumbs.component";
-import Card from "../../../components/Card/Card";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import CardFile from "../../../components/Card/Card";
 
 export default function DashboardFavoritesView() {
   const navigate = useNavigate();
+
+  const { pathname } = useLocation();
+
+  const tabActive = tabsList.find((tab) => pathname.includes(tab.url));
+
   const [showFormFolder, setShowFormFolder] = useState(false);
   const [showFormFile, setShowFormFile] = useState(false);
   // const userContext = useContext(UserContext);
@@ -98,7 +102,6 @@ export default function DashboardFavoritesView() {
           autoClose: 2000,
           isLoading: false,
         });
-        navigate("/dashboard-cloud");
         return;
       }
     } catch (error) {
@@ -198,7 +201,7 @@ export default function DashboardFavoritesView() {
         handleSearchInputChange={handleSearchInputChange}
         searchValue={searchValue}
       />
-      <Breadcrumbs label="Mes favoris" link="/dashboard-favorites" />
+      <Breadcrumbs label={tabActive?.name} link="/dashboard-favorites" />
       <Grid>
         <Box
           sx={{

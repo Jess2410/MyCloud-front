@@ -85,7 +85,6 @@ export default function DashboardFolderView() {
           autoClose: 2000,
           isLoading: false,
         });
-        navigate("/dashboard-cloud"); //TODO implémentation à refaire
         return;
       }
     } catch (error) {

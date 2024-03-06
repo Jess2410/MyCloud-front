@@ -58,7 +58,6 @@ const CardFolder: FC<CardFolderProps> = ({
           autoClose: 2000,
           isLoading: false,
         });
-        navigate("/dashboard-cloud");
         return;
       }
     } catch (error) {

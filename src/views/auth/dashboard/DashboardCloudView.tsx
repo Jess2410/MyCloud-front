@@ -56,7 +56,6 @@ export type FileData = FolderData & {
 };
 
 export default function DashboardCloudView() {
-  const navigate = useNavigate();
   const { pathname } = useLocation();
 
   const tabActive = tabsList.find((tab) => pathname.includes(tab.url));
@@ -157,38 +156,10 @@ export default function DashboardCloudView() {
   };
 
   const getLastParam = (currentpathname: string): string => {
-    // /dashboard-cloud/1/3
-    // // console.log(params["*"]);
-    // console.log("currentpathname ", currentpathname);
-    const splitted = currentpathname.split("/"); // ["","dashboard-cloud","1","3"] // ["","dashboard-cloud"]
-
-    // console.log("splitted ", splitted);
+    const splitted = currentpathname.split("/");
     if (splitted.length <= 2) return "";
-
-    // console.log("splitted[splitted.length-1] ", splitted[splitted.length - 1]);
     return splitted[splitted.length - 1];
   };
-
-  //   useEffect(() => {
-  //     console.log(pathname);
-  //     const pathnameWithoutRoot = pathname.substring(pathname.indexOf("/") + 1);
-  //     console.log(pathnameWithoutRoot);
-  //     setLastPathnameId(
-  //       pathnameWithoutRoot.substring(pathnameWithoutRoot.lastIndexOf("/") + 1)
-  //     );
-  //   }, [pathname]);
-
-  //   useEffect(() => {
-  //     console.log(lastPathnameId);
-  //     if (lastPathnameId.length == 0) getFiles("");
-  //     else getFilesFromParent(lastPathnameId);
-  //   }, [pathname]);
-
-  //   useEffect(() => {
-  //     console.log(lastPathnameId);
-  //     if (lastPathnameId.length == 0) getFolders("");
-  //     else getFoldersFromParent(lastPathnameId);
-  //   }, [pathname]);
 
   useEffect(() => {
     //console.log(lastPathnameId); ///TODO pas encore modifié par la ligne 181 a ce moement la
@@ -198,27 +169,10 @@ export default function DashboardCloudView() {
   }, [pathname]);
 
   useEffect(() => {
-    //console.log(lastPathnameId);
     const param = getLastParam(pathname);
     if (param.length == 0) getFolders();
     else getFoldersFromParent(param);
   }, [pathname]);
-
-  // useEffect(() => {
-  //   if (allFoldersSelected) {
-  //     setSelectedFoldersIds(folders?.map((folder: FolderData) => folder.id));
-  //   } else {
-  //     setSelectedFoldersIds([]);
-  //   }
-  // }, [allFoldersSelected]);
-
-  // useEffect(() => {
-  //   if (allFoldersSelected) {
-  //     setSelectedFoldersIds(folders?.map((folder: FolderData) => folder.id));
-  //   } else {
-  //     setSelectedFoldersIds([]);
-  //   }
-  // }, [allFoldersSelected]);
 
   return (
     <Box
