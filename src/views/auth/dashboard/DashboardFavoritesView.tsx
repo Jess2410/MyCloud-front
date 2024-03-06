@@ -23,6 +23,7 @@ import { arraysAreEqual } from "../../../utils/array";
 import Breadcrumbs from "../../../components/Breadcrumbs/Breadcrumbs.component";
 import Card from "../../../components/Card/Card";
 import { useNavigate } from "react-router-dom";
+import CardFile from "../../../components/Card/Card";
 
 export default function DashboardFavoritesView() {
   const navigate = useNavigate();
@@ -197,11 +198,7 @@ export default function DashboardFavoritesView() {
         handleSearchInputChange={handleSearchInputChange}
         searchValue={searchValue}
       />
-      <Breadcrumbs
-        label="Mes favoris"
-        link="/dashboard-favorites"
-        newLabel="1"
-      />
+      <Breadcrumbs label="Mes favoris" link="/dashboard-favorites" />
       <Grid>
         <Box
           sx={{
@@ -232,14 +229,13 @@ export default function DashboardFavoritesView() {
 
           {(searchValue !== "" ? filteredFolders : files).map(
             (data: FileData) => (
-              <Card
+              <CardFile
                 key={data.id}
                 id={data.id}
                 // isFolderSelected={selectedFoldersIds.includes(data.id)}
                 // onSelectFolder={handleSelectFolder}
                 extension={data.extension}
                 allFoldersSelected={allFoldersSelected}
-                moveToFavorites={() => moveToFavorites(data.id)}
                 creation_date={data.creation_date}
                 isFavorite={data.isFavorite}
                 name={data.name}

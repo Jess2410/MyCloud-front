@@ -2,26 +2,21 @@ import Grid from "@mui/material/Grid";
 import trashIcon from "../../../assets/icons/trash-drawer.svg";
 import starIcon from "../../../assets/icons/star-drawer.svg";
 import fileIcon from "../../../assets/icons/file-drawer.svg";
-import {
-  // useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
-// import { UserContext } from "../../../context/UserContext";
 import DeleteDialog from "../../../components/Dialog/DeleteDialog.component";
 import ToolBar from "../../../components/Tabs/ToolBar.component";
-import { toast } from "react-toastify";
-import { sendGetRequest, sendPatchRequest } from "../../../utils/data";
+import { sendGetRequest } from "../../../utils/data";
 import { API_BASE_URL } from "../../../constants/url";
 import { arraysAreEqual } from "../../../utils/array";
 import CardFolder from "../../../components/Card/CardFolder";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Breadcrumbs from "../../../components/Breadcrumbs/Breadcrumbs.component";
 import FormDialogFolder from "../../../components/Dialog/FormDialogFolder.component";
 import FormDialogFile from "../../../components/Dialog/FormDialogFile.component";
 import Card from "../../../components/Card/Card";
+import useToolbar from "../../../components/Tabs/hooks/useToolbar";
+import CardFile from "../../../components/Card/Card";
 
 export const tabsList = [
   {
@@ -62,91 +57,37 @@ export type FileData = FolderData & {
 
 export default function DashboardCloudView() {
   const navigate = useNavigate();
-  const [showFormFolder, setShowFormFolder] = useState(false);
-  const [showFormFile, setShowFormFile] = useState(false);
+  const { pathname } = useLocation();
 
-  // const userContext = useContext(UserContext);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [actionType, setActionType] = useState("");
+  const tabActive = tabsList.find((tab) => pathname.includes(tab.url));
 
   const [folders, setFolders] = useState<FolderData[]>([]);
 
   const [files, setFiles] = useState([]);
+  const [lastPathnameId, setLastPathnameId] = useState("");
 
-  const [allFoldersSelected, setAllFoldersSelected] = useState(false);
-  const [selectedFoldersIds, setSelectedFoldersIds] = useState<number[]>([]);
-
-  const [filteredFolders, setFilteredFolders] = useState<FolderData[]>([]);
-  const [filteredFiles, setFilteredFiles] = useState<FileData[]>([]);
-  const [deletedFolders, setDeletedFolders] = useState<FolderData[]>([]);
-  const [searchValue, setSearchValue] = useState("");
-
-  const { pathname } = useLocation();
-  const tabActive = tabsList.find((tab) => pathname.includes(tab.url));
-
-  const displayDeleteModale = (actionType: string | null | undefined) => {
-    setShowDeleteModal(!showDeleteModal);
-    if (actionType) {
-      setActionType(actionType);
-    }
-  };
-
-  const handleSelectFolder = (folderId: number, isFolderSelected: boolean) => {
-    setSelectedFoldersIds((prev) =>
-      isFolderSelected
-        ? [...prev, folderId]
-        : prev.filter((id) => id !== folderId)
-    );
-
-    const allSelected = folders.every((folder) =>
-      selectedFoldersIds.includes(folder?.id)
-    );
-    setAllFoldersSelected(allSelected);
-  };
-
-  const handleSelectAllCards = () => {
-    if (!allFoldersSelected) {
-      const allFolderIds = folders.map((folder) => folder?.id);
-      setSelectedFoldersIds(allFolderIds);
-    } else {
-      setSelectedFoldersIds([]);
-    }
-    setAllFoldersSelected(!allFoldersSelected);
-  };
-
-  const moveToFavorites = async (id: number) => {
-    const loader = toast.loading("Veuillez patienter...");
-    try {
-      const token = localStorage.getItem("@userToken");
-      const response = await sendPatchRequest(
-        `${API_BASE_URL}/folders/isFavorite`,
-        { Authorization: `Bearer ${token}` },
-        { id: id }
-      );
-      if (response.status === 200) {
-        toast.update(loader, {
-          render: response.message,
-          type: "success",
-          autoClose: 2000,
-          isLoading: false,
-        });
-        navigate("/dashboard-cloud");
-        return;
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleSearchInputChange = (event: any) => {
-    const value = event.target.value.toLowerCase();
-    setSearchValue(value);
-
-    folders.filter((folder) => folder.name.toLowerCase().includes(value));
-    setFilteredFolders(filteredFolders);
-    files.filter((file: FileData) => file.name.toLowerCase().includes(value));
-    setFilteredFiles(filteredFiles);
-  };
+  const {
+    showFormFolder,
+    setShowFormFolder,
+    showFormFile,
+    setShowFormFile,
+    actionType,
+    deletedFolders,
+    displayDeleteModale,
+    handleSelectFolder,
+    handleSelectAllCards,
+    handleSearchInputChange,
+    allFoldersSelected,
+    setAllFoldersSelected,
+    searchValue,
+    setSearchValue,
+    selectedFoldersIds,
+    setSelectedFoldersIds,
+    filteredFolders,
+    setFilteredFolders,
+    showDeleteModal,
+    setShowDeleteModal,
+  } = useToolbar(folders, files);
 
   const getFolders = async () => {
     try {
@@ -162,53 +103,124 @@ export default function DashboardCloudView() {
     }
   };
 
-  useEffect(() => {
-    const getFiles = async () => {
-      try {
-        const token = localStorage.getItem("@userToken");
-        const response = await sendGetRequest(`${API_BASE_URL}/files`, {
-          Authorization: `Bearer ${token}`,
-        });
-        if (!arraysAreEqual(files, response)) {
-          setFiles(response);
-        }
-      } catch (error) {
-        console.log("error");
+  const getFiles = async () => {
+    try {
+      const token = localStorage.getItem("@userToken");
+      const response = await sendGetRequest(`${API_BASE_URL}/files`, {
+        Authorization: `Bearer ${token}`,
+      });
+      if (!arraysAreEqual(files, response)) {
+        setFiles(response);
       }
-    };
-    getFiles();
-  }, []);
-
-  useEffect(() => {
-    if (allFoldersSelected) {
-      setSelectedFoldersIds(folders?.map((folder: FolderData) => folder.id));
-    } else {
-      setSelectedFoldersIds([]);
+    } catch (error) {
+      console.log("error");
     }
-  }, [allFoldersSelected]);
+  };
 
-  useEffect(() => {
-    const filtered = folders.filter((folder) =>
-      folder.name.toLowerCase().includes(searchValue.toLowerCase())
-    );
-    setFilteredFolders(filtered);
-    const filteredFiles = files.filter((file: FileData) =>
-      file.name.toLowerCase().includes(searchValue.toLowerCase())
-    );
-    setFilteredFiles(filteredFiles);
-  }, [folders, files, searchValue]);
-
-  useEffect(() => {
-    if (allFoldersSelected) {
-      setSelectedFoldersIds(folders?.map((folder: FolderData) => folder.id));
-    } else {
-      setSelectedFoldersIds([]);
+  const getFoldersFromParent = async (foldersRequestPath: string) => {
+    try {
+      console.log("getFoldersFromParent ", foldersRequestPath);
+      const token = localStorage.getItem("@userToken");
+      const response = await sendGetRequest(
+        `${API_BASE_URL}/folders/parent/${foldersRequestPath}`,
+        {
+          Authorization: `Bearer ${token}`,
+        }
+      );
+      if (!arraysAreEqual(folders, response)) {
+        console.log(response);
+        setFolders(response);
+      }
+      console.log("arraysAreEqual(folders, response)");
+    } catch (error) {
+      console.log("error");
     }
-  }, [allFoldersSelected]);
+  };
+
+  const getFilesFromParent = async (filesRequestPath: string) => {
+    console.log("getFilesFromParent ", filesRequestPath);
+    setFiles([]);
+    // try {
+    //   const token = localStorage.getItem("@userToken");
+    //   const response = await sendGetRequest(
+    //     `${API_BASE_URL}/files/parent/${filesRequestPath}`,
+    //     {
+    //       Authorization: `Bearer ${token}`,
+    //     }
+    //   );
+    //   if (!arraysAreEqual(files, response)) {
+    //     setFiles(response);
+    //   }
+    // } catch (error) {
+    //   console.log("error");
+    // }
+  };
+
+  const params = useParams();
+
+  const getLastParam = (currentpathname: string): string => {
+    // /dashboard-cloud/1/3
+    // console.log(params["*"]);
+    console.log("currentpathname ", currentpathname);
+    const splitted = currentpathname.split("/"); // ["","dashboard-cloud","1","3"] // ["","dashboard-cloud"]
+
+    console.log("splitted ", splitted);
+    if (splitted.length <= 2) return "";
+
+    console.log("splitted[splitted.length-1] ", splitted[splitted.length - 1]);
+    return splitted[splitted.length - 1];
+  };
+
+  //   useEffect(() => {
+  //     console.log(pathname);
+  //     const pathnameWithoutRoot = pathname.substring(pathname.indexOf("/") + 1);
+  //     console.log(pathnameWithoutRoot);
+  //     setLastPathnameId(
+  //       pathnameWithoutRoot.substring(pathnameWithoutRoot.lastIndexOf("/") + 1)
+  //     );
+  //   }, [pathname]);
+
+  //   useEffect(() => {
+  //     console.log(lastPathnameId);
+  //     if (lastPathnameId.length == 0) getFiles("");
+  //     else getFilesFromParent(lastPathnameId);
+  //   }, [pathname]);
+
+  //   useEffect(() => {
+  //     console.log(lastPathnameId);
+  //     if (lastPathnameId.length == 0) getFolders("");
+  //     else getFoldersFromParent(lastPathnameId);
+  //   }, [pathname]);
 
   useEffect(() => {
-    getFolders();
-  }, []);
+    //console.log(lastPathnameId); ///TODO pas encore modifié par la ligne 181 a ce moement la
+    const param = getLastParam(pathname);
+    if (param.length == 0) getFiles();
+    else getFilesFromParent(param);
+  }, [pathname]);
+
+  useEffect(() => {
+    //console.log(lastPathnameId);
+    const param = getLastParam(pathname);
+    if (param.length == 0) getFolders();
+    else getFoldersFromParent(param);
+  }, [pathname]);
+
+  // useEffect(() => {
+  //   if (allFoldersSelected) {
+  //     setSelectedFoldersIds(folders?.map((folder: FolderData) => folder.id));
+  //   } else {
+  //     setSelectedFoldersIds([]);
+  //   }
+  // }, [allFoldersSelected]);
+
+  // useEffect(() => {
+  //   if (allFoldersSelected) {
+  //     setSelectedFoldersIds(folders?.map((folder: FolderData) => folder.id));
+  //   } else {
+  //     setSelectedFoldersIds([]);
+  //   }
+  // }, [allFoldersSelected]);
 
   return (
     <Box
@@ -227,11 +239,8 @@ export default function DashboardCloudView() {
         handleSearchInputChange={handleSearchInputChange}
         searchValue={searchValue}
       />
-      <Breadcrumbs
-        label={tabActive?.name}
-        link="/dashboard-cloud"
-        newLabel="1"
-      />
+      <Breadcrumbs label={tabActive?.name} link="/dashboard-cloud" />
+
       <Grid>
         <Box
           sx={{
@@ -251,7 +260,6 @@ export default function DashboardCloudView() {
                 isFolderSelected={selectedFoldersIds.includes(data.id)}
                 onSelectFolder={handleSelectFolder}
                 allFoldersSelected={allFoldersSelected}
-                moveToFavorites={() => moveToFavorites(data.id)}
                 creation_date={data.creation_date}
                 isFavorite={data.isFavorite}
                 name={data.name}
@@ -260,14 +268,13 @@ export default function DashboardCloudView() {
           )}
           {(searchValue !== "" ? filteredFolders : files).map(
             (data: FileData) => (
-              <Card
+              <CardFile
                 key={data.id}
                 id={data.id}
                 // isFolderSelected={selectedFoldersIds.includes(data.id)}
                 // onSelectFolder={handleSelectFolder}
                 extension={data.extension}
                 allFoldersSelected={allFoldersSelected}
-                moveToFavorites={() => moveToFavorites(data.id)}
                 creation_date={data.creation_date}
                 isFavorite={data.isFavorite}
                 name={data.name}

@@ -21,6 +21,7 @@ const Layout: React.FC<DashboardMainProps> = ({ children }) => {
     return "stranger";
   };
   const logout = useLogout();
+
   return (
     <Box
       sx={{ display: "flex", flexDirection: "column", height: "100vh", px: 6 }}

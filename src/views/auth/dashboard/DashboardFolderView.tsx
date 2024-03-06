@@ -1,6 +1,6 @@
 import Grid from "@mui/material/Grid";
 import { useEffect, useState } from "react";
-import { Box, Breadcrumbs, Link, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import ToolBarInFolder from "../../../components/Tabs/ToolBarInFolder.component";
 import {
   sendGetRequest,
@@ -9,22 +9,28 @@ import {
 } from "../../../utils/data";
 import { arraysAreEqual } from "../../../utils/array";
 import { API_BASE_URL } from "../../../constants/url";
-import { FolderData } from "./DashboardCloudView";
-import { useLocation, useNavigate } from "react-router-dom";
+import { FileData, FolderData } from "./DashboardCloudView";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { tabsList } from "../../../components/Drawer/DashboardDrawer.component";
+import Card from "../../../components/Card/Card";
+import CardFolder from "../../../components/Card/CardFolder";
+import Breadcrumbs from "../../../components/Breadcrumbs/Breadcrumbs.component";
 
 export default function DashboardFolderView() {
   const navigate = useNavigate();
-  // const [showForm, setShowForm] = useState(false);
-  // const [typeForm, setTypeForm] = useState("");
-  // const userContext = useContext(UserContext);
+  const params = useParams();
+
+  const location = useLocation();
+  const id = location.pathname.substring(
+    location.pathname.lastIndexOf("/") + 1,
+    location.pathname.length
+  );
+  console.log(id);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [actionType, setActionType] = useState("");
   const [folders, setFolders] = useState<FolderData[]>([]);
-
-  // const [files, setFiles] = useState([]);
-  const [nameFolder, setNameFolder] = useState("");
+  const [files, setFiles] = useState([]);
 
   const [allFoldersSelected, setAllFoldersSelected] = useState(false);
   const [selectedFoldersIds, setSelectedFoldersIds] = useState<number[]>([]);
@@ -95,19 +101,29 @@ export default function DashboardFolderView() {
     setFilteredFolders(filteredFolders);
   };
 
+  const getFoldersAndFilesByParentId = async (id: number | string) => {
+    try {
+      const token = localStorage.getItem("@userToken");
+      // const response = await sendGetRequest(
+      //   `${API_BASE_URL}/files/parent/{id}${params.id}`,
+      const response = await sendGetRequest(
+        `${API_BASE_URL}/folders/parent/${id}`,
+        {
+          Authorization: `Bearer ${token}`,
+        }
+      );
+      if (!arraysAreEqual(folders, response)) {
+        console.log(response);
+        setFolders(response);
+      }
+    } catch (error) {
+      console.log("error");
+    }
+  };
+
   useEffect(() => {
     const getFolders = async () => {
-      try {
-        const token = localStorage.getItem("@userToken");
-        const response = await sendGetRequest(`${API_BASE_URL}/folders`, {
-          Authorization: `Bearer ${token}`,
-        });
-        if (!arraysAreEqual(folders, response)) {
-          setFolders(response);
-        }
-      } catch (error) {
-        console.log("error");
-      }
+      getFoldersAndFilesByParentId(id);
     };
     getFolders();
   }, []);
@@ -142,6 +158,39 @@ export default function DashboardFolderView() {
         handleSearchInputChange={handleSearchInputChange}
         searchValue={searchValue}
       />
+
+      {/* <Breadcrumbs label={params.id} link="/dashboard-cloud" newLabel="1" /> */}
+      {/* {(searchValue !== "" ? filteredFolders : folders).map(
+        (data: FolderData) => (
+          <CardFolder
+            key={data.id}
+            id={data.id}
+            isFolderSelected={selectedFoldersIds.includes(data.id)}
+            onSelectFolder={handleSelectFolder}
+            allFoldersSelected={allFoldersSelected}
+            // moveToFavorites={() => moveToFavorites(data.id)}
+            creation_date={data.creation_date}
+            isFavorite={data.isFavorite}
+            name={data.name}
+            // onDoubleClick={() => handleFolderDoubleClick(data.id)}
+          />
+        )
+      )}
+
+      {(searchValue !== "" ? filteredFolders : files).map((data: FileData) => (
+        <CardFile
+          key={data.id}
+          id={data.id}
+          // isFolderSelected={selectedFoldersIds.includes(data.id)}
+          // onSelectFolder={handleSelectFolder}
+          extension={data.extension}
+          allFoldersSelected={allFoldersSelected}
+          moveToFavorites={() => moveToFavorites(data.id)}
+          creation_date={data.creation_date}
+          isFavorite={data.isFavorite}
+          name={data.name}
+        />
+      ))} */}
     </Box>
   );
 }

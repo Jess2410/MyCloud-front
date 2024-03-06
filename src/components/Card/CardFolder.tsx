@@ -2,7 +2,6 @@ import {
   ChangeEvent,
   // Dispatch,  SetStateAction,
   FC,
-  useState,
 } from "react";
 import { Card as CardMui } from "@mui/material";
 import CardActions from "@mui/material/CardActions";
@@ -16,16 +15,15 @@ import starUnchecked from "../../assets/icons/Vectorstar-no-checked.svg";
 import checkboxChecked from "../../assets/icons/Vectorcheckbox-checked.png";
 import checkboxUnchecked from "../../assets/icons/Vectorcheckbox-no-checked.png";
 import styles from "./card.component.module.css";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { sendPatchRequest } from "../../utils/data";
+import { API_BASE_URL } from "../../constants/url";
 
 type CardFolderProps = {
   isFavorite: boolean;
   isFolderSelected: boolean;
   onSelectFolder: (folderId: number, isFolderSelected: boolean) => void;
-  moveToFavorites?: (
-    e: React.ChangeEvent<HTMLInputElement>,
-    id: number
-  ) => Promise<void>;
   allFoldersSelected: boolean;
   id: number;
   name: string;
@@ -36,19 +34,43 @@ const CardFolder: FC<CardFolderProps> = ({
   isFavorite,
   isFolderSelected,
   onSelectFolder,
-  moveToFavorites,
   allFoldersSelected,
   id,
   name,
   creation_date,
 }) => {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+
+  const moveToFavorites = async () => {
+    const loader = toast.loading("Veuillez patienter...");
+    try {
+      const token = localStorage.getItem("@userToken");
+      const response = await sendPatchRequest(
+        `${API_BASE_URL}/folders/isFavorite`,
+        { Authorization: `Bearer ${token}` },
+        { id: id }
+      );
+      if (response.status === 200) {
+        toast.update(loader, {
+          render: response.message,
+          type: "success",
+          autoClose: 2000,
+          isLoading: false,
+        });
+        navigate("/dashboard-cloud");
+        return;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleMoveToFavoritesChange = (
     event: ChangeEvent<HTMLInputElement>
   ) => {
     if (moveToFavorites) {
-      moveToFavorites(event, id);
+      moveToFavorites();
     }
   };
 
@@ -61,7 +83,8 @@ const CardFolder: FC<CardFolderProps> = ({
   };
 
   const handleDoubleClick = () => {
-    navigate(`/dashboard/folders/${id}`);
+    console.log(id);
+    navigate(`${pathname}/${id}`);
   };
 
   const formatDate = (dateString: string) => {

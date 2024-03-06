@@ -5,7 +5,6 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import iconFileImage from "../../assets/icons/file-img.png";
-import iconFolder from "../../assets/icons/folder.png";
 import iconFileAudio from "../../assets/icons/file-audio.png";
 import iconFile from "../../assets/icons/file.png";
 import Checkbox from "@mui/material/Checkbox";
@@ -14,11 +13,14 @@ import starUnchecked from "../../assets/icons/Vectorstar-no-checked.svg";
 import checkboxChecked from "../../assets/icons/Vectorcheckbox-checked.png";
 import checkboxUnchecked from "../../assets/icons/Vectorcheckbox-no-checked.png";
 import styles from "./card.component.module.css";
+import { toast } from "react-toastify";
+import { sendPatchRequest } from "../../utils/data";
+import { API_BASE_URL } from "../../constants/url";
+import { useNavigate } from "react-router-dom";
 
 type CardProps = {
   extension?: string;
   isFavorite: boolean;
-  moveToFavorites: () => void;
   allFoldersSelected?: boolean;
   id: number;
   name: string;
@@ -26,10 +28,9 @@ type CardProps = {
   // onAddSelectedCards: (id: number) => void;
 };
 
-const Card: FC<CardProps> = ({
+const CardFile: FC<CardProps> = ({
   extension,
   isFavorite,
-  moveToFavorites,
   allFoldersSelected,
   id,
   // onAddSelectedCards,
@@ -37,6 +38,8 @@ const Card: FC<CardProps> = ({
   // type,
   creation_date,
 }) => {
+  const navigate = useNavigate();
+
   const displayIcon = () => {
     if (extension === "mp3") {
       return <img src={iconFileAudio} alt="audio-file-icon" />;
@@ -48,6 +51,30 @@ const Card: FC<CardProps> = ({
     //   return <img src={iconFolder} alt="icon" />;
     // }
     return <img src={iconFile} alt="icon" />;
+  };
+
+  const moveToFavorites = async () => {
+    const loader = toast.loading("Veuillez patienter...");
+    try {
+      const token = localStorage.getItem("@userToken");
+      const response = await sendPatchRequest(
+        `${API_BASE_URL}/folders/isFavorite`,
+        { Authorization: `Bearer ${token}` },
+        { id: id }
+      );
+      if (response.status === 200) {
+        toast.update(loader, {
+          render: response.message,
+          type: "success",
+          autoClose: 2000,
+          isLoading: false,
+        });
+        navigate("/dashboard-cloud");
+        return;
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -91,4 +118,4 @@ const Card: FC<CardProps> = ({
   );
 };
 
-export default Card;
+export default CardFile;

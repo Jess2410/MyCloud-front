@@ -28,7 +28,7 @@ const AppRouter = () => {
       element: <ServicesView />,
     },
     {
-      path: "/dashboard-cloud",
+      path: "/dashboard-cloud/*",
       // element: user ? <DashboardCloudView /> : <LoginView />,
       element: (
         <Layout>
@@ -36,14 +36,14 @@ const AppRouter = () => {
         </Layout>
       ),
     },
-    {
-      path: "/dashboard/folders/:id",
-      element: (
-        <Layout>
-          <DashboardFolderView />
-        </Layout>
-      ),
-    },
+    // {
+    //   path: "/dashboard-cloud/:id/*",
+    //   element: (
+    //     <Layout>
+    //       <DashboardFolderView />
+    //     </Layout>
+    //   ),
+    // },
     {
       path: "/dashboard-favorites",
       // element: user ? <DashboardCloudView /> : <LoginView />,

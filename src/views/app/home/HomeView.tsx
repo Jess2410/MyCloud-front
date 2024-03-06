@@ -17,13 +17,13 @@ export default function HomeView() {
     >
       <Box
         sx={{
-          padding: ["40px", "80px"],
+          padding: "8vh 16vh 0",
         }}
       >
         <Navbar />
         <Box
           sx={{
-            padding: ["40px 0", "80px 0"],
+            // padding: ["40px 0", "80px 0"],
             maxWidth: "500px",
             gap: "40px",
           }}

@@ -19,9 +19,9 @@ type ToolBarProps = {
   def: boolean;
   restore: boolean;
   allFoldersSelected: boolean;
-  handleSearchInputChange: (event: any) => void;
+  handleSearchInputChange?: (event: any) => void;
   searchValue: string;
-  setShowFormFolder: () => void;
+  setShowFormFolder: any;
   setShowFormFile: () => void;
 };
 const ToolBar: React.FC<ToolBarProps> = ({
