@@ -104,8 +104,7 @@ export default function DashboardFolderView() {
   const getFoldersAndFilesByParentId = async (id: number | string) => {
     try {
       const token = localStorage.getItem("@userToken");
-      // const response = await sendGetRequest(
-      //   `${API_BASE_URL}/files/parent/{id}${params.id}`,
+
       const response = await sendGetRequest(
         `${API_BASE_URL}/folders/parent/${id}`,
         {

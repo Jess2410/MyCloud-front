@@ -119,7 +119,7 @@ export default function DashboardCloudView() {
 
   const getFoldersFromParent = async (foldersRequestPath: string) => {
     try {
-      console.log("getFoldersFromParent ", foldersRequestPath);
+      // console.log("getFoldersFromParent ", foldersRequestPath);
       const token = localStorage.getItem("@userToken");
       const response = await sendGetRequest(
         `${API_BASE_URL}/folders/parent/${foldersRequestPath}`,
@@ -131,14 +131,14 @@ export default function DashboardCloudView() {
         console.log(response);
         setFolders(response);
       }
-      console.log("arraysAreEqual(folders, response)");
+      // console.log("arraysAreEqual(folders, response)");
     } catch (error) {
       console.log("error");
     }
   };
 
   const getFilesFromParent = async (filesRequestPath: string) => {
-    console.log("getFilesFromParent ", filesRequestPath);
+    // console.log("getFilesFromParent ", filesRequestPath);
     setFiles([]);
     // try {
     //   const token = localStorage.getItem("@userToken");
@@ -156,18 +156,16 @@ export default function DashboardCloudView() {
     // }
   };
 
-  const params = useParams();
-
   const getLastParam = (currentpathname: string): string => {
     // /dashboard-cloud/1/3
-    // console.log(params["*"]);
-    console.log("currentpathname ", currentpathname);
+    // // console.log(params["*"]);
+    // console.log("currentpathname ", currentpathname);
     const splitted = currentpathname.split("/"); // ["","dashboard-cloud","1","3"] // ["","dashboard-cloud"]
 
-    console.log("splitted ", splitted);
+    // console.log("splitted ", splitted);
     if (splitted.length <= 2) return "";
 
-    console.log("splitted[splitted.length-1] ", splitted[splitted.length - 1]);
+    // console.log("splitted[splitted.length-1] ", splitted[splitted.length - 1]);
     return splitted[splitted.length - 1];
   };
 
