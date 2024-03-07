@@ -14,9 +14,10 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Breadcrumbs from "../../../components/Breadcrumbs/Breadcrumbs.component";
 import FormDialogFolder from "../../../components/Dialog/FormDialogFolder.component";
 import FormDialogFile from "../../../components/Dialog/FormDialogFile.component";
-import Card from "../../../components/Card/Card";
+import Card from "../../../components/Card/CardFile";
 import useToolbar from "../../../components/Tabs/hooks/useToolbar";
-import CardFile from "../../../components/Card/Card";
+import CardFile from "../../../components/Card/CardFile";
+import ModalFileViewer from "../../../components/ModalFileViewer/ModalFileViewer.component";
 
 export const tabsList = [
   {
@@ -126,7 +127,7 @@ export default function DashboardCloudView() {
           Authorization: `Bearer ${token}`,
         }
       );
-      if (!arraysAreEqual(folders, response)) {
+      if (JSON.stringify(folders) !== JSON.stringify(response)) {
         console.log(response);
         setFolders(response);
       }
@@ -159,6 +160,30 @@ export default function DashboardCloudView() {
     const splitted = currentpathname.split("/");
     if (splitted.length <= 2) return "";
     return splitted[splitted.length - 1];
+  };
+
+  const [open, setOpen] = useState(false);
+  const [selectedFileContent, setSelectedFileContent] = useState(null);
+  console.log("🚀 ~ selectedFileContent:", selectedFileContent);
+
+  const handleOpen = async (id: any) => {
+    try {
+      const token = localStorage.getItem("@userToken");
+      const response = await sendGetRequest(`${API_BASE_URL}/files/${id}`, {
+        Authorization: `Bearer ${token}`,
+      });
+      const { url } = response;
+      console.log("🚀 ~ handleOpen ~ response:", response);
+      setSelectedFileContent(url);
+      setOpen(true);
+    } catch (error) {
+      console.log("error");
+    }
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedFileContent(null);
   };
 
   useEffect(() => {
@@ -230,10 +255,16 @@ export default function DashboardCloudView() {
                 creation_date={data.creation_date}
                 isFavorite={data.isFavorite}
                 name={data.name}
+                onDoubleClick={() => handleOpen(data.id)}
               />
             )
           )}
-
+          {open && (
+            <ModalFileViewer
+              selectedFile={selectedFileContent}
+              handleClose={handleClose}
+            />
+          )}
           {showFormFolder && (
             <FormDialogFolder
               handleClose={() => setShowFormFolder(false)}

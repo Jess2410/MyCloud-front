@@ -13,7 +13,7 @@ import { FileData, FolderData } from "./DashboardCloudView";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { tabsList } from "../../../components/Drawer/DashboardDrawer.component";
-import Card from "../../../components/Card/Card";
+import Card from "../../../components/Card/CardFile";
 import CardFolder from "../../../components/Card/CardFolder";
 import Breadcrumbs from "../../../components/Breadcrumbs/Breadcrumbs.component";
 
@@ -110,7 +110,7 @@ export default function DashboardFolderView() {
           Authorization: `Bearer ${token}`,
         }
       );
-      if (!arraysAreEqual(folders, response)) {
+      if (JSON.stringify(folders) !== JSON.stringify(response)) {
         console.log(response);
         setFolders(response);
       }

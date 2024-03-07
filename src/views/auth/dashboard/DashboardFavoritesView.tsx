@@ -5,15 +5,10 @@ import {
 } from "react";
 import { Box, Grid } from "@mui/material";
 // import { UserContext } from "../../../context/UserContext";
-import FormDialog from "../../../components/Dialog/FormDialogFile.component";
 import DeleteDialog from "../../../components/Dialog/DeleteDialog.component";
 import ToolBar from "../../../components/Tabs/ToolBar.component";
 import { toast } from "react-toastify";
-import {
-  sendGetRequest,
-  sendPatchRequest,
-  sendPostRequest,
-} from "../../../utils/data";
+import { sendGetRequest, sendPatchRequest } from "../../../utils/data";
 import { API_BASE_URL } from "../../../constants/url";
 import { FileData, FolderData, tabsList } from "./DashboardCloudView";
 import CardFolder from "../../../components/Card/CardFolder";
@@ -21,12 +16,11 @@ import FormDialogFolder from "../../../components/Dialog/FormDialogFolder.compon
 import FormDialogFile from "../../../components/Dialog/FormDialogFile.component";
 import { arraysAreEqual } from "../../../utils/array";
 import Breadcrumbs from "../../../components/Breadcrumbs/Breadcrumbs.component";
-import { useLocation, useNavigate } from "react-router-dom";
-import CardFile from "../../../components/Card/Card";
+import { useLocation } from "react-router-dom";
+import CardFile from "../../../components/Card/CardFile";
+import ModalFileViewer from "../../../components/ModalFileViewer/ModalFileViewer.component";
 
 export default function DashboardFavoritesView() {
-  const navigate = useNavigate();
-
   const { pathname } = useLocation();
 
   const tabActive = tabsList.find((tab) => pathname.includes(tab.url));
@@ -37,7 +31,6 @@ export default function DashboardFavoritesView() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [actionType, setActionType] = useState("");
   const [folders, setFolders] = useState<FolderData[]>([]);
-  const [nameFolder, setNameFolder] = useState("");
   const [files, setFiles] = useState([]);
 
   const [allFoldersSelected, setAllFoldersSelected] = useState(false);
@@ -147,6 +140,21 @@ export default function DashboardFavoritesView() {
   //   getFiles();
   // }, []);
 
+  const [open, setOpen] = useState(false);
+  const [selectedFileContent, setSelectedFileContent] = useState(null);
+  console.log("🚀 ~ selectedFileContent:", selectedFileContent);
+
+  const handleOpen = (id: any) => {
+    console.log("🚀 ~ handleOpen ~ id:", id);
+    setSelectedFileContent(id);
+    setOpen(!open);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedFileContent(null);
+  };
+
   useEffect(() => {
     const filtered = folders.filter((folder) =>
       folder.name.toLowerCase().includes(searchValue.toLowerCase())
@@ -232,19 +240,23 @@ export default function DashboardFavoritesView() {
 
           {(searchValue !== "" ? filteredFolders : files).map(
             (data: FileData) => (
-              <CardFile
-                key={data.id}
-                id={data.id}
-                // isFolderSelected={selectedFoldersIds.includes(data.id)}
-                // onSelectFolder={handleSelectFolder}
-                extension={data.extension}
-                allFoldersSelected={allFoldersSelected}
-                creation_date={data.creation_date}
-                isFavorite={data.isFavorite}
-                name={data.name}
-              />
+              <>
+                <CardFile
+                  key={data.id}
+                  id={data.id}
+                  // isFolderSelected={selectedFoldersIds.includes(data.id)}
+                  // onSelectFolder={handleSelectFolder}
+                  extension={data.extension}
+                  allFoldersSelected={allFoldersSelected}
+                  creation_date={data.creation_date}
+                  isFavorite={data.isFavorite}
+                  name={data.name}
+                  onDoubleClick={() => handleOpen(data.url)}
+                />
+              </>
             )
           )}
+          {open && <ModalFileViewer handleClose={handleClose} />}
 
           {showFormFolder && (
             <FormDialogFolder

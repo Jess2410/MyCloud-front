@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useState } from "react";
+import { FC } from "react";
 import { Card as CardMui } from "@mui/material";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -16,7 +16,6 @@ import styles from "./card.component.module.css";
 import { toast } from "react-toastify";
 import { sendPatchRequest } from "../../utils/data";
 import { API_BASE_URL } from "../../constants/url";
-import { useNavigate } from "react-router-dom";
 
 type CardProps = {
   extension?: string;
@@ -25,6 +24,7 @@ type CardProps = {
   id: number;
   name: string;
   creation_date: string;
+  onDoubleClick: () => void;
   // onAddSelectedCards: (id: number) => void;
 };
 
@@ -33,13 +33,11 @@ const CardFile: FC<CardProps> = ({
   isFavorite,
   allFoldersSelected,
   id,
+  onDoubleClick,
   // onAddSelectedCards,
   name,
-  // type,
   creation_date,
 }) => {
-  const navigate = useNavigate();
-
   const displayIcon = () => {
     if (extension === "mp3") {
       return <img src={iconFileAudio} alt="audio-file-icon" />;
@@ -77,43 +75,48 @@ const CardFile: FC<CardProps> = ({
   };
 
   return (
-    <CardMui
-      className={allFoldersSelected ? styles["card-selected"] : styles["card"]}
-    >
-      <CardActions className={styles["card__actions"]}>
-        <Checkbox
-          icon={<img src={starUnchecked} alt="Unchecked" />}
-          checkedIcon={<img src={starChecked} alt="Checked" />}
-          checked={isFavorite}
-          onChange={moveToFavorites}
-          inputProps={{ "aria-label": "favorite" }}
-        />
-        <Checkbox
-          icon={<img src={checkboxUnchecked} alt="Unchecked" />}
-          checkedIcon={<img src={checkboxChecked} alt="Checked" />}
-          checked={allFoldersSelected}
-          // onChange={() => onAddSelectedCards(id)}
-          inputProps={{ "aria-label": "selected" }}
-        />
-      </CardActions>
-      <CardMedia className={styles["card__media"]}>{displayIcon()}</CardMedia>
-      <CardContent className={styles["card__content"]}>
-        <Typography
-          gutterBottom
-          component="div"
-          className={styles["card__title"]}
-        >
-          {name}
-        </Typography>
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          className={styles["card__date"]}
-        >
-          {creation_date}
-        </Typography>
-      </CardContent>
-    </CardMui>
+    <>
+      <CardMui
+        className={
+          allFoldersSelected ? styles["card-selected"] : styles["card"]
+        }
+        onDoubleClick={onDoubleClick}
+      >
+        <CardActions className={styles["card__actions"]}>
+          <Checkbox
+            icon={<img src={starUnchecked} alt="Unchecked" />}
+            checkedIcon={<img src={starChecked} alt="Checked" />}
+            checked={isFavorite}
+            onChange={moveToFavorites}
+            inputProps={{ "aria-label": "favorite" }}
+          />
+          <Checkbox
+            icon={<img src={checkboxUnchecked} alt="Unchecked" />}
+            checkedIcon={<img src={checkboxChecked} alt="Checked" />}
+            checked={allFoldersSelected}
+            // onChange={() => onAddSelectedCards(id)}
+            inputProps={{ "aria-label": "selected" }}
+          />
+        </CardActions>
+        <CardMedia className={styles["card__media"]}>{displayIcon()}</CardMedia>
+        <CardContent className={styles["card__content"]}>
+          <Typography
+            gutterBottom
+            component="div"
+            className={styles["card__title"]}
+          >
+            {name}
+          </Typography>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            className={styles["card__date"]}
+          >
+            {creation_date}
+          </Typography>
+        </CardContent>
+      </CardMui>
+    </>
   );
 };
 

@@ -21,12 +21,12 @@ import DeleteDialogTrash from "../../../components/Dialog/DeleteDialogTrash.comp
 import FormDialogFile from "../../../components/Dialog/FormDialogFile.component";
 import FormDialogFolder from "../../../components/Dialog/FormDialogFolder.component";
 import { arraysAreEqual } from "../../../utils/array";
-import Card from "../../../components/Card/Card";
+import Card from "../../../components/Card/CardFile";
 import { useLocation, useNavigate } from "react-router-dom";
 import useToolbar from "../../../components/Tabs/hooks/useToolbar";
 import { tabsList } from "../../../components/Drawer/DashboardDrawer.component";
 import Breadcrumbs from "../../../components/Breadcrumbs/Breadcrumbs.component";
-import CardFile from "../../../components/Card/Card";
+import CardFile from "../../../components/Card/CardFile";
 
 export default function DashboardTrashView() {
   const navigate = useNavigate();
