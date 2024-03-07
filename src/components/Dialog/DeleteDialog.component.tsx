@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 type DeleteDialogProps = {
   handleClose: () => void;
   actionType?: string | null | undefined;
-  deletedFolders: FolderData[];
+  deletedFolders?: FolderData[];
 };
 
 const DeleteDialog: FC<DeleteDialogProps> = ({

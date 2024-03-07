@@ -66,7 +66,9 @@ export default function DashboardCloudView() {
   const [folders, setFolders] = useState<FolderData[]>([]);
 
   const [files, setFiles] = useState([]);
-  const [lastPathnameId, setLastPathnameId] = useState("");
+
+  const [open, setOpen] = useState(false);
+  const [selectedFileContent, setSelectedFileContent] = useState(null);
 
   const {
     showFormFolder,
@@ -89,9 +91,6 @@ export default function DashboardCloudView() {
     handleSelectFolder,
     handleSelectFile,
   } = useToolbar(folders, files);
-
-  const [open, setOpen] = useState(false);
-  const [selectedFileContent, setSelectedFileContent] = useState(null);
 
   const getFolders = async () => {
     try {
@@ -189,10 +188,37 @@ export default function DashboardCloudView() {
       console.log(error);
     }
   };
+  const moveToFavoritesFiles = async (id: number) => {
+    const loader = toast.loading("Veuillez patienter...");
+    try {
+      const token = localStorage.getItem("@userToken");
+      const response = await sendPatchRequest(
+        `${API_BASE_URL}/files/isFavorite`,
+        { Authorization: `Bearer ${token}` },
+        { id: id }
+      );
+      if (response.status === 200) {
+        toast.update(loader, {
+          render: response.message,
+          type: "success",
+          autoClose: 2000,
+          isLoading: false,
+        });
+        return;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleMoveToFavoritesChange = (id: number) => {
     if (moveToFavorites) {
       moveToFavorites(id);
+    }
+  };
+  const handleMoveToFavoritesFilesChange = (id: number) => {
+    if (moveToFavoritesFiles) {
+      moveToFavoritesFiles(id);
     }
   };
   useEffect(() => {
@@ -260,6 +286,9 @@ export default function DashboardCloudView() {
           {(searchValue !== "" ? filteredFolders : files).map(
             (data: FileData) => (
               <CardFile
+                handleMoveToFavoritesChange={() =>
+                  handleMoveToFavoritesFilesChange(data.id)
+                }
                 key={data.id}
                 id={data.id}
                 onSelectFile={handleSelectFile}
@@ -289,7 +318,7 @@ export default function DashboardCloudView() {
           )}
           {showDeleteModal && (
             <DeleteDialog
-              deletedFolders={deletedFolders}
+              // deletedFolders={deletedFolders}
               handleClose={() => setShowDeleteModal(false)}
               actionType={actionType}
             />

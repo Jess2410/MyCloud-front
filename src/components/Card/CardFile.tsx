@@ -27,6 +27,7 @@ type CardProps = {
   creation_date: string;
   onDoubleClick: () => void;
   // onAddSelectedCards: (id: number) => void;
+  handleMoveToFavoritesChange: () => void;
 };
 
 const CardFile: FC<CardProps> = ({
@@ -39,6 +40,7 @@ const CardFile: FC<CardProps> = ({
   // onAddSelectedCards,
   name,
   creation_date,
+  handleMoveToFavoritesChange,
 }) => {
   const [isChecked, setIsChecked] = useState<boolean>(isSelected ?? false);
 
@@ -60,7 +62,7 @@ const CardFile: FC<CardProps> = ({
     try {
       const token = localStorage.getItem("@userToken");
       const response = await sendPatchRequest(
-        `${API_BASE_URL}/folders/isFavorite`,
+        `${API_BASE_URL}/files/isFavorite`,
         { Authorization: `Bearer ${token}` },
         { id: id }
       );

@@ -30,7 +30,6 @@ import CardFile from "../../../components/Card/CardFile";
 import ModalFileViewer from "../../../components/ModalFileViewer/ModalFileViewer.component";
 
 export default function DashboardTrashView() {
-  const navigate = useNavigate();
   const [folders, setFolders] = useState<FolderData[]>([]);
   const [files, setFiles] = useState([]);
 
@@ -42,19 +41,18 @@ export default function DashboardTrashView() {
     actionType,
     deletedFolders,
     displayDeleteModale,
-    handleSelectFolder,
     handleSelectAllCards,
     handleSearchInputChange,
-    allFoldersSelected,
-    setAllFoldersSelected,
     searchValue,
     setSearchValue,
-    selectedFoldersIds,
-    setSelectedFoldersIds,
     filteredFolders,
     setFilteredFolders,
     showDeleteModal,
     setShowDeleteModal,
+    selectedFiles,
+    selectedFolders,
+    handleSelectFolder,
+    handleSelectFile,
   } = useToolbar(folders, files);
 
   const { pathname } = useLocation();
@@ -97,6 +95,63 @@ export default function DashboardTrashView() {
       console.log("error");
     }
   };
+
+  const moveToFavorites = async (id: number) => {
+    const loader = toast.loading("Veuillez patienter...");
+    try {
+      const token = localStorage.getItem("@userToken");
+      const response = await sendPatchRequest(
+        `${API_BASE_URL}/folders/isFavorite`,
+        { Authorization: `Bearer ${token}` },
+        { id: id }
+      );
+      if (response.status === 200) {
+        toast.update(loader, {
+          render: response.message,
+          type: "success",
+          autoClose: 2000,
+          isLoading: false,
+        });
+        return;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const moveToFavoritesFiles = async (id: number) => {
+    const loader = toast.loading("Veuillez patienter...");
+    try {
+      const token = localStorage.getItem("@userToken");
+      const response = await sendPatchRequest(
+        `${API_BASE_URL}/files/isFavorite`,
+        { Authorization: `Bearer ${token}` },
+        { id: id }
+      );
+      if (response.status === 200) {
+        toast.update(loader, {
+          render: response.message,
+          type: "success",
+          autoClose: 2000,
+          isLoading: false,
+        });
+        return;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleMoveToFavoritesChange = (id: number) => {
+    if (moveToFavorites) {
+      moveToFavorites(id);
+    }
+  };
+  const handleMoveToFavoritesFilesChange = (id: number) => {
+    if (moveToFavoritesFiles) {
+      moveToFavoritesFiles(id);
+    }
+  };
+
   useEffect(() => {
     getFolders();
   }, []);
@@ -109,7 +164,10 @@ export default function DashboardTrashView() {
         setShowFormFolder={() => setShowFormFolder(!showFormFolder)}
         setShowFormFile={() => setShowFormFile(!showFormFile)}
         handleSelectAllCards={handleSelectAllCards}
-        allFoldersSelected={allFoldersSelected}
+        isChecked={
+          [...selectedFolders.values()].every((value) => value === true) &&
+          [...selectedFiles.values()].every((value) => value === true)
+        }
         displayDeleteModale={displayDeleteModale}
         def={true}
         restore={true}
@@ -132,12 +190,13 @@ export default function DashboardTrashView() {
           {(searchValue !== "" ? filteredFolders : folders).map(
             (data: FolderData) => (
               <CardFolder
+                handleMoveToFavoritesChange={() =>
+                  handleMoveToFavoritesChange(data.id)
+                }
                 key={data.id}
                 id={data.id}
-                isFolderSelected={selectedFoldersIds.includes(data.id)}
                 onSelectFolder={handleSelectFolder}
-                allFoldersSelected={allFoldersSelected}
-                // moveToFavorites={() => moveToFavorites(data.id)}
+                isSelected={selectedFolders.get(data.id)}
                 creation_date={data.creation_date}
                 isFavorite={data.isFavorite}
                 name={data.name}
@@ -149,12 +208,14 @@ export default function DashboardTrashView() {
           {(searchValue !== "" ? filteredFolders : files).map(
             (data: FileData) => (
               <CardFile
+                handleMoveToFavoritesChange={() =>
+                  handleMoveToFavoritesFilesChange(data.id)
+                }
                 key={data.id}
                 id={data.id}
-                // isFolderSelected={selectedFoldersIds.includes(data.id)}
-                // onSelectFolder={handleSelectFolder}
+                onSelectFile={handleSelectFile}
                 extension={data.extension}
-                allFoldersSelected={allFoldersSelected}
+                isSelected={selectedFiles.get(data.id)}
                 creation_date={data.creation_date}
                 isFavorite={data.isFavorite}
                 name={data.name}
@@ -179,7 +240,7 @@ export default function DashboardTrashView() {
           )}
           {showDeleteModal && (
             <DeleteDialogTrash
-              deletedFolders={deletedFolders}
+              // deletedFolders={deletedFolders}
               handleClose={() => setShowDeleteModal(false)}
               actionType={actionType}
             />

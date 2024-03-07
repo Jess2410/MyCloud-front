@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 type DeleteDialogTrashProps = {
   handleClose: () => void;
   actionType?: string | null | undefined;
-  deletedFolders: FolderData[];
+  deletedFolders?: FolderData[];
 };
 
 const DeleteDialogTrash: FC<DeleteDialogTrashProps> = ({

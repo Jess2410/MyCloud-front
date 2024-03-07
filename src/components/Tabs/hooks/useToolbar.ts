@@ -3,8 +3,11 @@ import {
   FileData,
   FolderData,
 } from "../../../views/auth/dashboard/DashboardCloudView";
+import { toast } from "react-toastify";
 
 import _ from "lodash";
+import { sendPatchRequest } from "../../../utils/data";
+import { API_BASE_URL } from "../../../constants/url";
 
 const initSelectedItems = (
   items: FolderData[] | FileData[]
@@ -28,7 +31,8 @@ const useToolbar = (folders: FolderData[], files: FileData[]) => {
   const [filteredFolders, setFilteredFolders] = useState<FolderData[]>([]);
   const [filteredFiles, setFilteredFiles] = useState<FileData[]>([]);
   const [searchValue, setSearchValue] = useState("");
-  const [deletedFolders, setDeletedFolders] = useState<FolderData[]>([]);
+  const [deletedFolders, setDeletedFolders] = useState<number[]>([]);
+  const [deletedFiles, setDeletedFiles] = useState<number[]>([]);
 
   const [selectedFolders, setSelectedFolders] = useState<Map<number, boolean>>(
     new Map()
@@ -80,12 +84,67 @@ const useToolbar = (folders: FolderData[], files: FileData[]) => {
   };
 
   const handleSearchInputChange = (event: any) => {
-    // const value = event.target.value.toLowerCase();
-    // setSearchValue(value);
-    // folders.filter((folder) => folder.name.toLowerCase().includes(value));
-    // setFilteredFolders(filteredFolders);
-    // files.filter((file: FileData) => file.name.toLowerCase().includes(value));
-    // setFilteredFiles(filteredFiles);
+    const value = event.target.value.toLowerCase();
+    setSearchValue(value);
+    folders.filter((folder) => folder.name.toLowerCase().includes(value));
+    setFilteredFolders(filteredFolders);
+    files.filter((file: FileData) => file.name.toLowerCase().includes(value));
+    setFilteredFiles(filteredFiles);
+  };
+
+  const deleteSelectedItems = async () => {
+    const foldersToDelete: number[] = [];
+    const filesToDelete: number[] = [];
+
+    selectedFolders.forEach((isSelected, folderId) => {
+      if (isSelected) {
+        foldersToDelete.push(folderId);
+      }
+    });
+
+    selectedFiles.forEach((isSelected, fileId) => {
+      if (isSelected) {
+        filesToDelete.push(fileId);
+      }
+    });
+    const loader = toast.loading("Veuillez patienter...");
+    try {
+      const token = localStorage.getItem("@userToken");
+      const response = await sendPatchRequest(
+        `${API_BASE_URL}/folders/isTrash`,
+        { Authorization: `Bearer ${token}` },
+        { folders: foldersToDelete, files: filesToDelete }
+        // { id: id }
+      );
+      // const response = await fetch("/deleteItems", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({
+      //     folders: foldersToDelete,
+      //     files: filesToDelete,
+      //   }),
+      // });
+
+      if (response.status === 200) {
+        toast.update(loader, {
+          render: response.message,
+          type: "success",
+          autoClose: 2000,
+          isLoading: false,
+        });
+        // Mettre à jour l'état local avec les éléments supprimés
+        setDeletedFolders([...deletedFolders, ...foldersToDelete]);
+        // Remettez à zéro les éléments sélectionnés
+        setSelectedFolders(new Map());
+        setSelectedFiles(new Map());
+      } else {
+        throw new Error("Failed to delete selected items");
+      }
+    } catch (error) {
+      console.error("Error deleting selected items:", error);
+    }
   };
 
   // useEffect(() => {
@@ -96,16 +155,16 @@ const useToolbar = (folders: FolderData[], files: FileData[]) => {
   //   }
   // }, [allFoldersSelected]);
 
-  // useEffect(() => {
-  //   const filtered = folders.filter((folder) =>
-  //     folder.name.toLowerCase().includes(searchValue.toLowerCase())
-  //   );
-  //   setFilteredFolders(filtered);
-  //   const filteredFiles = files.filter((file: FileData) =>
-  //     file.name.toLowerCase().includes(searchValue.toLowerCase())
-  //   );
-  //   setFilteredFiles(filteredFiles);
-  // }, [folders, files, searchValue]);
+  useEffect(() => {
+    const filtered = folders.filter((folder) =>
+      folder.name.toLowerCase().includes(searchValue.toLowerCase())
+    );
+    setFilteredFolders(filtered);
+    const filteredFiles = files.filter((file: FileData) =>
+      file.name.toLowerCase().includes(searchValue.toLowerCase())
+    );
+    setFilteredFiles(filteredFiles);
+  }, [folders, files, searchValue]);
 
   useEffect(() => {
     setSelectedFolders(initSelectedItems(folders));
