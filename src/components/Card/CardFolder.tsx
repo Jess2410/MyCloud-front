@@ -18,9 +18,6 @@ import checkboxChecked from "../../assets/icons/Vectorcheckbox-checked.png";
 import checkboxUnchecked from "../../assets/icons/Vectorcheckbox-no-checked.png";
 import styles from "./card.component.module.css";
 import { useLocation, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { sendPatchRequest } from "../../utils/data";
-import { API_BASE_URL } from "../../constants/url";
 
 type CardFolderProps = {
   isFavorite: boolean;
@@ -29,6 +26,7 @@ type CardFolderProps = {
   id: number;
   name: string;
   creation_date: string;
+  handleMoveToFavoritesChange: () => void;
 };
 
 const CardFolder: FC<CardFolderProps> = ({
@@ -38,40 +36,12 @@ const CardFolder: FC<CardFolderProps> = ({
   id,
   name,
   creation_date,
+  handleMoveToFavoritesChange,
 }) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
   const [isChecked, setIsChecked] = useState<boolean>(isSelected ?? false);
-
-  const moveToFavorites = async () => {
-    const loader = toast.loading("Veuillez patienter...");
-    try {
-      const token = localStorage.getItem("@userToken");
-      const response = await sendPatchRequest(
-        `${API_BASE_URL}/folders/isFavorite`,
-        { Authorization: `Bearer ${token}` },
-        { id: id }
-      );
-      if (response.status === 200) {
-        toast.update(loader, {
-          render: response.message,
-          type: "success",
-          autoClose: 2000,
-          isLoading: false,
-        });
-        return;
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleMoveToFavoritesChange = () => {
-    if (moveToFavorites) {
-      moveToFavorites();
-    }
-  };
 
   const handleSelect = (
     _event: ChangeEvent<HTMLInputElement>,

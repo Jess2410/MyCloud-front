@@ -179,6 +179,12 @@ export default function DashboardFavoritesView() {
     setSelectedFileContent(null);
   };
 
+  const handleMoveToFavoritesChange = (id: number) => {
+    if (moveToFavorites) {
+      moveToFavorites(id);
+    }
+  };
+
   useEffect(() => {
     //console.log(lastPathnameId); ///TODO pas encore modifié par la ligne 181 a ce moement la
     const param = getLastParam(pathname);
@@ -258,6 +264,9 @@ export default function DashboardFavoritesView() {
           {(searchValue !== "" ? filteredFolders : folders)?.map(
             (data: FolderData) => (
               <CardFolder
+                handleMoveToFavoritesChange={() =>
+                  handleMoveToFavoritesChange(data.id)
+                }
                 key={data.id}
                 id={data.id}
                 onSelectFolder={handleSelectFolder}

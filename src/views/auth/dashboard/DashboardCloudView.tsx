@@ -18,6 +18,8 @@ import Card from "../../../components/Card/CardFile";
 import useToolbar from "../../../components/Tabs/hooks/useToolbar";
 import CardFile from "../../../components/Card/CardFile";
 import ModalFileViewer from "../../../components/ModalFileViewer/ModalFileViewer.component";
+import { toast } from "react-toastify";
+import { sendPatchRequest } from "../../../utils/data";
 
 export const tabsList = [
   {
@@ -88,6 +90,9 @@ export default function DashboardCloudView() {
     handleSelectFile,
   } = useToolbar(folders, files);
 
+  const [open, setOpen] = useState(false);
+  const [selectedFileContent, setSelectedFileContent] = useState(null);
+
   const getFolders = async () => {
     try {
       const token = localStorage.getItem("@userToken");
@@ -128,29 +133,13 @@ export default function DashboardCloudView() {
       if (JSON.stringify(folders) !== JSON.stringify(response)) {
         setFolders(response);
       }
-      // console.log("arraysAreEqual(folders, response)");
     } catch (error) {
       console.log("error");
     }
   };
 
-  const getFilesFromParent = async (filesRequestPath: string) => {
-    // console.log("getFilesFromParent ", filesRequestPath);
+  const getFilesFromParent = async () => {
     setFiles([]);
-    // try {
-    //   const token = localStorage.getItem("@userToken");
-    //   const response = await sendGetRequest(
-    //     `${API_BASE_URL}/files/parent/${filesRequestPath}`,
-    //     {
-    //       Authorization: `Bearer ${token}`,
-    //     }
-    //   );
-    //   if (!arraysAreEqual(files, response)) {
-    //     setFiles(response);
-    //   }
-    // } catch (error) {
-    //   console.log("error");
-    // }
   };
 
   const getLastParam = (currentpathname: string): string => {
@@ -159,10 +148,6 @@ export default function DashboardCloudView() {
     return splitted[splitted.length - 1];
   };
 
-  const [open, setOpen] = useState(false);
-  const [selectedFileContent, setSelectedFileContent] = useState(null);
-  // console.log("🚀 ~ selectedFileContent:", selectedFileContent);
-
   const handleOpen = async (id: any) => {
     try {
       const token = localStorage.getItem("@userToken");
@@ -170,7 +155,6 @@ export default function DashboardCloudView() {
         Authorization: `Bearer ${token}`,
       });
       const { url } = response;
-      // console.log("🚀 ~ handleOpen ~ response:", response);
       setSelectedFileContent(url);
       setOpen(true);
     } catch (error) {
@@ -183,11 +167,39 @@ export default function DashboardCloudView() {
     setSelectedFileContent(null);
   };
 
+  const moveToFavorites = async (id: number) => {
+    const loader = toast.loading("Veuillez patienter...");
+    try {
+      const token = localStorage.getItem("@userToken");
+      const response = await sendPatchRequest(
+        `${API_BASE_URL}/folders/isFavorite`,
+        { Authorization: `Bearer ${token}` },
+        { id: id }
+      );
+      if (response.status === 200) {
+        toast.update(loader, {
+          render: response.message,
+          type: "success",
+          autoClose: 2000,
+          isLoading: false,
+        });
+        return;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleMoveToFavoritesChange = (id: number) => {
+    if (moveToFavorites) {
+      moveToFavorites(id);
+    }
+  };
   useEffect(() => {
-    //console.log(lastPathnameId); ///TODO pas encore modifié par la ligne 181 a ce moement la
     const param = getLastParam(pathname);
     if (param.length == 0) getFiles();
-    else getFilesFromParent(param);
+    else getFilesFromParent();
+    // else getFilesFromParent(param);
   }, [pathname]);
 
   useEffect(() => {
@@ -232,6 +244,9 @@ export default function DashboardCloudView() {
           {(searchValue !== "" ? filteredFolders : folders).map(
             (data: FolderData) => (
               <CardFolder
+                handleMoveToFavoritesChange={() =>
+                  handleMoveToFavoritesChange(data.id)
+                }
                 key={data.id}
                 id={data.id}
                 onSelectFolder={handleSelectFolder}
