@@ -2,6 +2,8 @@ import {
   ChangeEvent,
   // Dispatch,  SetStateAction,
   FC,
+  useEffect,
+  useState,
 } from "react";
 import { Card as CardMui } from "@mui/material";
 import CardActions from "@mui/material/CardActions";
@@ -22,9 +24,8 @@ import { API_BASE_URL } from "../../constants/url";
 
 type CardFolderProps = {
   isFavorite: boolean;
-  isFolderSelected: boolean;
   onSelectFolder: (folderId: number, isFolderSelected: boolean) => void;
-  allFoldersSelected: boolean;
+  isSelected?: boolean;
   id: number;
   name: string;
   creation_date: string;
@@ -32,15 +33,16 @@ type CardFolderProps = {
 
 const CardFolder: FC<CardFolderProps> = ({
   isFavorite,
-  isFolderSelected,
   onSelectFolder,
-  allFoldersSelected,
+  isSelected,
   id,
   name,
   creation_date,
 }) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
+
+  const [isChecked, setIsChecked] = useState<boolean>(isSelected ?? false);
 
   const moveToFavorites = async () => {
     const loader = toast.loading("Veuillez patienter...");
@@ -65,16 +67,18 @@ const CardFolder: FC<CardFolderProps> = ({
     }
   };
 
-  const handleMoveToFavoritesChange = (
-    event: ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleMoveToFavoritesChange = () => {
     if (moveToFavorites) {
       moveToFavorites();
     }
   };
 
-  const handleSelect = () => {
-    onSelectFolder(id, !isFolderSelected);
+  const handleSelect = (
+    _event: ChangeEvent<HTMLInputElement>,
+    checked: boolean
+  ) => {
+    setIsChecked(checked);
+    onSelectFolder(id, checked);
   };
 
   const displayIcon = () => {
@@ -94,9 +98,13 @@ const CardFolder: FC<CardFolderProps> = ({
     return `${day}-${month}-${year}`;
   };
 
+  useEffect(() => {
+    if (isSelected !== undefined) setIsChecked(isSelected);
+  }, [isSelected]);
+
   return (
     <CardMui
-      className={allFoldersSelected ? styles["card-selected"] : styles["card"]}
+      className={isChecked ? styles["card-selected"] : styles["card"]}
       onDoubleClick={handleDoubleClick}
     >
       <CardActions className={styles["card__actions"]}>
@@ -110,7 +118,7 @@ const CardFolder: FC<CardFolderProps> = ({
         <Checkbox
           icon={<img src={checkboxUnchecked} alt="Unchecked" />}
           checkedIcon={<img src={checkboxChecked} alt="Checked" />}
-          checked={isFolderSelected}
+          checked={isChecked}
           onChange={handleSelect}
           inputProps={{ "aria-label": "selected" }}
         />

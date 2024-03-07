@@ -5,34 +5,35 @@ import SearchWithFilter from "../SearchBarFilter/SearchBarFilter.component";
 import addFile from "../../assets/icons/add-file-icon.png";
 import addFolder from "../../assets/icons/add-folder-icon.png";
 import trash from "../../assets/icons/trash-icon.png";
-import checkBox from "../../assets/icons/checkbox.png";
-import checkBoxNoChecked from "../../assets/icons/checkbox-checked-tool.png";
+import checkboxChecked from "../../assets/icons/Vectorcheckbox-checked.png";
+import checkboxUnchecked from "../../assets/icons/Vectorcheckbox-no-checked.png";
 import deftrashIcon from "../../assets/icons/trash-definitive-icon.png";
 import React from "react";
+import Checkbox from "../Button/Checkbox/Checkbox";
 
 type ToolBarProps = {
-  handleSelectAllCards: () => void;
+  handleSelectAllCards: (isSelected: boolean) => void;
   tabActive?: number;
   allCheckboxesChecked?: boolean;
   isTrash: boolean;
   displayDeleteModale: (actionType?: string | null | undefined) => void;
   def: boolean;
   restore: boolean;
-  allFoldersSelected: boolean;
   handleSearchInputChange?: (event: any) => void;
   searchValue: string;
   setShowFormFolder: any;
   setShowFormFile: () => void;
+  isChecked: boolean;
 };
 const ToolBar: React.FC<ToolBarProps> = ({
   setShowFormFolder,
   setShowFormFile,
   handleSelectAllCards,
-  allFoldersSelected,
   displayDeleteModale,
   isTrash = false,
   handleSearchInputChange,
   searchValue,
+  isChecked,
 }) => {
   return (
     <Box
@@ -81,19 +82,14 @@ const ToolBar: React.FC<ToolBarProps> = ({
         >
           Sélectionner
         </Typography>
-        <Box
-          sx={{
-            borderRight: "1px solid var(--primary)",
-          }}
-          onClick={handleSelectAllCards}
-          // onClick={() => handleSelectAllCards()}
-        >
-          {allFoldersSelected ? (
-            <IconButton icon={checkBoxNoChecked} />
-          ) : (
-            <IconButton icon={checkBox} />
-          )}
-        </Box>
+
+        <Checkbox
+          iconChecked={checkboxChecked}
+          iconUnchecked={checkboxUnchecked}
+          isChecked={isChecked}
+          onChange={handleSelectAllCards}
+        />
+
         {isTrash ? (
           <>
             <IconButton

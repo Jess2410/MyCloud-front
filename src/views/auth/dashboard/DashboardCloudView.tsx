@@ -74,19 +74,18 @@ export default function DashboardCloudView() {
     actionType,
     deletedFolders,
     displayDeleteModale,
-    handleSelectFolder,
     handleSelectAllCards,
     handleSearchInputChange,
-    allFoldersSelected,
-    setAllFoldersSelected,
     searchValue,
     setSearchValue,
-    selectedFoldersIds,
-    setSelectedFoldersIds,
     filteredFolders,
     setFilteredFolders,
     showDeleteModal,
     setShowDeleteModal,
+    selectedFiles,
+    selectedFolders,
+    handleSelectFolder,
+    handleSelectFile,
   } = useToolbar(folders, files);
 
   const getFolders = async () => {
@@ -119,7 +118,6 @@ export default function DashboardCloudView() {
 
   const getFoldersFromParent = async (foldersRequestPath: string) => {
     try {
-      // console.log("getFoldersFromParent ", foldersRequestPath);
       const token = localStorage.getItem("@userToken");
       const response = await sendGetRequest(
         `${API_BASE_URL}/folders/parent/${foldersRequestPath}`,
@@ -128,7 +126,6 @@ export default function DashboardCloudView() {
         }
       );
       if (JSON.stringify(folders) !== JSON.stringify(response)) {
-        console.log(response);
         setFolders(response);
       }
       // console.log("arraysAreEqual(folders, response)");
@@ -164,7 +161,7 @@ export default function DashboardCloudView() {
 
   const [open, setOpen] = useState(false);
   const [selectedFileContent, setSelectedFileContent] = useState(null);
-  console.log("🚀 ~ selectedFileContent:", selectedFileContent);
+  // console.log("🚀 ~ selectedFileContent:", selectedFileContent);
 
   const handleOpen = async (id: any) => {
     try {
@@ -173,7 +170,7 @@ export default function DashboardCloudView() {
         Authorization: `Bearer ${token}`,
       });
       const { url } = response;
-      console.log("🚀 ~ handleOpen ~ response:", response);
+      // console.log("🚀 ~ handleOpen ~ response:", response);
       setSelectedFileContent(url);
       setOpen(true);
     } catch (error) {
@@ -208,7 +205,10 @@ export default function DashboardCloudView() {
         setShowFormFolder={() => setShowFormFolder(!showFormFolder)}
         setShowFormFile={() => setShowFormFile(!showFormFile)}
         handleSelectAllCards={handleSelectAllCards}
-        allFoldersSelected={allFoldersSelected}
+        isChecked={
+          [...selectedFolders.values()].every((value) => value === true) &&
+          [...selectedFiles.values()].every((value) => value === true)
+        }
         displayDeleteModale={displayDeleteModale}
         def={true}
         restore={true}
@@ -234,9 +234,8 @@ export default function DashboardCloudView() {
               <CardFolder
                 key={data.id}
                 id={data.id}
-                isFolderSelected={selectedFoldersIds.includes(data.id)}
                 onSelectFolder={handleSelectFolder}
-                allFoldersSelected={allFoldersSelected}
+                isSelected={selectedFolders.get(data.id)}
                 creation_date={data.creation_date}
                 isFavorite={data.isFavorite}
                 name={data.name}
@@ -248,10 +247,9 @@ export default function DashboardCloudView() {
               <CardFile
                 key={data.id}
                 id={data.id}
-                // isFolderSelected={selectedFoldersIds.includes(data.id)}
-                // onSelectFolder={handleSelectFolder}
+                onSelectFile={handleSelectFile}
                 extension={data.extension}
-                allFoldersSelected={allFoldersSelected}
+                isSelected={selectedFiles.get(data.id)}
                 creation_date={data.creation_date}
                 isFavorite={data.isFavorite}
                 name={data.name}
@@ -261,7 +259,7 @@ export default function DashboardCloudView() {
           )}
           {open && (
             <ModalFileViewer
-              selectedFile={selectedFileContent}
+              selectedFile={selectedFileContent ? selectedFileContent : ""}
               handleClose={handleClose}
             />
           )}

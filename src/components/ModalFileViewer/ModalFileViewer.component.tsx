@@ -22,7 +22,7 @@ import { API_BASE_URL } from "../../constants/url";
 
 type ModalFileViewerProps = {
   handleClose: () => void;
-  selectedFile: string;
+  selectedFile?: string;
 };
 
 export default function ModalFileViewer({

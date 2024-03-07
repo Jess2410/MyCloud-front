@@ -19,66 +19,76 @@ import Breadcrumbs from "../../../components/Breadcrumbs/Breadcrumbs.component";
 import { useLocation } from "react-router-dom";
 import CardFile from "../../../components/Card/CardFile";
 import ModalFileViewer from "../../../components/ModalFileViewer/ModalFileViewer.component";
+import useToolbar from "../../../components/Tabs/hooks/useToolbar";
 
 export default function DashboardFavoritesView() {
   const { pathname } = useLocation();
 
   const tabActive = tabsList.find((tab) => pathname.includes(tab.url));
 
-  const [showFormFolder, setShowFormFolder] = useState(false);
-  const [showFormFile, setShowFormFile] = useState(false);
   // const userContext = useContext(UserContext);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [actionType, setActionType] = useState("");
+
   const [folders, setFolders] = useState<FolderData[]>([]);
   const [files, setFiles] = useState([]);
 
   const [allFoldersSelected, setAllFoldersSelected] = useState(false);
   const [selectedFoldersIds, setSelectedFoldersIds] = useState<number[]>([]);
-
-  const [filteredFolders, setFilteredFolders] = useState<FolderData[]>([]);
   const [filteredFiles, setFilteredFiles] = useState<FileData[]>([]);
-  const [deletedFolders, setDeletedFolders] = useState<FolderData[]>([]);
-  const [searchValue, setSearchValue] = useState("");
 
-  const displayDeleteModale = (actionType: string | null | undefined) => {
-    setShowDeleteModal(!showDeleteModal);
-    if (actionType) {
-      setActionType(actionType);
+  const {
+    showFormFolder,
+    setShowFormFolder,
+    showFormFile,
+    setShowFormFile,
+    actionType,
+    deletedFolders,
+    displayDeleteModale,
+    handleSelectAllCards,
+    handleSearchInputChange,
+    searchValue,
+    setSearchValue,
+    filteredFolders,
+    setFilteredFolders,
+    showDeleteModal,
+    setShowDeleteModal,
+    selectedFiles,
+    selectedFolders,
+    handleSelectFolder,
+    handleSelectFile,
+  } = useToolbar(folders, files);
+
+  const getFiles = async () => {
+    try {
+      const token = localStorage.getItem("@userToken");
+      const response = await sendGetRequest(`${API_BASE_URL}/files/favorites`, {
+        Authorization: `Bearer ${token}`,
+      });
+      if (!arraysAreEqual(files, response)) {
+        setFiles(response);
+      }
+    } catch (error) {
+      console.log("error");
     }
   };
 
-  const handleSelectFolder = (folderId: number, isFolderSelected: boolean) => {
-    setSelectedFoldersIds((prev) =>
-      isFolderSelected
-        ? [...prev, folderId]
-        : prev.filter((id) => id !== folderId)
-    );
-
-    const allSelected = folders.every((folder) =>
-      selectedFoldersIds.includes(folder?.id)
-    );
-    setAllFoldersSelected(allSelected);
+  const getFilesFromParent = async (filesRequestPath: string) => {
+    // console.log("getFilesFromParent ", filesRequestPath);
+    setFiles([]);
+    // try {
+    //   const token = localStorage.getItem("@userToken");
+    //   const response = await sendGetRequest(
+    //     `${API_BASE_URL}/files/parent/${filesRequestPath}`,
+    //     {
+    //       Authorization: `Bearer ${token}`,
+    //     }
+    //   );
+    //   if (!arraysAreEqual(files, response)) {
+    //     setFiles(response);
+    //   }
+    // } catch (error) {
+    //   console.log("error");
+    // }
   };
-
-  const handleSelectAllCards = () => {
-    if (!allFoldersSelected) {
-      const allFolderIds = folders.map((folder) => folder?.id);
-      setSelectedFoldersIds(allFolderIds);
-    } else {
-      setSelectedFoldersIds([]);
-    }
-    setAllFoldersSelected(!allFoldersSelected);
-  };
-
-  const handleSearchInputChange = (event: any) => {
-    const value = event.target.value.toLowerCase();
-    setSearchValue(value);
-
-    folders.filter((folder) => folder.name.toLowerCase().includes(value));
-    setFilteredFolders(filteredFolders);
-  };
-
   const moveToFavorites = async (id: number) => {
     const loader = toast.loading("Veuillez patienter...");
     try {
@@ -119,6 +129,12 @@ export default function DashboardFavoritesView() {
     }
   };
 
+  const getLastParam = (currentpathname: string): string => {
+    const splitted = currentpathname.split("/");
+    if (splitted.length <= 2) return "";
+    return splitted[splitted.length - 1];
+  };
+
   // TODO : la route pour get les fichiers favoris
   // useEffect(() => {
   //   const getFiles = async () => {
@@ -142,18 +158,33 @@ export default function DashboardFavoritesView() {
 
   const [open, setOpen] = useState(false);
   const [selectedFileContent, setSelectedFileContent] = useState(null);
-  console.log("🚀 ~ selectedFileContent:", selectedFileContent);
 
-  const handleOpen = (id: any) => {
-    console.log("🚀 ~ handleOpen ~ id:", id);
-    setSelectedFileContent(id);
-    setOpen(!open);
+  const handleOpen = async (id: any) => {
+    try {
+      const token = localStorage.getItem("@userToken");
+      const response = await sendGetRequest(`${API_BASE_URL}/files/${id}`, {
+        Authorization: `Bearer ${token}`,
+      });
+      const { url } = response;
+      // console.log("🚀 ~ handleOpen ~ response:", response);
+      setSelectedFileContent(url);
+      setOpen(true);
+    } catch (error) {
+      console.log("error");
+    }
   };
 
   const handleClose = () => {
     setOpen(false);
     setSelectedFileContent(null);
   };
+
+  useEffect(() => {
+    //console.log(lastPathnameId); ///TODO pas encore modifié par la ligne 181 a ce moement la
+    const param = getLastParam(pathname);
+    if (param.length == 0) getFiles();
+    else getFilesFromParent(param);
+  }, [pathname]);
 
   useEffect(() => {
     const filtered = folders.filter((folder) =>
@@ -201,7 +232,10 @@ export default function DashboardFavoritesView() {
         setShowFormFolder={() => setShowFormFolder(!showFormFolder)}
         setShowFormFile={() => setShowFormFile(!showFormFile)}
         handleSelectAllCards={handleSelectAllCards}
-        allFoldersSelected={allFoldersSelected}
+        isChecked={
+          [...selectedFolders.values()].every((value) => value === true) &&
+          [...selectedFiles.values()].every((value) => value === true)
+        }
         displayDeleteModale={displayDeleteModale}
         def={true}
         restore={true}
@@ -226,37 +260,38 @@ export default function DashboardFavoritesView() {
               <CardFolder
                 key={data.id}
                 id={data.id}
-                isFolderSelected={selectedFoldersIds.includes(data.id)}
                 onSelectFolder={handleSelectFolder}
-                allFoldersSelected={allFoldersSelected}
-                // moveToFavorites={() => moveToFavorites(data.id)}
+                isSelected={selectedFolders.get(data.id)}
                 creation_date={data.creation_date}
                 isFavorite={data.isFavorite}
                 name={data.name}
-                // onDoubleClick={() => handleFolderDoubleClick(data.id)}
               />
             )
           )}
 
-          {(searchValue !== "" ? filteredFolders : files).map(
+          {(searchValue !== "" ? filteredFiles : files).map(
             (data: FileData) => (
               <>
                 <CardFile
                   key={data.id}
                   id={data.id}
-                  // isFolderSelected={selectedFoldersIds.includes(data.id)}
-                  // onSelectFolder={handleSelectFolder}
+                  onSelectFile={handleSelectFile}
                   extension={data.extension}
-                  allFoldersSelected={allFoldersSelected}
+                  isSelected={selectedFiles.get(data.id)}
                   creation_date={data.creation_date}
                   isFavorite={data.isFavorite}
                   name={data.name}
-                  onDoubleClick={() => handleOpen(data.url)}
+                  onDoubleClick={() => handleOpen(data.id)}
                 />
               </>
             )
           )}
-          {open && <ModalFileViewer handleClose={handleClose} />}
+          {open && (
+            <ModalFileViewer
+              selectedFile={selectedFileContent ? selectedFileContent : ""}
+              handleClose={handleClose}
+            />
+          )}
 
           {showFormFolder && (
             <FormDialogFolder

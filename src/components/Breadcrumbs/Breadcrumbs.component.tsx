@@ -3,7 +3,6 @@ import { Box, Breadcrumbs as BreadcrumbsMUI, Link } from "@mui/material";
 import { useLocation, useParams, Link as RouterLink } from "react-router-dom";
 import { sendGetRequest } from "../../utils/data";
 import { API_BASE_URL } from "../../constants/url";
-import { arraysAreEqual } from "../../utils/array";
 import { tabsList } from "../Drawer/DashboardDrawer.component";
 
 type BreadcrumbsProps = {
@@ -12,17 +11,13 @@ type BreadcrumbsProps = {
 };
 
 const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ link, label }) => {
-  console.log("🚀 ~ label:", label);
-  console.log("🚀 ~ link:", link);
   const location = useLocation();
   const params = useParams();
 
   const pathnames = params ? (params["*"] ? params["*"].split("/") : []) : [];
   const [listNamesFolders, setListNamesFolders] = useState<string[]>([]);
-  console.log("🚀 ~ listNamesFolders:", listNamesFolders);
 
   const [navigationItems, setNavigationItems] = useState<string[]>([]);
-  console.log("🚀 ~ navigationItems:", navigationItems);
 
   const getFoldersNames = async () => {
     try {

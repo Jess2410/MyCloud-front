@@ -27,6 +27,7 @@ import useToolbar from "../../../components/Tabs/hooks/useToolbar";
 import { tabsList } from "../../../components/Drawer/DashboardDrawer.component";
 import Breadcrumbs from "../../../components/Breadcrumbs/Breadcrumbs.component";
 import CardFile from "../../../components/Card/CardFile";
+import ModalFileViewer from "../../../components/ModalFileViewer/ModalFileViewer.component";
 
 export default function DashboardTrashView() {
   const navigate = useNavigate();
@@ -59,26 +60,30 @@ export default function DashboardTrashView() {
   const { pathname } = useLocation();
   const tabActive = tabsList.find((tab) => pathname.includes(tab.url));
 
-  // TODO : la route pour get les fichiers trash
-  // useEffect(() => {
-  //   const getFiles = async () => {
-  //     try {
-  //       const token = localStorage.getItem("@userToken");
-  //       const response = await sendGetRequest(
-  //         `${API_BASE_URL}/files/trash`,
-  //         {
-  //           Authorization: `Bearer ${token}`,
-  //         }
-  //       );
-  //       if (!arraysAreEqual(files, response)) {
-  //         setFiles(response);
-  //       }
-  //     } catch (error) {
-  //       console.log("error");
-  //     }
-  //   };
-  //   getFiles();
-  // }, []);
+  const [open, setOpen] = useState(false);
+  const [selectedFileContent, setSelectedFileContent] = useState(null);
+  console.log("🚀 ~ selectedFileContent:", selectedFileContent);
+
+  const handleOpen = async (id: any) => {
+    try {
+      const token = localStorage.getItem("@userToken");
+      const response = await sendGetRequest(`${API_BASE_URL}/files/${id}`, {
+        Authorization: `Bearer ${token}`,
+      });
+      const { url } = response;
+      console.log("🚀 ~ handleOpen ~ response:", response);
+      setSelectedFileContent(url);
+      setOpen(true);
+    } catch (error) {
+      console.log("error");
+    }
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedFileContent(null);
+  };
+
   const getFolders = async () => {
     try {
       const token = localStorage.getItem("@userToken");
@@ -153,8 +158,15 @@ export default function DashboardTrashView() {
                 creation_date={data.creation_date}
                 isFavorite={data.isFavorite}
                 name={data.name}
+                onDoubleClick={() => handleOpen(data.id)}
               />
             )
+          )}
+          {open && (
+            <ModalFileViewer
+              selectedFile={selectedFileContent ? selectedFileContent : ""}
+              handleClose={handleClose}
+            />
           )}
           {showFormFolder && (
             <FormDialogFolder

@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState, useEffect, ChangeEvent } from "react";
 import { Card as CardMui } from "@mui/material";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -19,8 +19,9 @@ import { API_BASE_URL } from "../../constants/url";
 
 type CardProps = {
   extension?: string;
+  onSelectFile: (fileId: number, isFileSelected: boolean) => void;
   isFavorite: boolean;
-  allFoldersSelected?: boolean;
+  isSelected?: boolean;
   id: number;
   name: string;
   creation_date: string;
@@ -30,14 +31,17 @@ type CardProps = {
 
 const CardFile: FC<CardProps> = ({
   extension,
+  onSelectFile,
   isFavorite,
-  allFoldersSelected,
+  isSelected,
   id,
   onDoubleClick,
   // onAddSelectedCards,
   name,
   creation_date,
 }) => {
+  const [isChecked, setIsChecked] = useState<boolean>(isSelected ?? false);
+
   const displayIcon = () => {
     if (extension === "mp3") {
       return <img src={iconFileAudio} alt="audio-file-icon" />;
@@ -74,12 +78,22 @@ const CardFile: FC<CardProps> = ({
     }
   };
 
+  const handleSelect = (
+    _event: ChangeEvent<HTMLInputElement>,
+    checked: boolean
+  ) => {
+    setIsChecked(checked);
+    onSelectFile(id, checked);
+  };
+
+  useEffect(() => {
+    if (isSelected !== undefined) setIsChecked(isSelected);
+  }, [isSelected]);
+
   return (
     <>
       <CardMui
-        className={
-          allFoldersSelected ? styles["card-selected"] : styles["card"]
-        }
+        className={isSelected ? styles["card-selected"] : styles["card"]}
         onDoubleClick={onDoubleClick}
       >
         <CardActions className={styles["card__actions"]}>
@@ -93,8 +107,8 @@ const CardFile: FC<CardProps> = ({
           <Checkbox
             icon={<img src={checkboxUnchecked} alt="Unchecked" />}
             checkedIcon={<img src={checkboxChecked} alt="Checked" />}
-            checked={allFoldersSelected}
-            // onChange={() => onAddSelectedCards(id)}
+            checked={isChecked}
+            onChange={handleSelect}
             inputProps={{ "aria-label": "selected" }}
           />
         </CardActions>
