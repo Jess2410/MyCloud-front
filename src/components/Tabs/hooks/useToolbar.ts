@@ -42,9 +42,6 @@ const useToolbar = (folders: FolderData[], files: FileData[]) => {
     new Map()
   );
 
-  console.log("folders", selectedFolders);
-  console.log("files", selectedFiles);
-
   const displayDeleteModale = (actionType: string | null | undefined) => {
     setShowDeleteModal(!showDeleteModal);
     if (actionType) {
@@ -58,6 +55,7 @@ const useToolbar = (folders: FolderData[], files: FileData[]) => {
 
     setSelectedFolders(selectedFoldersCopy);
   };
+
   const handleSelectFile = (fileId: number, isFileSelected: boolean) => {
     const selectedFilesCopy = _.cloneDeep(selectedFiles);
     selectedFilesCopy.set(fileId, isFileSelected);

@@ -83,7 +83,6 @@ export default function DashboardCloudView() {
     searchValue,
     setSearchValue,
     filteredFolders,
-    setFilteredFolders,
     showDeleteModal,
     setShowDeleteModal,
     selectedFiles,
@@ -318,7 +317,7 @@ export default function DashboardCloudView() {
           )}
           {showDeleteModal && (
             <DeleteDialog
-              // deletedFolders={deletedFolders}
+              deletedFolders={deletedFolders}
               handleClose={() => setShowDeleteModal(false)}
               actionType={actionType}
             />

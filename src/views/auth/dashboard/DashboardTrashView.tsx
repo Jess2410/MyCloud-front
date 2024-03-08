@@ -240,7 +240,7 @@ export default function DashboardTrashView() {
           )}
           {showDeleteModal && (
             <DeleteDialogTrash
-              // deletedFolders={deletedFolders}
+              deletedFolders={deletedFolders}
               handleClose={() => setShowDeleteModal(false)}
               actionType={actionType}
             />

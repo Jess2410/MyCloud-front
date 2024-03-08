@@ -19,13 +19,14 @@ export default function FormDialogFile({ handleClose }: FormDialogProps) {
     file: null as File | null,
   });
 
+  const [file, setFile] = useState(null);
+
   const createFile = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // const formData = new FormData(event.currentTarget);
-    // const formJson = Object.fromEntries((formData as any).entries());
-    // const nameFile = formJson.name;
-    // const fileFile = formJson.file;
-    console.log("🚀 ~ createFile ~ formData:", formData);
+    const formData = new FormData(event.currentTarget);
+    const formJson = Object.fromEntries((formData as any).entries());
+
+    console.log("🚀 ~ createFile ~ formData:", formJson.image);
     const loader = toast.loading("Veuillez patienter...");
     try {
       const token = localStorage.getItem("@userToken");
@@ -33,11 +34,11 @@ export default function FormDialogFile({ handleClose }: FormDialogProps) {
         `${API_BASE_URL}/file`,
         { Authorization: `Bearer ${token}` },
         {
-          name: formData.name,
-          file: formData.file,
+          name: formJson.name,
+          file: formJson.image,
         }
       );
-      if (!formData.file) {
+      if (!formJson.image) {
         toast.error("Veuillez sélectionner un fichier.");
         return;
       }
@@ -89,7 +90,7 @@ export default function FormDialogFile({ handleClose }: FormDialogProps) {
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             variant="standard"
           />
-
+          {/* 
           <TextField
             type="file"
             name="file"
@@ -104,19 +105,21 @@ export default function FormDialogFile({ handleClose }: FormDialogProps) {
             // onChange={(e: any) => {
             //   setFile(e.target.files?.length ? e.target?.files[0] : null);
             // }}
-          />
-          {/* <input
+          /> */}
+          <input
             type="file"
             id="image"
             name="image"
-            accept="image/png, image/jpeg"
+            accept="image/png, image/jpeg, .pdf"
             placeholder="fichier"
-            hidden
             onChange={(e) => {
-              console.log("🚀 ~ <TextFieldtype ~ e:", e);
-              return;
+              const target = e.target as HTMLInputElement;
+              const file = target.files && target.files[0];
+              if (file) {
+                setFormData({ ...formData, file: file });
+              }
             }}
-          /> */}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Retour</Button>
