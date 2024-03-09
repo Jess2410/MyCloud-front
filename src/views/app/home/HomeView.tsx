@@ -17,24 +17,24 @@ export default function HomeView() {
     >
       <Box
         sx={{
-          padding: "8vh 16vh 0",
+          padding: ["2em", "2vh 16vh 0"],
         }}
       >
         <Navbar />
         <Box
           sx={{
-            // padding: ["40px 0", "80px 0"],
-            maxWidth: "500px",
-            gap: "40px",
+            padding: ["2em 0", "2em 0"],
+            maxWidth: ["550px", "700px", "55%"],
+            // gap: "40px",
           }}
         >
           <Typography
             sx={{
               fontFamily: "Poppins",
               fontWeight: 500,
-              fontSize: ["40px", "44px"],
-              lineHeight: ["48px", "64px"],
-              color: "#6A6369",
+              fontSize: ["2em", "2.5em"],
+              lineHeight: ["1em", "1.5em"],
+              color: ["black", "#6A6369"],
               textAlign: { xs: "center", sm: "left" },
             }}
           >
@@ -47,7 +47,7 @@ export default function HomeView() {
               fontSize: ["16px", "18px"],
               fontFamily: "Poppins",
               fontWeight: 400,
-              lineHeight: "31px",
+              lineHeight: "1.75em",
               textAlign: ["center", "left"],
               color: "#6A6369",
             }}

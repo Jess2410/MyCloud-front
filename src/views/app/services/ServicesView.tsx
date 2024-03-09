@@ -17,7 +17,7 @@ const ServicesView = () => {
     <>
       <Box
         sx={{
-          padding: ["40px 0", "80px"],
+          padding: ["2em", "2vh 16vh 0"],
         }}
       >
         <Navbar />
@@ -26,7 +26,6 @@ const ServicesView = () => {
         sx={{
           m: "auto",
           maxWidth: 1200,
-
           position: "relative",
         }}
       >
@@ -42,13 +41,13 @@ const ServicesView = () => {
             src={image}
           />
         </Box>
-        <Box sx={{ p: { xs: 2 } }}>
+        <Box sx={{ p: { xs: 1 } }}>
           <Typography
             sx={{
               fontFamily: "Poppins",
               color: "var(--primary-hover)",
             }}
-            variant="h2"
+            variant="h3"
             gutterBottom
             align="center"
           >
@@ -66,12 +65,12 @@ const ServicesView = () => {
             Découvrez les fonctionnalités offertes par notre service de stockage
             en ligne.
           </Typography>
-          <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
+          <Box sx={{ mt: 1, display: "flex", justifyContent: "center", px: 8 }}>
             <Link to="/signin" style={{ textDecoration: "none" }}>
               <Button variant="contained" label="Démarrer" />
             </Link>
           </Box>
-          <Grid container spacing={4} sx={{ mt: 4 }}>
+          <Grid container spacing={4} sx={{ mt: 4, px: 8 }}>
             <Grid item xs={12} md={4}>
               <Card
                 sx={{
@@ -89,7 +88,7 @@ const ServicesView = () => {
                     alignItems: "center",
                   }}
                 >
-                  <StorageIcon sx={{ fontSize: 60, color: "#E4B8FD", mb: 2 }} />
+                  <StorageIcon sx={{ fontSize: 40, color: "#E4B8FD" }} />
                   <Typography
                     gutterBottom
                     variant="h5"
@@ -133,9 +132,8 @@ const ServicesView = () => {
                 >
                   <SyncIcon
                     sx={{
-                      fontSize: 60,
+                      fontSize: 40,
                       color: "#E4B8FD",
-                      mb: 2,
                     }}
                   />
                   <Typography
@@ -183,9 +181,8 @@ const ServicesView = () => {
                   <ShareIcon
                     sx={{
                       fontFamily: "Poppins",
-                      fontSize: 60,
+                      fontSize: 40,
                       color: "#E4B8FD",
-                      mb: 2,
                     }}
                   />
                   <Typography

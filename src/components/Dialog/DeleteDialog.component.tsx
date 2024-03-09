@@ -9,43 +9,24 @@ import { toast } from "react-toastify";
 import { API_BASE_URL } from "../../constants/url";
 import { sendPatchRequest } from "../../utils/data";
 import { useNavigate } from "react-router-dom";
+import useToolbar from "../Tabs/hooks/useToolbar";
 
 type DeleteDialogProps = {
   handleClose: () => void;
   actionType?: string | null | undefined;
   deletedFolders?: number[];
+  files: any;
+  folders: any;
+  handleDelete: () => void;
 };
 
 const DeleteDialog: FC<DeleteDialogProps> = ({
   handleClose,
   actionType,
-  deletedFolders,
+  files,
+  folders,
+  handleDelete,
 }) => {
-  const navigate = useNavigate();
-
-  const moveFoldersInTrash = async () => {
-    const loader = toast.loading("Veuillez patienter...");
-    try {
-      const token = localStorage.getItem("@userToken");
-      const response = await sendPatchRequest(
-        `${API_BASE_URL}/folders/isTrash`,
-        { Authorization: `Bearer ${token}` },
-        { id: deletedFolders }
-      );
-      if (response.status === 200) {
-        toast.update(loader, {
-          render: response.message,
-          type: "success",
-          autoClose: 2000,
-          isLoading: false,
-        });
-        navigate("/dashboard-trash"); //TODO implémentation à refaire
-        return;
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
   return (
     <Dialog
       open={true}
@@ -66,7 +47,7 @@ const DeleteDialog: FC<DeleteDialogProps> = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Retour</Button>
-        <Button onClick={moveFoldersInTrash} autoFocus>
+        <Button onClick={handleDelete} autoFocus>
           {actionType === "restore" ? "Restaurer" : "Supprimer"}
         </Button>
       </DialogActions>

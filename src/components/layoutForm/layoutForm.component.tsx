@@ -24,7 +24,7 @@ const LayoutForm: React.FC<LayoutProps> = ({ children, image }) => {
       >
         <Box
           sx={{
-            padding: ["40px 0", "80px"],
+            padding: ["2em", "2vh 16vh 0"],
           }}
         >
           <Navbar />
@@ -48,6 +48,7 @@ const LayoutForm: React.FC<LayoutProps> = ({ children, image }) => {
 
           <Box
             sx={{
+              pt: 10,
               height: "100%",
               display: "flex",
               justifyContent: "center",

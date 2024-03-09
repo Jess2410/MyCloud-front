@@ -13,7 +13,6 @@ import DashboardCloudView from "../views/auth/dashboard/DashboardCloudView";
 import DashboardFavoritesView from "../views/auth/dashboard/DashboardFavoritesView";
 import DashboardTrashView from "../views/auth/dashboard/DashboardTrashView";
 import Layout from "../views/Layout.component";
-import DashboardFolderView from "../views/auth/dashboard/DashboardFolderView";
 
 const AppRouter = () => {
   const { user } = useContext(UserContext);

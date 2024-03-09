@@ -21,7 +21,7 @@ const AboutView = () => {
     >
       <Box
         sx={{
-          padding: ["40px 0", "80px"],
+          padding: ["2em", "2vh 16vh 0"],
         }}
       >
         <Navbar />
@@ -46,7 +46,7 @@ const AboutView = () => {
           sx={{
             ml: "auto",
             mr: "auto",
-            maxWidth: 800,
+            maxWidth: 1000,
             position: "relative",
             textAlign: "center",
             zIndex: 1,
@@ -54,7 +54,7 @@ const AboutView = () => {
               "linear-gradient(to right, #E4B8FD, var(--primary-hover))",
             borderRadius: "20px",
             height: "100%",
-            p: 2,
+            p: 1,
           }}
         >
           <Box
@@ -64,22 +64,22 @@ const AboutView = () => {
               p: [2, 3],
             }}
           >
-            <Box
+            {/* <Box
               sx={{
-                position: ["absolute", "fixed", "absolute"],
+                position: ["absolute", "fixed", "fixed"],
                 top: "100%",
                 right: 0,
                 transform: ["translate(0%,-30%)", "translate(50%,-50%)"],
               }}
             >
               <img style={{ height: "200px" }} src={vector} alt="Cloud logo" />
-            </Box>
+            </Box> */}
             <Typography
               sx={{
                 fontFamily: "Poppins",
                 color: "var(--secondary)",
               }}
-              variant="h2"
+              variant="h3"
               gutterBottom
             >
               À Propos du Nuage
@@ -89,7 +89,7 @@ const AboutView = () => {
               sx={{
                 fontFamily: "Poppins",
                 color: "#a0a0a0",
-                mb: 4,
+                mb: 2,
                 px: [2, 8],
               }}
               variant="body1"

@@ -91,29 +91,38 @@ const useToolbar = (folders: FolderData[], files: FileData[]) => {
   };
 
   const deleteSelectedItems = async () => {
-    const foldersToDelete: number[] = [];
-    const filesToDelete: number[] = [];
-
-    selectedFolders.forEach((isSelected, folderId) => {
-      if (isSelected) {
-        foldersToDelete.push(folderId);
-      }
-    });
-
-    selectedFiles.forEach((isSelected, fileId) => {
-      if (isSelected) {
-        filesToDelete.push(fileId);
-      }
-    });
     const loader = toast.loading("Veuillez patienter...");
     try {
       const token = localStorage.getItem("@userToken");
-      const response = await sendPatchRequest(
-        `${API_BASE_URL}/folders/isTrash`,
-        { Authorization: `Bearer ${token}` },
-        { folders: foldersToDelete, files: filesToDelete }
-        // { id: id }
-      );
+      // const response = await sendPatchRequest(
+      //   `${API_BASE_URL}/folders/isTrash`,
+      //   { Authorization: `Bearer ${token}` },
+      //   {
+      //     folders: selectedFolders.keys(),
+      //     files: selectedFiles.keys(),
+      //   }
+      // );
+      // { id: id }
+
+      const filteredFolders = [...selectedFolders.entries()]
+        .filter(([_key, value]) => value === true)
+        .map(([key, _value]) => key);
+
+      const filteredFiles = [...selectedFiles.entries()]
+        .filter(([_key, value]) => value === true)
+        .map(([key, _value]) => key);
+
+      const response = await fetch(`${API_BASE_URL}/folders/isTrash`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          folders: filteredFolders,
+          files: filteredFiles,
+        }),
+      });
+
       // const response = await fetch("/deleteItems", {
       //   method: "POST",
       //   headers: {
@@ -132,11 +141,11 @@ const useToolbar = (folders: FolderData[], files: FileData[]) => {
           autoClose: 2000,
           isLoading: false,
         });
-        // Mettre à jour l'état local avec les éléments supprimés
-        setDeletedFolders([...deletedFolders, ...foldersToDelete]);
-        // Remettez à zéro les éléments sélectionnés
-        setSelectedFolders(new Map());
-        setSelectedFiles(new Map());
+        // // Mettre à jour l'état local avec les éléments supprimés
+        // setDeletedFolders([...deletedFolders, ...foldersToDelete]);
+        // // Remettez à zéro les éléments sélectionnés
+        // setSelectedFolders(new Map());
+        // setSelectedFiles(new Map());
       } else {
         throw new Error("Failed to delete selected items");
       }
@@ -194,6 +203,7 @@ const useToolbar = (folders: FolderData[], files: FileData[]) => {
     setShowDeleteModal,
     handleSelectFolder,
     handleSelectFile,
+    deleteSelectedItems,
   };
 };
 export default useToolbar;

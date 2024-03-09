@@ -89,6 +89,7 @@ export default function DashboardCloudView() {
     selectedFolders,
     handleSelectFolder,
     handleSelectFile,
+    deleteSelectedItems,
   } = useToolbar(folders, files);
 
   const getFolders = async () => {
@@ -187,6 +188,7 @@ export default function DashboardCloudView() {
       console.log(error);
     }
   };
+
   const moveToFavoritesFiles = async (id: number) => {
     const loader = toast.loading("Veuillez patienter...");
     try {
@@ -319,7 +321,10 @@ export default function DashboardCloudView() {
             <DeleteDialog
               deletedFolders={deletedFolders}
               handleClose={() => setShowDeleteModal(false)}
+              handleDelete={deleteSelectedItems}
               actionType={actionType}
+              files={files}
+              folders={folders}
             />
           )}
         </Box>

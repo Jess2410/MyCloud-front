@@ -14,7 +14,7 @@ const ContactView = () => {
     <>
       <Box
         sx={{
-          padding: ["40px 0", "80px"],
+          padding: ["2em", "2vh 16vh 0"],
         }}
       >
         <Navbar />
@@ -40,13 +40,13 @@ const ContactView = () => {
             src={image}
           />
         </Box>
-        <Box sx={{ p: { xs: 2 } }}>
+        <Box sx={{ p: { xs: 1 } }}>
           <Typography
             sx={{
               fontFamily: "Poppins",
               color: "var(--primary-hover)",
             }}
-            variant="h2"
+            variant="h3"
             gutterBottom
             align="center"
           >
@@ -63,7 +63,7 @@ const ContactView = () => {
           >
             Pour nous contacter, rien de plus simple!
           </Typography>
-          <Grid container spacing={4} sx={{ mt: 4 }}>
+          <Grid container spacing={4} sx={{ mt: 1, px: 8 }}>
             <Grid item xs={12} md={4}>
               <Card
                 sx={{
@@ -81,9 +81,7 @@ const ContactView = () => {
                     alignItems: "center",
                   }}
                 >
-                  <LocalPhoneIcon
-                    sx={{ fontSize: 60, color: "#E4B8FD", mb: 2 }}
-                  />
+                  <LocalPhoneIcon sx={{ fontSize: 40, color: "#E4B8FD" }} />
                   <Typography
                     gutterBottom
                     variant="h5"
@@ -126,9 +124,8 @@ const ContactView = () => {
                 >
                   <AlternateEmailIcon
                     sx={{
-                      fontSize: 60,
+                      fontSize: 40,
                       color: "#E4B8FD",
-                      mb: 2,
                     }}
                   />
                   <Typography
@@ -175,9 +172,8 @@ const ContactView = () => {
                   <LinkedInIcon
                     sx={{
                       fontFamily: "Poppins",
-                      fontSize: 60,
+                      fontSize: 40,
                       color: "#E4B8FD",
-                      mb: 2,
                     }}
                   />
                   <Typography
