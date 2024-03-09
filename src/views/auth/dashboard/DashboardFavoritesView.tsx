@@ -12,7 +12,7 @@ import { sendGetRequest, sendPatchRequest } from "../../../utils/data";
 import { API_BASE_URL } from "../../../constants/url";
 import { FileData, FolderData, tabsList } from "./DashboardCloudView";
 import CardFolder from "../../../components/Card/CardFolder";
-import FormDialogFolder from "../../../components/Dialog/FormDialogFolder.component";
+import FormDialogFolder from "../../../components/Dialog/MoveDialogFolder.component";
 import FormDialogFile from "../../../components/Dialog/FormDialogFile.component";
 import { arraysAreEqual } from "../../../utils/array";
 import Breadcrumbs from "../../../components/Breadcrumbs/Breadcrumbs.component";
@@ -46,7 +46,6 @@ export default function DashboardFavoritesView() {
     handleSelectAllCards,
     handleSearchInputChange,
     searchValue,
-    setSearchValue,
     filteredFolders,
     setFilteredFolders,
     showDeleteModal,
@@ -55,6 +54,7 @@ export default function DashboardFavoritesView() {
     selectedFolders,
     handleSelectFolder,
     handleSelectFile,
+    deleteSelectedItems,
   } = useToolbar(folders, files);
 
   const getFiles = async () => {
@@ -71,23 +71,8 @@ export default function DashboardFavoritesView() {
     }
   };
 
-  const getFilesFromParent = async (filesRequestPath: string) => {
-    // console.log("getFilesFromParent ", filesRequestPath);
+  const getFilesFromParent = async () => {
     setFiles([]);
-    // try {
-    //   const token = localStorage.getItem("@userToken");
-    //   const response = await sendGetRequest(
-    //     `${API_BASE_URL}/files/parent/${filesRequestPath}`,
-    //     {
-    //       Authorization: `Bearer ${token}`,
-    //     }
-    //   );
-    //   if (!arraysAreEqual(files, response)) {
-    //     setFiles(response);
-    //   }
-    // } catch (error) {
-    //   console.log("error");
-    // }
   };
   const moveToFavorites = async (id: number) => {
     const loader = toast.loading("Veuillez patienter...");
@@ -135,27 +120,6 @@ export default function DashboardFavoritesView() {
     return splitted[splitted.length - 1];
   };
 
-  // TODO : la route pour get les fichiers favoris
-  // useEffect(() => {
-  //   const getFiles = async () => {
-  //     try {
-  //       const token = localStorage.getItem("@userToken");
-  //       const response = await sendGetRequest(
-  //         `${API_BASE_URL}/files/favorites`,
-  //         {
-  //           Authorization: `Bearer ${token}`,
-  //         }
-  //       );
-  //       if (!arraysAreEqual(files, response)) {
-  //         setFiles(response);
-  //       }
-  //     } catch (error) {
-  //       console.log("error");
-  //     }
-  //   };
-  //   getFiles();
-  // }, []);
-
   const [open, setOpen] = useState(false);
   const [selectedFileContent, setSelectedFileContent] = useState(null);
 
@@ -166,7 +130,6 @@ export default function DashboardFavoritesView() {
         Authorization: `Bearer ${token}`,
       });
       const { url } = response;
-      // console.log("🚀 ~ handleOpen ~ response:", response);
       setSelectedFileContent(url);
       setOpen(true);
     } catch (error) {
@@ -179,17 +142,45 @@ export default function DashboardFavoritesView() {
     setSelectedFileContent(null);
   };
 
+  const moveToFavoritesFiles = async (id: number) => {
+    const loader = toast.loading("Veuillez patienter...");
+    try {
+      const token = localStorage.getItem("@userToken");
+      const response = await sendPatchRequest(
+        `${API_BASE_URL}/files/isFavorite`,
+        { Authorization: `Bearer ${token}` },
+        { id: id }
+      );
+      if (response.status === 200) {
+        toast.update(loader, {
+          render: response.message,
+          type: "success",
+          autoClose: 2000,
+          isLoading: false,
+        });
+        return;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleMoveToFavoritesChange = (id: number) => {
     if (moveToFavorites) {
       moveToFavorites(id);
     }
   };
-
+  const handleMoveToFavoritesFilesChange = (id: number) => {
+    if (moveToFavoritesFiles) {
+      moveToFavoritesFiles(id);
+    }
+  };
   useEffect(() => {
     //console.log(lastPathnameId); ///TODO pas encore modifié par la ligne 181 a ce moement la
     const param = getLastParam(pathname);
     if (param.length == 0) getFiles();
-    else getFilesFromParent(param);
+    // else getFilesFromParent(param);
+    else getFilesFromParent();
   }, [pathname]);
 
   useEffect(() => {
@@ -221,13 +212,6 @@ export default function DashboardFavoritesView() {
   useEffect(() => {
     getFolders();
   }, []);
-
-  // useEffect(() => {
-  //   const filtered = folders.filter((folder) =>
-  //     folder.name.toLowerCase().includes(searchValue.toLowerCase())
-  //   );
-  //   setFilteredFolders(filtered);
-  // }, [folders, searchValue]);
 
   return (
     <Box
@@ -282,6 +266,9 @@ export default function DashboardFavoritesView() {
             (data: FileData) => (
               <>
                 <CardFile
+                  handleMoveToFavoritesChange={() =>
+                    handleMoveToFavoritesFilesChange(data.id)
+                  }
                   key={data.id}
                   id={data.id}
                   onSelectFile={handleSelectFile}
@@ -315,7 +302,10 @@ export default function DashboardFavoritesView() {
             <DeleteDialog
               deletedFolders={deletedFolders}
               handleClose={() => setShowDeleteModal(false)}
+              handleDelete={deleteSelectedItems}
               actionType={actionType}
+              files={files}
+              folders={folders}
             />
           )}
         </Box>

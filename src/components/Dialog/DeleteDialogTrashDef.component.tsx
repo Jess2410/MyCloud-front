@@ -5,13 +5,22 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 
-type DeleteDialogTrashProps = {
+type DeleteDialogDefTrashProps = {
   handleClose: () => void;
   actionType?: string | null | undefined;
   deletedFolders?: number[];
+  files: any;
+  folders: any;
+  handleDeleteDef: () => void;
 };
 
-const DeleteDialogTrash: FC<DeleteDialogTrashProps> = ({ handleClose }) => {
+const DeleteDialogTrashDef: FC<DeleteDialogDefTrashProps> = ({
+  handleClose,
+  deletedFolders,
+  files,
+  folders,
+  handleDeleteDef,
+}) => {
   return (
     <Dialog
       open={true}
@@ -21,17 +30,17 @@ const DeleteDialogTrash: FC<DeleteDialogTrashProps> = ({ handleClose }) => {
     >
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          Êtes-vous sûr(e) de vouloir supprimer ce(s) élément(s) ?
+          Êtes-vous sûr(e) de vouloir vider la corbeille ?
         </DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Retour</Button>
-        <Button onClick={() => console.log()} autoFocus>
-          Supprimer
+        <Button onClick={handleDeleteDef} autoFocus>
+          Vider
         </Button>
       </DialogActions>
     </Dialog>
   );
 };
 
-export default DeleteDialogTrash;
+export default DeleteDialogTrashDef;

@@ -4,12 +4,6 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
-import { FolderData } from "../../views/auth/dashboard/DashboardCloudView";
-import { toast } from "react-toastify";
-import { API_BASE_URL } from "../../constants/url";
-import { sendPatchRequest } from "../../utils/data";
-import { useNavigate } from "react-router-dom";
-import useToolbar from "../Tabs/hooks/useToolbar";
 
 type DeleteDialogProps = {
   handleClose: () => void;
@@ -20,13 +14,7 @@ type DeleteDialogProps = {
   handleDelete: () => void;
 };
 
-const DeleteDialog: FC<DeleteDialogProps> = ({
-  handleClose,
-  actionType,
-  files,
-  folders,
-  handleDelete,
-}) => {
+const DeleteDialog: FC<DeleteDialogProps> = ({ handleClose, handleDelete }) => {
   return (
     <Dialog
       open={true}
@@ -36,19 +24,13 @@ const DeleteDialog: FC<DeleteDialogProps> = ({
     >
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          {actionType === "def"
-            ? "Êtes-vous sûr(e) de vouloir supprimer définitivement ce(s) élément(s) ?"
-            : actionType === "restore"
-            ? "Êtes-vous sûr(e) de vouloir restaurer ce(s) élément(s) ?"
-            : actionType === "none"
-            ? "Êtes-vous sûr(e) de vouloir supprimer ce(s) élément(s) ?"
-            : null}
+          Êtes-vous sûr(e) de vouloir supprimer ce(s) élément(s) ?
         </DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Retour</Button>
         <Button onClick={handleDelete} autoFocus>
-          {actionType === "restore" ? "Restaurer" : "Supprimer"}
+          Supprimer
         </Button>
       </DialogActions>
     </Dialog>

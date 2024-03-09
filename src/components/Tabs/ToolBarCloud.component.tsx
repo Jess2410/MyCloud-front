@@ -1,7 +1,5 @@
 import { Box, ButtonBase, Typography } from "@mui/material";
 import IconButton from "../IconButton/IconButton";
-import SearchWithFilter from "../SearchBarFilter/SearchBarFilter.component";
-
 import addFile from "../../assets/icons/add-file-icon.png";
 import addFolder from "../../assets/icons/add-folder-icon.png";
 import checkBox from "../../assets/icons/checkbox.png";
@@ -17,12 +15,14 @@ type ToolBarProps = {
   displayDeleteModale: (actionType?: string | null | undefined) => void;
   def: boolean;
   restore: boolean;
+  displayRestoreModale: () => void;
 };
 const ToolBarCloud: React.FC<ToolBarProps> = ({
   //   handleSelectAllCards,
   allCheckboxesChecked,
   displayForm,
   displayDeleteModale,
+  displayRestoreModale,
 }) => {
   return (
     <Box
@@ -94,7 +94,7 @@ const ToolBarCloud: React.FC<ToolBarProps> = ({
               color: "var(--primary-hover)",
               fontWeight: "bold",
             }}
-            onClick={() => displayDeleteModale("restore")}
+            onClick={() => displayRestoreModale()}
           >
             Restaurer
           </ButtonBase>

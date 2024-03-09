@@ -9,25 +9,22 @@ import { Box } from "@mui/material";
 // import { UserContext } from "../../../context/UserContext";
 import ToolBar from "../../../components/Tabs/ToolBar.component";
 import { toast } from "react-toastify";
-import {
-  sendGetRequest,
-  sendPatchRequest,
-  sendPostRequest,
-} from "../../../utils/data";
+import { sendGetRequest, sendPatchRequest } from "../../../utils/data";
 import { API_BASE_URL } from "../../../constants/url";
 import { FileData, FolderData } from "./DashboardCloudView";
 import CardFolder from "../../../components/Card/CardFolder";
 import DeleteDialogTrash from "../../../components/Dialog/DeleteDialogTrash.component";
 import FormDialogFile from "../../../components/Dialog/FormDialogFile.component";
-import FormDialogFolder from "../../../components/Dialog/FormDialogFolder.component";
+import FormDialogFolder from "../../../components/Dialog/MoveDialogFolder.component";
 import { arraysAreEqual } from "../../../utils/array";
-import Card from "../../../components/Card/CardFile";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import useToolbar from "../../../components/Tabs/hooks/useToolbar";
 import { tabsList } from "../../../components/Drawer/DashboardDrawer.component";
 import Breadcrumbs from "../../../components/Breadcrumbs/Breadcrumbs.component";
 import CardFile from "../../../components/Card/CardFile";
 import ModalFileViewer from "../../../components/ModalFileViewer/ModalFileViewer.component";
+import RestoreDialogTrash from "../../../components/Dialog/RestoreDialogTrash.component";
+import DeleteDialogTrashDef from "../../../components/Dialog/DeleteDialogTrashDef.component";
 
 export default function DashboardTrashView() {
   const [folders, setFolders] = useState<FolderData[]>([]);
@@ -41,18 +38,22 @@ export default function DashboardTrashView() {
     actionType,
     deletedFolders,
     displayDeleteModale,
+    displayRestoreModale,
     handleSelectAllCards,
     handleSearchInputChange,
     searchValue,
-    setSearchValue,
     filteredFolders,
-    setFilteredFolders,
-    showDeleteModal,
     setShowDeleteModal,
+    setShowDeleteDefModal,
     selectedFiles,
     selectedFolders,
     handleSelectFolder,
     handleSelectFile,
+    restoreSelectedItems,
+    showRestoreModal,
+    displayDeleteModaleDef,
+    showDeleteDefModal,
+    deleteDefinitivelyItems,
   } = useToolbar(folders, files);
 
   const { pathname } = useLocation();
@@ -60,7 +61,6 @@ export default function DashboardTrashView() {
 
   const [open, setOpen] = useState(false);
   const [selectedFileContent, setSelectedFileContent] = useState(null);
-  console.log("🚀 ~ selectedFileContent:", selectedFileContent);
 
   const handleOpen = async (id: any) => {
     try {
@@ -169,11 +169,15 @@ export default function DashboardTrashView() {
           [...selectedFiles.values()].every((value) => value === true)
         }
         displayDeleteModale={displayDeleteModale}
+        displayRestoreModale={displayRestoreModale}
+        displayDeleteModaleDef={displayDeleteModaleDef}
         def={true}
         restore={true}
-        isTrash={false}
+        isTrash={true}
         handleSearchInputChange={handleSearchInputChange}
         searchValue={searchValue}
+        folders={folders}
+        files={files}
       />
       <Breadcrumbs label={tabActive?.name} link="/dashboard-cloud" />
       <Grid>
@@ -238,11 +242,21 @@ export default function DashboardTrashView() {
           {showFormFile && (
             <FormDialogFile handleClose={() => setShowFormFile(false)} />
           )}
-          {showDeleteModal && (
-            <DeleteDialogTrash
+          {showRestoreModal && (
+            <RestoreDialogTrash
               deletedFolders={deletedFolders}
               handleClose={() => setShowDeleteModal(false)}
               actionType={actionType}
+              handleRestore={restoreSelectedItems}
+            />
+          )}
+          {showDeleteDefModal && (
+            <DeleteDialogTrashDef
+              deletedFolders={deletedFolders}
+              handleClose={() => setShowDeleteDefModal(false)}
+              handleDeleteDef={deleteDefinitivelyItems}
+              files={files}
+              folders={folders}
             />
           )}
         </Box>

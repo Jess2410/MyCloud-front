@@ -14,12 +14,12 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Breadcrumbs from "../../../components/Breadcrumbs/Breadcrumbs.component";
 import FormDialogFolder from "../../../components/Dialog/FormDialogFolder.component";
 import FormDialogFile from "../../../components/Dialog/FormDialogFile.component";
-import Card from "../../../components/Card/CardFile";
 import useToolbar from "../../../components/Tabs/hooks/useToolbar";
 import CardFile from "../../../components/Card/CardFile";
 import ModalFileViewer from "../../../components/ModalFileViewer/ModalFileViewer.component";
 import { toast } from "react-toastify";
 import { sendPatchRequest } from "../../../utils/data";
+import MoveDialogFolder from "../../../components/Dialog/MoveDialogFolder.component";
 
 export const tabsList = [
   {
@@ -81,7 +81,6 @@ export default function DashboardCloudView() {
     handleSelectAllCards,
     handleSearchInputChange,
     searchValue,
-    setSearchValue,
     filteredFolders,
     showDeleteModal,
     setShowDeleteModal,
@@ -90,6 +89,10 @@ export default function DashboardCloudView() {
     handleSelectFolder,
     handleSelectFile,
     deleteSelectedItems,
+    displayMoveForm,
+    setShowFormMoveFolder,
+    showFormMoveFolder,
+    folderToMove,
   } = useToolbar(folders, files);
 
   const getFolders = async () => {
@@ -271,6 +274,7 @@ export default function DashboardCloudView() {
           {(searchValue !== "" ? filteredFolders : folders).map(
             (data: FolderData) => (
               <CardFolder
+                displayMoveForm={() => displayMoveForm(data.id)}
                 handleMoveToFavoritesChange={() =>
                   handleMoveToFavoritesChange(data.id)
                 }
@@ -316,6 +320,13 @@ export default function DashboardCloudView() {
           )}
           {showFormFile && (
             <FormDialogFile handleClose={() => setShowFormFile(false)} />
+          )}
+          {showFormMoveFolder && (
+            <MoveDialogFolder
+              folders={folders}
+              handleClose={() => setShowFormMoveFolder(false)}
+              folderToMove={folderToMove}
+            />
           )}
           {showDeleteModal && (
             <DeleteDialog

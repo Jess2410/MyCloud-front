@@ -1,15 +1,18 @@
 import { Box, ButtonBase, Typography } from "@mui/material";
 import IconButton from "../IconButton/IconButton";
 import SearchWithFilter from "../SearchBarFilter/SearchBarFilter.component";
-
+// import { useState, useEffect } from "react";
 import addFile from "../../assets/icons/add-file-icon.png";
 import addFolder from "../../assets/icons/add-folder-icon.png";
 import trash from "../../assets/icons/trash-icon.png";
+// import disabledTrash from "../../assets/icons/disabled-trash.png";
 import checkboxChecked from "../../assets/icons/Vectorcheckbox-checked.png";
 import checkboxUnchecked from "../../assets/icons/Vectorcheckbox-no-checked.png";
 import deftrashIcon from "../../assets/icons/trash-definitive-icon.png";
 import React from "react";
 import Checkbox from "../Button/Checkbox/Checkbox";
+// import useToolbar from "./hooks/useToolbar";
+// import { FolderData } from "../../views/auth/dashboard/DashboardCloudView";
 
 type ToolBarProps = {
   handleSelectAllCards: (isSelected: boolean) => void;
@@ -24,6 +27,16 @@ type ToolBarProps = {
   setShowFormFolder: any;
   setShowFormFile: () => void;
   isChecked: boolean;
+  displayRestoreModale?: () => void;
+  displayDeleteModaleDef?: () => void;
+  folders?: any;
+  files?: any;
+  // selectedFiles: Map<number, boolean>;
+  // selectedFolders: Map<number, boolean>;
+  // handleSelectFolder: any;
+  // handleSelectFile: any;
+  // setSelectedFiles: () => void;
+  // setSelectedFolders: () => void;
 };
 const ToolBar: React.FC<ToolBarProps> = ({
   setShowFormFolder,
@@ -32,9 +45,41 @@ const ToolBar: React.FC<ToolBarProps> = ({
   displayDeleteModale,
   isTrash = false,
   handleSearchInputChange,
+  displayRestoreModale,
   searchValue,
   isChecked,
+  displayDeleteModaleDef,
+  // folders,
+  // files,
 }) => {
+  // const [folders, setFolders] = useState<FolderData[]>([]);
+
+  // const [files, setFiles] = useState([]);
+  // const {
+  //   selectedFiles,
+  //   selectedFolders,
+  //   // handleSelectFolder,
+  //   // handleSelectFile,
+
+  //   // setSelectedFiles,
+  //   // setSelectedFolders,
+  // } = useToolbar(folders, files);
+
+  // useEffect(() => {
+  //   console.log("🚀 ~ TOOLBARRRR - files:", files);
+  //   console.log("🚀 ~ TOOLBARRRR - folders:", folders);
+  //   console.log("🚀 ~ TOOLBARRRR - selectedFolders:", selectedFolders);
+  //   console.log("🚀 ~ TOOLBARRRR - selectedFiles:", selectedFiles);
+  // }, [
+  //   selectedFiles,
+  //   selectedFolders,
+  //   // handleSelectFolder,
+  //   // handleSelectFile,
+
+  //   // setSelectedFiles,
+  //   // setSelectedFolders,
+  // ]);
+
   return (
     <Box
       sx={{
@@ -92,10 +137,14 @@ const ToolBar: React.FC<ToolBarProps> = ({
 
         {isTrash ? (
           <>
-            <IconButton
-              icon={deftrashIcon}
-              onClick={() => displayDeleteModale("def")}
-            />
+            {/* {[...selectedFolders.values()].some((value) => value === true) ||
+            [...selectedFiles.values()].some((value) => value === true) ? (
+              <IconButton icon={disabledTrash} />
+                // onClick={displayDeleteModaleDef}
+            ) : ( */}
+            <IconButton icon={deftrashIcon} onClick={displayDeleteModaleDef} />
+            {/* )} */}
+
             <ButtonBase
               style={{
                 border: "1.5px solid var(--primary-hover)",
@@ -104,7 +153,7 @@ const ToolBar: React.FC<ToolBarProps> = ({
                 color: "var(--primary-hover)",
                 fontWeight: "bold",
               }}
-              onClick={() => displayDeleteModale("restore")}
+              onClick={displayRestoreModale}
             >
               Restaurer
             </ButtonBase>

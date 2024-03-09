@@ -27,6 +27,25 @@ export const sendPostRequest = async (
     console.log(error);
   }
 };
+export const sendDeleteRequest = async (
+  url: string,
+  headers?: OptionalHeaders
+) => {
+  try {
+    const request = await fetch(url, {
+      method: "DELETE",
+      headers: {
+        "Content-type": "application/json",
+        Accept: "application/json",
+        ...headers,
+      },
+    });
+    const data = await request.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export const sendPostFileRequest = async (
   url: string,

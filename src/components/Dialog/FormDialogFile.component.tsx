@@ -26,7 +26,7 @@ export default function FormDialogFile({ handleClose }: FormDialogProps) {
     const formData = new FormData(event.currentTarget);
     const formJson = Object.fromEntries((formData as any).entries());
 
-    console.log("🚀 ~ createFile ~ formData:", formJson.image);
+    // console.log("🚀 ~ createFile ~ formData:", formJson.image);
     const loader = toast.loading("Veuillez patienter...");
     try {
       const token = localStorage.getItem("@userToken");

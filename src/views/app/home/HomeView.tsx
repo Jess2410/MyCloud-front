@@ -23,8 +23,8 @@ export default function HomeView() {
         <Navbar />
         <Box
           sx={{
-            padding: ["2em 0", "2em 0"],
-            maxWidth: ["550px", "700px", "55%"],
+            padding: ["2em 0", "2em 0", "2em 0", "4em 0"],
+            maxWidth: ["550px", "700px", "55%", "550px"],
             // gap: "40px",
           }}
         >

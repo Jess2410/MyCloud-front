@@ -1,11 +1,12 @@
-import {
-  ChangeEvent,
-  // Dispatch,  SetStateAction,
+import React, {
   FC,
-  useEffect,
   useState,
+  useEffect,
+  ChangeEvent,
+  MouseEventHandler,
 } from "react";
 import { Card as CardMui } from "@mui/material";
+import Box from "@mui/material/Box";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
@@ -27,6 +28,7 @@ type CardFolderProps = {
   name: string;
   creation_date: string;
   handleMoveToFavoritesChange: () => void;
+  displayMoveForm: any;
 };
 
 const CardFolder: FC<CardFolderProps> = ({
@@ -37,6 +39,8 @@ const CardFolder: FC<CardFolderProps> = ({
   name,
   creation_date,
   handleMoveToFavoritesChange,
+  displayMoveForm,
+  // handleShowMoveForm,
 }) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -60,6 +64,12 @@ const CardFolder: FC<CardFolderProps> = ({
     navigate(`${pathname}/${id}`);
   };
 
+  const handleRightClick: MouseEventHandler<HTMLDivElement> = (e) => {
+    e.preventDefault();
+    displayMoveForm();
+    console.log("Clic droit détecté sur la carte!", id);
+  };
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const day = date.getDate().toString().padStart(2, "0");
@@ -73,44 +83,46 @@ const CardFolder: FC<CardFolderProps> = ({
   }, [isSelected]);
 
   return (
-    <CardMui
-      className={isChecked ? styles["card-selected"] : styles["card"]}
-      onDoubleClick={handleDoubleClick}
-    >
-      <CardActions className={styles["card__actions"]}>
-        <Checkbox
-          icon={<img src={starUnchecked} alt="Unchecked" />}
-          checkedIcon={<img src={starChecked} alt="Checked" />}
-          checked={isFavorite}
-          onChange={handleMoveToFavoritesChange}
-          inputProps={{ "aria-label": "favorite" }}
-        />
-        <Checkbox
-          icon={<img src={checkboxUnchecked} alt="Unchecked" />}
-          checkedIcon={<img src={checkboxChecked} alt="Checked" />}
-          checked={isChecked}
-          onChange={handleSelect}
-          inputProps={{ "aria-label": "selected" }}
-        />
-      </CardActions>
-      <CardMedia className={styles["card__media"]}>{displayIcon()}</CardMedia>
-      <CardContent className={styles["card__content"]}>
-        <Typography
-          gutterBottom
-          component="div"
-          className={styles["card__title"]}
-        >
-          {name}
-        </Typography>
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          className={styles["card__date"]}
-        >
-          {formatDate(creation_date)}
-        </Typography>
-      </CardContent>
-    </CardMui>
+    <Box onContextMenu={handleRightClick}>
+      <CardMui
+        className={isChecked ? styles["card-selected"] : styles["card"]}
+        onDoubleClick={handleDoubleClick}
+      >
+        <CardActions className={styles["card__actions"]}>
+          <Checkbox
+            icon={<img src={starUnchecked} alt="Unchecked" />}
+            checkedIcon={<img src={starChecked} alt="Checked" />}
+            checked={isFavorite}
+            onChange={handleMoveToFavoritesChange}
+            inputProps={{ "aria-label": "favorite" }}
+          />
+          <Checkbox
+            icon={<img src={checkboxUnchecked} alt="Unchecked" />}
+            checkedIcon={<img src={checkboxChecked} alt="Checked" />}
+            checked={isChecked}
+            onChange={handleSelect}
+            inputProps={{ "aria-label": "selected" }}
+          />
+        </CardActions>
+        <CardMedia className={styles["card__media"]}>{displayIcon()}</CardMedia>
+        <CardContent className={styles["card__content"]}>
+          <Typography
+            gutterBottom
+            component="div"
+            className={styles["card__title"]}
+          >
+            {name}
+          </Typography>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            className={styles["card__date"]}
+          >
+            {formatDate(creation_date)}
+          </Typography>
+        </CardContent>
+      </CardMui>
+    </Box>
   );
 };
 

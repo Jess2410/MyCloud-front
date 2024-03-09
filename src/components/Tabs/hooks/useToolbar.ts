@@ -6,7 +6,6 @@ import {
 import { toast } from "react-toastify";
 
 import _ from "lodash";
-import { sendPatchRequest } from "../../../utils/data";
 import { API_BASE_URL } from "../../../constants/url";
 
 const initSelectedItems = (
@@ -24,9 +23,13 @@ const initSelectedItems = (
 const useToolbar = (folders: FolderData[], files: FileData[]) => {
   const [showFormFolder, setShowFormFolder] = useState(false);
   const [showFormFile, setShowFormFile] = useState(false);
+  const [showFormMoveFolder, setShowFormMoveFolder] = useState(false);
   // const userContext = useContext(UserContext);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showDeleteDefModal, setShowDeleteDefModal] = useState(false);
+  const [showRestoreModal, setShowRestoreModal] = useState(false);
   const [actionType, setActionType] = useState("");
+  const [folderToMove, setFolderToMove] = useState<number>();
 
   const [filteredFolders, setFilteredFolders] = useState<FolderData[]>([]);
   const [filteredFiles, setFilteredFiles] = useState<FileData[]>([]);
@@ -38,15 +41,27 @@ const useToolbar = (folders: FolderData[], files: FileData[]) => {
     new Map()
   );
 
+  console.log("🚀 ~ useToolbar ~ selectedFolders:", selectedFolders);
   const [selectedFiles, setSelectedFiles] = useState<Map<number, boolean>>(
     new Map()
   );
+  console.log("🚀 ~ useToolbar ~ selectedFolders:", selectedFiles);
 
   const displayDeleteModale = (actionType: string | null | undefined) => {
     setShowDeleteModal(!showDeleteModal);
     if (actionType) {
       setActionType(actionType);
     }
+  };
+  const displayMoveForm = (id: number) => {
+    setShowFormMoveFolder(!showFormMoveFolder);
+    setFolderToMove(id);
+  };
+  const displayDeleteModaleDef = () => {
+    setShowDeleteDefModal(!showDeleteDefModal);
+  };
+  const displayRestoreModale = () => {
+    setShowRestoreModal(!showRestoreModal);
   };
 
   const handleSelectFolder = (folderId: number, isFolderSelected: boolean) => {
@@ -94,15 +109,6 @@ const useToolbar = (folders: FolderData[], files: FileData[]) => {
     const loader = toast.loading("Veuillez patienter...");
     try {
       const token = localStorage.getItem("@userToken");
-      // const response = await sendPatchRequest(
-      //   `${API_BASE_URL}/folders/isTrash`,
-      //   { Authorization: `Bearer ${token}` },
-      //   {
-      //     folders: selectedFolders.keys(),
-      //     files: selectedFiles.keys(),
-      //   }
-      // );
-      // { id: id }
 
       const filteredFolders = [...selectedFolders.entries()]
         .filter(([_key, value]) => value === true)
@@ -116,6 +122,99 @@ const useToolbar = (folders: FolderData[], files: FileData[]) => {
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,
+          "Content-type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          folders: filteredFolders,
+          files: filteredFiles,
+        }),
+      });
+      if (response.status === 200) {
+        toast.update(loader, {
+          render: response?.message,
+          type: "success",
+          autoClose: 2000,
+          isLoading: false,
+        });
+        displayDeleteModale("none");
+      } else {
+        throw new Error("Failed to delete selected items");
+      }
+    } catch (error) {
+      displayDeleteModale("none");
+      console.error("Error deleting selected items:", error);
+    }
+  };
+  const restoreSelectedItems = async () => {
+    const loader = toast.loading("Veuillez patienter...");
+    try {
+      const token = localStorage.getItem("@userToken");
+
+      const filteredFolders = [...selectedFolders.entries()]
+        .filter(([_key, value]) => value === true)
+        .map(([key, _value]) => key);
+
+      const filteredFiles = [...selectedFiles.entries()]
+        .filter(([_key, value]) => value === true)
+        .map(([key, _value]) => key);
+
+      const response = await fetch(`${API_BASE_URL}/folders/restore`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          folders: filteredFolders,
+          files: filteredFiles,
+        }),
+      });
+      if (response.status === 200) {
+        toast.update(loader, {
+          render: response?.message,
+          type: "success",
+          autoClose: 2000,
+          isLoading: false,
+        });
+        displayRestoreModale();
+      } else {
+        throw new Error("Failed to restore selected items");
+      }
+    } catch (error) {
+      displayRestoreModale();
+      console.error("Error restoring selected items:", error);
+    }
+  };
+
+  const deleteDefinitivelyItems = async () => {
+    const loader = toast.loading("Veuillez patienter...");
+    try {
+      const token = localStorage.getItem("@userToken");
+
+      const filteredFolders = [...selectedFolders.entries()]
+        .filter(([_key, value]) => value === true)
+        .map(([key, _value]) => key);
+      console.log(
+        "🚀 ~ deleteDefinitivelyItems ~ filteredFolders:",
+        filteredFolders
+      );
+
+      const filteredFiles = [...selectedFiles.entries()]
+        .filter(([_key, value]) => value === true)
+        .map(([key, _value]) => key);
+      console.log(
+        "🚀 ~ deleteDefinitivelyItems ~ filteredFiles:",
+        filteredFiles
+      );
+
+      const response = await fetch(`${API_BASE_URL}/folders/delete`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
         },
         body: JSON.stringify({
           folders: filteredFolders,
@@ -123,33 +222,20 @@ const useToolbar = (folders: FolderData[], files: FileData[]) => {
         }),
       });
 
-      // const response = await fetch("/deleteItems", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({
-      //     folders: foldersToDelete,
-      //     files: filesToDelete,
-      //   }),
-      // });
-
-      if (response.status === 200) {
+      if (response.ok) {
+        const responseData = await response.json();
         toast.update(loader, {
-          render: response.message,
+          render: responseData.message,
           type: "success",
           autoClose: 2000,
           isLoading: false,
         });
-        // // Mettre à jour l'état local avec les éléments supprimés
-        // setDeletedFolders([...deletedFolders, ...foldersToDelete]);
-        // // Remettez à zéro les éléments sélectionnés
-        // setSelectedFolders(new Map());
-        // setSelectedFiles(new Map());
+        displayDeleteModaleDef();
       } else {
         throw new Error("Failed to delete selected items");
       }
     } catch (error) {
+      displayDeleteModaleDef();
       console.error("Error deleting selected items:", error);
     }
   };
@@ -190,6 +276,7 @@ const useToolbar = (folders: FolderData[], files: FileData[]) => {
     setActionType,
     deletedFolders,
     setDeletedFolders,
+    displayRestoreModale,
     displayDeleteModale,
     handleSelectAllCards,
     handleSearchInputChange,
@@ -201,9 +288,22 @@ const useToolbar = (folders: FolderData[], files: FileData[]) => {
     setFilteredFolders,
     showDeleteModal,
     setShowDeleteModal,
+    setShowRestoreModal,
     handleSelectFolder,
     handleSelectFile,
     deleteSelectedItems,
+    restoreSelectedItems,
+    showRestoreModal,
+    displayDeleteModaleDef,
+    showDeleteDefModal,
+    setShowDeleteDefModal,
+    deleteDefinitivelyItems,
+    setSelectedFiles,
+    setSelectedFolders,
+    displayMoveForm,
+    setShowFormMoveFolder,
+    showFormMoveFolder,
+    folderToMove,
   };
 };
 export default useToolbar;
