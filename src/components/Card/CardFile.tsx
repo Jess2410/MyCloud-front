@@ -28,7 +28,7 @@ type CardProps = {
   onDoubleClick: () => void;
   // onAddSelectedCards: (id: number) => void;
   handleMoveToFavoritesChange: () => void;
-  displayMoveFileForm: any;
+  displayMoveFileForm?: any;
 };
 
 const CardFile: FC<CardProps> = ({

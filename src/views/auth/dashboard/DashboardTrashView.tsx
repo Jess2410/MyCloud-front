@@ -13,7 +13,6 @@ import { sendGetRequest, sendPatchRequest } from "../../../utils/data";
 import { API_BASE_URL } from "../../../constants/url";
 import { FileData, FolderData } from "./DashboardCloudView";
 import CardFolder from "../../../components/Card/CardFolder";
-import DeleteDialogTrash from "../../../components/Dialog/DeleteDialogTrash.component";
 import FormDialogFile from "../../../components/Dialog/FormDialogFile.component";
 import FormDialogFolder from "../../../components/Dialog/FormDialogFolder.component";
 import { useLocation } from "react-router-dom";
@@ -60,7 +59,7 @@ export default function DashboardTrashView() {
   const tabActive = tabsList.find((tab) => pathname.includes(tab.url));
 
   const [open, setOpen] = useState(false);
-  const [selectedFileContent, setSelectedFileContent] = useState(null);
+  const [selectedFileContent, setSelectedFileContent] = useState(undefined);
 
   const handleOpen = async (id: any) => {
     try {
@@ -69,7 +68,6 @@ export default function DashboardTrashView() {
         Authorization: `Bearer ${token}`,
       });
       const { url } = response;
-      console.log("🚀 ~ handleOpen ~ response:", response);
       setSelectedFileContent(url);
       setOpen(true);
     } catch (error) {
@@ -79,7 +77,7 @@ export default function DashboardTrashView() {
 
   const handleClose = () => {
     setOpen(false);
-    setSelectedFileContent(null);
+    setSelectedFileContent(undefined);
   };
 
   const getFolders = async () => {
@@ -230,7 +228,7 @@ export default function DashboardTrashView() {
           )}
           {open && (
             <ModalFileViewer
-              selectedFile={selectedFileContent ? selectedFileContent : ""}
+              selectedFile={selectedFileContent}
               handleClose={handleClose}
             />
           )}

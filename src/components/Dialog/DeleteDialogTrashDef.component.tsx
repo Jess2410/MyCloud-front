@@ -16,9 +16,6 @@ type DeleteDialogDefTrashProps = {
 
 const DeleteDialogTrashDef: FC<DeleteDialogDefTrashProps> = ({
   handleClose,
-  deletedFolders,
-  files,
-  folders,
   handleDeleteDef,
 }) => {
   return (

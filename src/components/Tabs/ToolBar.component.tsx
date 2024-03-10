@@ -61,6 +61,7 @@ const ToolBar: React.FC<ToolBarProps> = ({
         mr: 1,
         flexWrap: "wrap",
         px: 2,
+        // minWidth: "20vw",
       }}
     >
       <Box

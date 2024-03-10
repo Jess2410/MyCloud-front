@@ -8,11 +8,11 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { API_BASE_URL } from "../../constants/url";
 import { sendPostFileRequest } from "../../utils/data";
 import { toast } from "react-toastify";
-import { FileData } from "../../views/auth/dashboard/DashboardCloudView";
+// import { FileData } from "../../views/auth/dashboard/DashboardCloudView";
 
 type FormDialogProps = {
   handleClose: () => void;
-  setFiles: React.Dispatch<React.SetStateAction<FileData[]>>;
+  // setFiles: React.Dispatch<React.SetStateAction<FileData[]>>;
 };
 
 export default function FormDialogFile({ handleClose }: FormDialogProps) {

@@ -21,6 +21,7 @@ import { toast } from "react-toastify";
 import { sendPatchRequest } from "../../../utils/data";
 import MoveDialogFolder from "../../../components/Dialog/MoveDialogFolder.component";
 import MoveDialogFile from "../../../components/Dialog/MoveDialogFile.component";
+import FormSendUserFolderDialog from "../../../components/Dialog/FormSendUserFolder.component";
 
 export const tabsList = [
   {
@@ -74,12 +75,20 @@ export default function DashboardCloudView() {
 
   const [files, setFiles] = useState([]);
 
+  const [showFormShare, setShowFormShare] = useState(false);
+  const [fileToShare, setFileToShare] = useState<number | undefined>(undefined);
+
   const [open, setOpen] = useState(false);
   const [selectedFileContent, setSelectedFileContent] = useState<
     FileData | undefined
   >(undefined);
   const [loading, setLoading] = useState(false);
 
+  const displayShareForm = (id: number) => {
+    console.log("🚀 ~ displayShareForm ~ id:", id);
+    setShowFormShare(!showFormShare);
+    setFileToShare(id);
+  };
   const {
     showFormFolder,
     setShowFormFolder,
@@ -338,6 +347,7 @@ export default function DashboardCloudView() {
               (data: FolderData) => (
                 <CardFolder
                   displayMoveForm={() => displayMoveForm(data.id)}
+                  displayShareForm={() => displayShareForm(data.id)}
                   handleMoveToFavoritesChange={() =>
                     handleMoveToFavoritesChange(data.id)
                   }
@@ -380,6 +390,13 @@ export default function DashboardCloudView() {
               <FormDialogFolder
                 handleClose={() => setShowFormFolder(false)}
                 setFolders={setFolders}
+              />
+            )}
+            {showFormShare && (
+              <FormSendUserFolderDialog
+                handleClose={() => setShowFormShare(false)}
+                setFolders={setFolders}
+                fileToShare={fileToShare}
               />
             )}
             {showFormFile && (

@@ -10,7 +10,7 @@ import { Document, PDFViewer, Page, Text } from "@react-pdf/renderer";
 
 type ModalFileViewerProps = {
   handleClose: () => void;
-  selectedFile?: FileData;
+  selectedFile?: FileData | undefined;
 };
 
 export default function ModalFileViewer({

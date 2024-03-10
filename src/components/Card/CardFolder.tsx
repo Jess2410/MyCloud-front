@@ -8,11 +8,13 @@ import Typography from "@mui/material/Typography";
 import iconFolder from "../../assets/icons/folder.png";
 import Checkbox from "@mui/material/Checkbox";
 import starChecked from "../../assets/icons/Vectorstar-checked.svg";
+import shareIcon from "../../assets/icons/share.png";
 import starUnchecked from "../../assets/icons/Vectorstar-no-checked.svg";
 import checkboxChecked from "../../assets/icons/Vectorcheckbox-checked.png";
 import checkboxUnchecked from "../../assets/icons/Vectorcheckbox-no-checked.png";
 import styles from "./card.component.module.css";
 import { useLocation, useNavigate } from "react-router-dom";
+import IconButton from "../IconButton/IconButton";
 
 type CardFolderProps = {
   isFavorite: boolean;
@@ -23,6 +25,7 @@ type CardFolderProps = {
   creation_date: string;
   handleMoveToFavoritesChange: () => void;
   displayMoveForm: any;
+  displayShareForm?: any;
 };
 
 const CardFolder: FC<CardFolderProps> = ({
@@ -34,6 +37,7 @@ const CardFolder: FC<CardFolderProps> = ({
   creation_date,
   handleMoveToFavoritesChange,
   displayMoveForm,
+  displayShareForm,
 
   // handleShowMoveForm,
 }) => {
@@ -78,7 +82,7 @@ const CardFolder: FC<CardFolderProps> = ({
   }, [isSelected]);
 
   return (
-    <Box onContextMenu={handleRightClick}>
+    <Box onContextMenu={handleRightClick} style={{ position: "relative" }}>
       <CardMui
         className={isChecked ? styles["card-selected"] : styles["card"]}
         onDoubleClick={handleDoubleClick}
@@ -108,6 +112,9 @@ const CardFolder: FC<CardFolderProps> = ({
           >
             {name}
           </Typography>
+          <Box sx={{ position: "absolute", right: 10 }}>
+            <IconButton icon={shareIcon} onClick={displayShareForm} />
+          </Box>
           <Typography
             variant="body2"
             color="text.secondary"

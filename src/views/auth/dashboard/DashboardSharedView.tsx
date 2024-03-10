@@ -31,7 +31,7 @@ export default function DashboardSharedView() {
   const [files, setFiles] = useState([]);
 
   const [open, setOpen] = useState(false);
-  const [selectedFileContent, setSelectedFileContent] = useState(null);
+  const [selectedFileContent, setSelectedFileContent] = useState<FileData>();
 
   const {
     showFormFolder,
@@ -61,7 +61,7 @@ export default function DashboardSharedView() {
   const getFolders = async () => {
     try {
       const token = localStorage.getItem("@userToken");
-      const response = await sendGetRequest(`${API_BASE_URL}/folders`, {
+      const response = await sendGetRequest(`${API_BASE_URL}/permissions`, {
         Authorization: `Bearer ${token}`,
       });
       if (JSON.stringify(folders) !== JSON.stringify(response)) {
@@ -142,7 +142,7 @@ export default function DashboardSharedView() {
 
   const handleClose = () => {
     setOpen(false);
-    setSelectedFileContent(null);
+    setSelectedFileContent(undefined);
   };
 
   const moveToFavorites = async (id: number) => {
@@ -203,7 +203,7 @@ export default function DashboardSharedView() {
   };
   useEffect(() => {
     const param = getLastParam(pathname);
-    if (param.length == 0) getFiles();
+    if (param.length == 0) setFiles([]);
     else getFilesFromParent(param);
     // else getFilesFromParent(param);
   }, [pathname]);
@@ -213,6 +213,9 @@ export default function DashboardSharedView() {
     if (param.length == 0) getFolders();
     else getFoldersFromParent(param);
   }, [pathname]);
+  useEffect(() => {
+    getFolders();
+  }, []);
 
   return (
     <Box
@@ -284,7 +287,11 @@ export default function DashboardSharedView() {
           )}
           {open && (
             <ModalFileViewer
-              selectedFile={selectedFileContent ? selectedFileContent : ""}
+              selectedFile={
+                typeof selectedFileContent === "string"
+                  ? undefined
+                  : selectedFileContent
+              }
               handleClose={handleClose}
             />
           )}

@@ -2,20 +2,13 @@ import Grid from "@mui/material/Grid";
 import { useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import ToolBarInFolder from "../../../components/Tabs/ToolBarInFolder.component";
-import {
-  sendGetRequest,
-  sendPatchRequest,
-  sendPostRequest,
-} from "../../../utils/data";
+import { sendGetRequest, sendPatchRequest } from "../../../utils/data";
 import { API_BASE_URL } from "../../../constants/url";
 import { FileData, FolderData } from "./DashboardCloudView";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 
 export default function DashboardFolderView() {
-  const navigate = useNavigate();
-  const params = useParams();
-
   const location = useLocation();
   const id = location.pathname.substring(
     location.pathname.lastIndexOf("/") + 1,
@@ -151,39 +144,6 @@ export default function DashboardFolderView() {
         handleSearchInputChange={handleSearchInputChange}
         searchValue={searchValue}
       />
-
-      {/* <Breadcrumbs label={params.id} link="/dashboard-cloud" newLabel="1" /> */}
-      {/* {(searchValue !== "" ? filteredFolders : folders).map(
-        (data: FolderData) => (
-          <CardFolder
-            key={data.id}
-            id={data.id}
-            isFolderSelected={selectedFoldersIds.includes(data.id)}
-            onSelectFolder={handleSelectFolder}
-            allFoldersSelected={allFoldersSelected}
-            // moveToFavorites={() => moveToFavorites(data.id)}
-            creation_date={data.creation_date}
-            isFavorite={data.isFavorite}
-            name={data.name}
-            // onDoubleClick={() => handleFolderDoubleClick(data.id)}
-          />
-        )
-      )}
-
-      {(searchValue !== "" ? filteredFolders : files).map((data: FileData) => (
-        <CardFile
-          key={data.id}
-          id={data.id}
-          // isFolderSelected={selectedFoldersIds.includes(data.id)}
-          // onSelectFolder={handleSelectFolder}
-          extension={data.extension}
-          allFoldersSelected={allFoldersSelected}
-          moveToFavorites={() => moveToFavorites(data.id)}
-          creation_date={data.creation_date}
-          isFavorite={data.isFavorite}
-          name={data.name}
-        />
-      ))} */}
     </Box>
   );
 }

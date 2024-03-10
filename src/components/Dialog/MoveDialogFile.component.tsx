@@ -1,14 +1,12 @@
 import * as React from "react";
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { API_BASE_URL } from "../../constants/url";
-import { sendPatchRequest, sendPostRequest } from "../../utils/data";
+import { sendPatchRequest } from "../../utils/data";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 import { FolderData } from "../../views/auth/dashboard/DashboardCloudView";
 import Box from "@mui/material/Box";
 import InputLabel from "@mui/material/InputLabel";
@@ -25,12 +23,9 @@ type MoveDialogProps = {
 
 export default function MoveDialogFile({
   handleClose,
-  files,
   fileToMove,
   folders,
 }: MoveDialogProps) {
-  console.log("🚀 ~ fileToMove:", fileToMove);
-  console.log("🚀 ~ files:", files);
   const [newLocation, setNewLocation] = React.useState("");
 
   const handleChange = (event: SelectChangeEvent) => {

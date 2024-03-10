@@ -130,7 +130,7 @@ export default function DashboardFavoritesView() {
   };
 
   const [open, setOpen] = useState(false);
-  const [selectedFileContent, setSelectedFileContent] = useState(null);
+  const [selectedFileContent, setSelectedFileContent] = useState(undefined);
 
   const handleOpen = async (id: any) => {
     try {
@@ -148,7 +148,7 @@ export default function DashboardFavoritesView() {
 
   const handleClose = () => {
     setOpen(false);
-    setSelectedFileContent(null);
+    setSelectedFileContent(undefined);
   };
 
   const moveToFavoritesFiles = async (id: number) => {
@@ -295,7 +295,7 @@ export default function DashboardFavoritesView() {
           )}
           {open && (
             <ModalFileViewer
-              selectedFile={selectedFileContent ? selectedFileContent : ""}
+              selectedFile={selectedFileContent}
               handleClose={handleClose}
             />
           )}
