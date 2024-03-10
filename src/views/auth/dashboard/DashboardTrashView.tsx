@@ -15,8 +15,7 @@ import { FileData, FolderData } from "./DashboardCloudView";
 import CardFolder from "../../../components/Card/CardFolder";
 import DeleteDialogTrash from "../../../components/Dialog/DeleteDialogTrash.component";
 import FormDialogFile from "../../../components/Dialog/FormDialogFile.component";
-import FormDialogFolder from "../../../components/Dialog/MoveDialogFolder.component";
-import { arraysAreEqual } from "../../../utils/array";
+import FormDialogFolder from "../../../components/Dialog/FormDialogFolder.component";
 import { useLocation } from "react-router-dom";
 import useToolbar from "../../../components/Tabs/hooks/useToolbar";
 import { tabsList } from "../../../components/Drawer/DashboardDrawer.component";
@@ -54,6 +53,7 @@ export default function DashboardTrashView() {
     displayDeleteModaleDef,
     showDeleteDefModal,
     deleteDefinitivelyItems,
+    displayMoveForm,
   } = useToolbar(folders, files);
 
   const { pathname } = useLocation();
@@ -88,7 +88,7 @@ export default function DashboardTrashView() {
       const response = await sendGetRequest(`${API_BASE_URL}/folders/trash`, {
         Authorization: `Bearer ${token}`,
       });
-      if (!arraysAreEqual(folders, response)) {
+      if (JSON.stringify(folders) !== JSON.stringify(response)) {
         setFolders(response);
       }
     } catch (error) {
@@ -194,6 +194,7 @@ export default function DashboardTrashView() {
           {(searchValue !== "" ? filteredFolders : folders).map(
             (data: FolderData) => (
               <CardFolder
+                displayMoveForm={() => displayMoveForm(data.id)}
                 handleMoveToFavoritesChange={() =>
                   handleMoveToFavoritesChange(data.id)
                 }

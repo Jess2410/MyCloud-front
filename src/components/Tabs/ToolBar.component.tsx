@@ -49,37 +49,7 @@ const ToolBar: React.FC<ToolBarProps> = ({
   searchValue,
   isChecked,
   displayDeleteModaleDef,
-  // folders,
-  // files,
 }) => {
-  // const [folders, setFolders] = useState<FolderData[]>([]);
-
-  // const [files, setFiles] = useState([]);
-  // const {
-  //   selectedFiles,
-  //   selectedFolders,
-  //   // handleSelectFolder,
-  //   // handleSelectFile,
-
-  //   // setSelectedFiles,
-  //   // setSelectedFolders,
-  // } = useToolbar(folders, files);
-
-  // useEffect(() => {
-  //   console.log("🚀 ~ TOOLBARRRR - files:", files);
-  //   console.log("🚀 ~ TOOLBARRRR - folders:", folders);
-  //   console.log("🚀 ~ TOOLBARRRR - selectedFolders:", selectedFolders);
-  //   console.log("🚀 ~ TOOLBARRRR - selectedFiles:", selectedFiles);
-  // }, [
-  //   selectedFiles,
-  //   selectedFolders,
-  //   // handleSelectFolder,
-  //   // handleSelectFile,
-
-  //   // setSelectedFiles,
-  //   // setSelectedFolders,
-  // ]);
-
   return (
     <Box
       sx={{

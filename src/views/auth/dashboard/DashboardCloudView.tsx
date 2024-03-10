@@ -2,15 +2,15 @@ import Grid from "@mui/material/Grid";
 import trashIcon from "../../../assets/icons/trash-drawer.svg";
 import starIcon from "../../../assets/icons/star-drawer.svg";
 import fileIcon from "../../../assets/icons/file-drawer.svg";
+import sharedIcon from "../../../assets/icons/folder-shared.svg";
 import { useEffect, useState } from "react";
-import { Box } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import DeleteDialog from "../../../components/Dialog/DeleteDialog.component";
 import ToolBar from "../../../components/Tabs/ToolBar.component";
 import { sendGetRequest } from "../../../utils/data";
 import { API_BASE_URL } from "../../../constants/url";
-import { arraysAreEqual } from "../../../utils/array";
 import CardFolder from "../../../components/Card/CardFolder";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Breadcrumbs from "../../../components/Breadcrumbs/Breadcrumbs.component";
 import FormDialogFolder from "../../../components/Dialog/FormDialogFolder.component";
 import FormDialogFile from "../../../components/Dialog/FormDialogFile.component";
@@ -20,6 +20,7 @@ import ModalFileViewer from "../../../components/ModalFileViewer/ModalFileViewer
 import { toast } from "react-toastify";
 import { sendPatchRequest } from "../../../utils/data";
 import MoveDialogFolder from "../../../components/Dialog/MoveDialogFolder.component";
+import MoveDialogFile from "../../../components/Dialog/MoveDialogFile.component";
 
 export const tabsList = [
   {
@@ -35,8 +36,14 @@ export const tabsList = [
     url: "/dashboard-favorites",
   },
   {
-    name: "Corbeille",
+    name: "Partagés",
     key: 3,
+    icon: sharedIcon,
+    url: "/dashboard-shared",
+  },
+  {
+    name: "Corbeille",
+    key: 4,
     icon: trashIcon,
     url: "/dashboard-trash",
   },
@@ -68,7 +75,10 @@ export default function DashboardCloudView() {
   const [files, setFiles] = useState([]);
 
   const [open, setOpen] = useState(false);
-  const [selectedFileContent, setSelectedFileContent] = useState(null);
+  const [selectedFileContent, setSelectedFileContent] = useState<
+    FileData | undefined
+  >(undefined);
+  const [loading, setLoading] = useState(false);
 
   const {
     showFormFolder,
@@ -93,38 +103,49 @@ export default function DashboardCloudView() {
     setShowFormMoveFolder,
     showFormMoveFolder,
     folderToMove,
+    displayMoveFileForm,
+    setShowFormMoveFile,
+    showFormMoveFile,
+    fileToMove,
   } = useToolbar(folders, files);
 
   const getFolders = async () => {
     try {
+      setLoading(true);
       const token = localStorage.getItem("@userToken");
       const response = await sendGetRequest(`${API_BASE_URL}/folders`, {
         Authorization: `Bearer ${token}`,
       });
-      if (!arraysAreEqual(folders, response)) {
+      if (JSON.stringify(folders) !== JSON.stringify(response)) {
         setFolders(response);
       }
     } catch (error) {
       console.log("error");
+    } finally {
+      setLoading(false);
     }
   };
 
   const getFiles = async () => {
     try {
+      setLoading(true);
       const token = localStorage.getItem("@userToken");
       const response = await sendGetRequest(`${API_BASE_URL}/files`, {
         Authorization: `Bearer ${token}`,
       });
-      if (!arraysAreEqual(files, response)) {
+      if (JSON.stringify(files) !== JSON.stringify(response)) {
         setFiles(response);
       }
     } catch (error) {
       console.log("error");
+    } finally {
+      setLoading(false);
     }
   };
 
   const getFoldersFromParent = async (foldersRequestPath: string) => {
     try {
+      setLoading(true);
       const token = localStorage.getItem("@userToken");
       const response = await sendGetRequest(
         `${API_BASE_URL}/folders/parent/${foldersRequestPath}`,
@@ -137,11 +158,29 @@ export default function DashboardCloudView() {
       }
     } catch (error) {
       console.log("error");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const getFilesFromParent = async () => {
-    setFiles([]);
+  const getFilesFromParent = async (foldersRequestPath: string) => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("@userToken");
+      const response = await sendGetRequest(
+        `${API_BASE_URL}/files/parent/${foldersRequestPath}`,
+        {
+          Authorization: `Bearer ${token}`,
+        }
+      );
+      if (JSON.stringify(folders) !== JSON.stringify(response)) {
+        setFiles(response);
+      }
+    } catch (error) {
+      console.log("error");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const getLastParam = (currentpathname: string): string => {
@@ -151,26 +190,33 @@ export default function DashboardCloudView() {
   };
 
   const handleOpen = async (id: any) => {
+    setLoading(true);
     try {
       const token = localStorage.getItem("@userToken");
-      const response = await sendGetRequest(`${API_BASE_URL}/files/${id}`, {
-        Authorization: `Bearer ${token}`,
-      });
-      const { url } = response;
-      setSelectedFileContent(url);
+      const response = await sendGetRequest(
+        `${API_BASE_URL}/files/file/${id}`,
+        {
+          Authorization: `Bearer ${token}`,
+        }
+      );
+      // const { url, extension } = response;
+      setSelectedFileContent(response);
       setOpen(true);
     } catch (error) {
       console.log("error");
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleClose = () => {
     setOpen(false);
-    setSelectedFileContent(null);
+    setSelectedFileContent(undefined);
   };
 
   const moveToFavorites = async (id: number) => {
     const loader = toast.loading("Veuillez patienter...");
+    setLoading(true);
     try {
       const token = localStorage.getItem("@userToken");
       const response = await sendPatchRequest(
@@ -185,15 +231,19 @@ export default function DashboardCloudView() {
           autoClose: 2000,
           isLoading: false,
         });
+
         return;
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const moveToFavoritesFiles = async (id: number) => {
     const loader = toast.loading("Veuillez patienter...");
+    setLoading(true);
     try {
       const token = localStorage.getItem("@userToken");
       const response = await sendPatchRequest(
@@ -212,6 +262,8 @@ export default function DashboardCloudView() {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -228,8 +280,7 @@ export default function DashboardCloudView() {
   useEffect(() => {
     const param = getLastParam(pathname);
     if (param.length == 0) getFiles();
-    else getFilesFromParent();
-    // else getFilesFromParent(param);
+    else getFilesFromParent(param);
   }, [pathname]);
 
   useEffect(() => {
@@ -260,86 +311,108 @@ export default function DashboardCloudView() {
       />
       <Breadcrumbs label={tabActive?.name} link="/dashboard-cloud" />
 
-      <Grid>
+      {loading ? (
         <Box
           sx={{
-            pt: 4,
             display: "flex",
-            flexWrap: "wrap",
-            gap: "16px",
-            justifyContent: "flex-start",
-            alignItems: "flex-start",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
           }}
         >
-          {(searchValue !== "" ? filteredFolders : folders).map(
-            (data: FolderData) => (
-              <CardFolder
-                displayMoveForm={() => displayMoveForm(data.id)}
-                handleMoveToFavoritesChange={() =>
-                  handleMoveToFavoritesChange(data.id)
-                }
-                key={data.id}
-                id={data.id}
-                onSelectFolder={handleSelectFolder}
-                isSelected={selectedFolders.get(data.id)}
-                creation_date={data.creation_date}
-                isFavorite={data.isFavorite}
-                name={data.name}
-              />
-            )
-          )}
-          {(searchValue !== "" ? filteredFolders : files).map(
-            (data: FileData) => (
-              <CardFile
-                handleMoveToFavoritesChange={() =>
-                  handleMoveToFavoritesFilesChange(data.id)
-                }
-                key={data.id}
-                id={data.id}
-                onSelectFile={handleSelectFile}
-                extension={data.extension}
-                isSelected={selectedFiles.get(data.id)}
-                creation_date={data.creation_date}
-                isFavorite={data.isFavorite}
-                name={data.name}
-                onDoubleClick={() => handleOpen(data.id)}
-              />
-            )
-          )}
-          {open && (
-            <ModalFileViewer
-              selectedFile={selectedFileContent ? selectedFileContent : ""}
-              handleClose={handleClose}
-            />
-          )}
-          {showFormFolder && (
-            <FormDialogFolder
-              handleClose={() => setShowFormFolder(false)}
-              setFolders={setFolders}
-            />
-          )}
-          {showFormFile && (
-            <FormDialogFile handleClose={() => setShowFormFile(false)} />
-          )}
-          {showFormMoveFolder && (
-            <MoveDialogFolder
-              folders={folders}
-              handleClose={() => setShowFormMoveFolder(false)}
-              folderToMove={folderToMove}
-            />
-          )}
-          {showDeleteModal && (
-            <DeleteDialog
-              deletedFolders={deletedFolders}
-              handleClose={() => setShowDeleteModal(false)}
-              handleDelete={deleteSelectedItems}
-              actionType={actionType}
-              files={files}
-              folders={folders}
-            />
-          )}
+          <CircularProgress />
         </Box>
-      </Grid>
+      ) : (
+        <Grid>
+          <Box
+            sx={{
+              pt: 4,
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "16px",
+              justifyContent: "flex-start",
+              alignItems: "flex-start",
+            }}
+          >
+            {(searchValue !== "" ? filteredFolders : folders).map(
+              (data: FolderData) => (
+                <CardFolder
+                  displayMoveForm={() => displayMoveForm(data.id)}
+                  handleMoveToFavoritesChange={() =>
+                    handleMoveToFavoritesChange(data.id)
+                  }
+                  key={data.id}
+                  id={data.id}
+                  onSelectFolder={handleSelectFolder}
+                  isSelected={selectedFolders.get(data.id)}
+                  creation_date={data.creation_date}
+                  isFavorite={data.isFavorite}
+                  name={data.name}
+                />
+              )
+            )}
+            {(searchValue !== "" ? filteredFolders : files).map(
+              (data: FileData) => (
+                <CardFile
+                  displayMoveFileForm={() => displayMoveFileForm(data.id)}
+                  handleMoveToFavoritesChange={() =>
+                    handleMoveToFavoritesFilesChange(data.id)
+                  }
+                  key={data.id}
+                  id={data.id}
+                  onSelectFile={handleSelectFile}
+                  extension={data.extension}
+                  isSelected={selectedFiles.get(data.id)}
+                  creation_date={data.creation_date}
+                  isFavorite={data.isFavorite}
+                  name={data.name}
+                  onDoubleClick={() => handleOpen(data.id)}
+                />
+              )
+            )}
+            {open && (
+              <ModalFileViewer
+                selectedFile={selectedFileContent}
+                handleClose={handleClose}
+              />
+            )}
+            {showFormFolder && (
+              <FormDialogFolder
+                handleClose={() => setShowFormFolder(false)}
+                setFolders={setFolders}
+              />
+            )}
+            {showFormFile && (
+              <FormDialogFile handleClose={() => setShowFormFile(false)} />
+            )}
+            {showFormMoveFolder && (
+              <MoveDialogFolder
+                folders={folders}
+                handleClose={() => setShowFormMoveFolder(false)}
+                folderToMove={folderToMove}
+              />
+            )}
+            {showFormMoveFile && (
+              <MoveDialogFile
+                files={files}
+                folders={folders}
+                handleClose={() => setShowFormMoveFile(false)}
+                fileToMove={fileToMove}
+              />
+            )}
+            {showDeleteModal && (
+              <DeleteDialog
+                deletedFolders={deletedFolders}
+                handleClose={() => setShowDeleteModal(false)}
+                handleDelete={deleteSelectedItems}
+                actionType={actionType}
+                files={files}
+                folders={folders}
+              />
+            )}
+          </Box>
+        </Grid>
+      )}
     </Box>
   );
 }

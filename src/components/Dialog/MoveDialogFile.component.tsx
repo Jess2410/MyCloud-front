@@ -18,44 +18,45 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 
 type MoveDialogProps = {
   handleClose: () => void;
-  // setFolders: React.Dispatch<React.SetStateAction<FolderData[]>>;
+  files: any;
+  fileToMove?: number;
   folders: any;
-  folderToMove?: number;
 };
 
-export default function MoveDialogFolder({
+export default function MoveDialogFile({
   handleClose,
+  files,
+  fileToMove,
   folders,
-  folderToMove,
-}: // setFolders,
-MoveDialogProps) {
-  console.log("🚀 ~ folderToMove:", folderToMove);
-  console.log("🚀 ~ folders:", folders);
+}: MoveDialogProps) {
+  console.log("🚀 ~ fileToMove:", fileToMove);
+  console.log("🚀 ~ files:", files);
   const [newLocation, setNewLocation] = React.useState("");
 
   const handleChange = (event: SelectChangeEvent) => {
     setNewLocation(event.target.value as string);
   };
-  const moveFolder = async (event: React.FormEvent<HTMLFormElement>) => {
+  const moveFile = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const formJson = Object.fromEntries((formData as any).entries());
-    const parent_folder_id = formJson.parent_folder_id;
+    const folder_id = formJson.folder_id;
+    console.log("🚀 ~ moveFile ~ folder_id:", folder_id);
     const loader = toast.loading("Veuillez patienter...");
 
     try {
       const token = localStorage.getItem("@userToken");
       const response = await sendPatchRequest(
-        `${API_BASE_URL}/folders/move`,
+        `${API_BASE_URL}/files/move`,
         { Authorization: `Bearer ${token}` },
         {
-          id: folderToMove,
-          parent_folder_id: parent_folder_id,
+          id: fileToMove,
+          folder_id: folder_id,
         }
       );
       if (response.status === 200) {
         toast.update(loader, {
-          render: "Dossier déplacé avec succès !",
+          render: "Fichier déplacé avec succès !",
           type: "success",
           autoClose: 2000,
           isLoading: false,
@@ -94,7 +95,7 @@ MoveDialogProps) {
         onClose={handleClose}
         PaperProps={{
           component: "form",
-          onSubmit: moveFolder,
+          onSubmit: moveFile,
         }}
       >
         <DialogTitle>Nouvel emplacement</DialogTitle>
@@ -119,15 +120,12 @@ MoveDialogProps) {
                 value={newLocation}
                 label="Nouvel emplacement"
                 onChange={handleChange}
-                name="parent_folder_id"
+                name="folder_id"
               >
                 <MenuItem value={undefined}>Racine</MenuItem>
-                {folders.map(
-                  (folder: FolderData) =>
-                    folder.id !== folderToMove && (
-                      <MenuItem value={folder.id}>{folder.name}</MenuItem>
-                    )
-                )}
+                {folders.map((folder: FolderData) => (
+                  <MenuItem value={folder.id}>{folder.name}</MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Box>

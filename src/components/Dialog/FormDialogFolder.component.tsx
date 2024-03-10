@@ -8,7 +8,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { API_BASE_URL } from "../../constants/url";
 import { sendPostRequest } from "../../utils/data";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 import { FolderData } from "../../views/auth/dashboard/DashboardCloudView";
 
 type FormDialogProps = {
@@ -61,14 +60,6 @@ export default function FormDialogFolder({
     }
   };
 
-  // const handleSubmitFolder = (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   const formData = new FormData(event.currentTarget);
-  //   const formJson = Object.fromEntries((formData as any).entries());
-  //   const nameFolder = formJson.name;
-  //   handleClose();
-  // };
-
   return (
     <>
       <Dialog
@@ -92,9 +83,6 @@ export default function FormDialogFolder({
             fullWidth
             variant="standard"
           />
-          {/* {title === "Nouveau fichier" && (
-            <TextField type="file" variant="standard" />
-          )} */}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Retour</Button>

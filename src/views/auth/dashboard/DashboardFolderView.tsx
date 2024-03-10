@@ -7,15 +7,10 @@ import {
   sendPatchRequest,
   sendPostRequest,
 } from "../../../utils/data";
-import { arraysAreEqual } from "../../../utils/array";
 import { API_BASE_URL } from "../../../constants/url";
 import { FileData, FolderData } from "./DashboardCloudView";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { tabsList } from "../../../components/Drawer/DashboardDrawer.component";
-import Card from "../../../components/Card/CardFile";
-import CardFolder from "../../../components/Card/CardFolder";
-import Breadcrumbs from "../../../components/Breadcrumbs/Breadcrumbs.component";
 
 export default function DashboardFolderView() {
   const navigate = useNavigate();

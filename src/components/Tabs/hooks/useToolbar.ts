@@ -24,12 +24,14 @@ const useToolbar = (folders: FolderData[], files: FileData[]) => {
   const [showFormFolder, setShowFormFolder] = useState(false);
   const [showFormFile, setShowFormFile] = useState(false);
   const [showFormMoveFolder, setShowFormMoveFolder] = useState(false);
+  const [showFormMoveFile, setShowFormMoveFile] = useState(false);
   // const userContext = useContext(UserContext);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showDeleteDefModal, setShowDeleteDefModal] = useState(false);
   const [showRestoreModal, setShowRestoreModal] = useState(false);
   const [actionType, setActionType] = useState("");
   const [folderToMove, setFolderToMove] = useState<number>();
+  const [fileToMove, setFileToMove] = useState<number>();
 
   const [filteredFolders, setFilteredFolders] = useState<FolderData[]>([]);
   const [filteredFiles, setFilteredFiles] = useState<FileData[]>([]);
@@ -41,11 +43,9 @@ const useToolbar = (folders: FolderData[], files: FileData[]) => {
     new Map()
   );
 
-  console.log("🚀 ~ useToolbar ~ selectedFolders:", selectedFolders);
   const [selectedFiles, setSelectedFiles] = useState<Map<number, boolean>>(
     new Map()
   );
-  console.log("🚀 ~ useToolbar ~ selectedFolders:", selectedFiles);
 
   const displayDeleteModale = (actionType: string | null | undefined) => {
     setShowDeleteModal(!showDeleteModal);
@@ -56,6 +56,10 @@ const useToolbar = (folders: FolderData[], files: FileData[]) => {
   const displayMoveForm = (id: number) => {
     setShowFormMoveFolder(!showFormMoveFolder);
     setFolderToMove(id);
+  };
+  const displayMoveFileForm = (id: number) => {
+    setShowFormMoveFile(!showFormMoveFile);
+    setFileToMove(id);
   };
   const displayDeleteModaleDef = () => {
     setShowDeleteDefModal(!showDeleteDefModal);
@@ -131,8 +135,9 @@ const useToolbar = (folders: FolderData[], files: FileData[]) => {
         }),
       });
       if (response.status === 200) {
+        const responseData = await response.json();
         toast.update(loader, {
-          render: response?.message,
+          render: responseData?.message,
           type: "success",
           autoClose: 2000,
           isLoading: false,
@@ -172,8 +177,9 @@ const useToolbar = (folders: FolderData[], files: FileData[]) => {
         }),
       });
       if (response.status === 200) {
+        const responseData = await response.json();
         toast.update(loader, {
-          render: response?.message,
+          render: responseData?.message,
           type: "success",
           autoClose: 2000,
           isLoading: false,
@@ -196,18 +202,10 @@ const useToolbar = (folders: FolderData[], files: FileData[]) => {
       const filteredFolders = [...selectedFolders.entries()]
         .filter(([_key, value]) => value === true)
         .map(([key, _value]) => key);
-      console.log(
-        "🚀 ~ deleteDefinitivelyItems ~ filteredFolders:",
-        filteredFolders
-      );
 
       const filteredFiles = [...selectedFiles.entries()]
         .filter(([_key, value]) => value === true)
         .map(([key, _value]) => key);
-      console.log(
-        "🚀 ~ deleteDefinitivelyItems ~ filteredFiles:",
-        filteredFiles
-      );
 
       const response = await fetch(`${API_BASE_URL}/folders/delete`, {
         method: "DELETE",
@@ -239,14 +237,6 @@ const useToolbar = (folders: FolderData[], files: FileData[]) => {
       console.error("Error deleting selected items:", error);
     }
   };
-
-  // useEffect(() => {
-  //   if (allFoldersSelected) {
-  //     setSelectedFoldersIds(folders?.map((folder: FolderData) => folder.id));
-  //   } else {
-  //     setSelectedFoldersIds([]);
-  //   }
-  // }, [allFoldersSelected]);
 
   useEffect(() => {
     const filtered = folders.filter((folder) =>
@@ -304,6 +294,10 @@ const useToolbar = (folders: FolderData[], files: FileData[]) => {
     setShowFormMoveFolder,
     showFormMoveFolder,
     folderToMove,
+    displayMoveFileForm,
+    setShowFormMoveFile,
+    showFormMoveFile,
+    fileToMove,
   };
 };
 export default useToolbar;

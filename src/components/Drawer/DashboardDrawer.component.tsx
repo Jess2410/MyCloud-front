@@ -20,6 +20,7 @@ import { useState } from "react";
 import fileIcon from "../../assets/icons/file-drawer.svg";
 import starIcon from "../../assets/icons/star-drawer.svg";
 import trashIcon from "../../assets/icons/trash-drawer.svg";
+import sharedIcon from "../../assets/icons/folder-shared.svg";
 
 export const tabsList = [
   {
@@ -35,8 +36,14 @@ export const tabsList = [
     url: "/dashboard-favorites",
   },
   {
-    name: "Corbeille",
+    name: "Partagés",
     key: 3,
+    icon: sharedIcon,
+    url: "/dashboard-shared",
+  },
+  {
+    name: "Corbeille",
+    key: 4,
     icon: trashIcon,
     url: "/dashboard-trash",
   },

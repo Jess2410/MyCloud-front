@@ -20,21 +20,18 @@ import CardFile from "../../../components/Card/CardFile";
 import ModalFileViewer from "../../../components/ModalFileViewer/ModalFileViewer.component";
 import useToolbar from "../../../components/Tabs/hooks/useToolbar";
 import MoveDialogFolder from "../../../components/Dialog/MoveDialogFolder.component";
-import MoveDialogFile from "../../../components/Dialog/MoveDialogFile.component";
 
-export default function DashboardFavoritesView() {
+export default function DashboardSharedView() {
   const { pathname } = useLocation();
 
   const tabActive = tabsList.find((tab) => pathname.includes(tab.url));
 
-  // const userContext = useContext(UserContext);
-
   const [folders, setFolders] = useState<FolderData[]>([]);
+
   const [files, setFiles] = useState([]);
 
-  const [allFoldersSelected, setAllFoldersSelected] = useState(false);
-  const [selectedFoldersIds, setSelectedFoldersIds] = useState<number[]>([]);
-  const [filteredFiles, setFilteredFiles] = useState<FileData[]>([]);
+  const [open, setOpen] = useState(false);
+  const [selectedFileContent, setSelectedFileContent] = useState(null);
 
   const {
     showFormFolder,
@@ -48,7 +45,6 @@ export default function DashboardFavoritesView() {
     handleSearchInputChange,
     searchValue,
     filteredFolders,
-    setFilteredFolders,
     showDeleteModal,
     setShowDeleteModal,
     selectedFiles,
@@ -60,16 +56,26 @@ export default function DashboardFavoritesView() {
     setShowFormMoveFolder,
     showFormMoveFolder,
     folderToMove,
-    displayMoveFileForm,
-    setShowFormMoveFile,
-    showFormMoveFile,
-    fileToMove,
   } = useToolbar(folders, files);
+
+  const getFolders = async () => {
+    try {
+      const token = localStorage.getItem("@userToken");
+      const response = await sendGetRequest(`${API_BASE_URL}/folders`, {
+        Authorization: `Bearer ${token}`,
+      });
+      if (JSON.stringify(folders) !== JSON.stringify(response)) {
+        setFolders(response);
+      }
+    } catch (error) {
+      console.log("error");
+    }
+  };
 
   const getFiles = async () => {
     try {
       const token = localStorage.getItem("@userToken");
-      const response = await sendGetRequest(`${API_BASE_URL}/files/favorites`, {
+      const response = await sendGetRequest(`${API_BASE_URL}/files`, {
         Authorization: `Bearer ${token}`,
       });
       if (JSON.stringify(files) !== JSON.stringify(response)) {
@@ -80,9 +86,65 @@ export default function DashboardFavoritesView() {
     }
   };
 
-  const getFilesFromParent = async () => {
-    setFiles([]);
+  const getFoldersFromParent = async (foldersRequestPath: string) => {
+    try {
+      const token = localStorage.getItem("@userToken");
+      const response = await sendGetRequest(
+        `${API_BASE_URL}/folders/parent/${foldersRequestPath}`,
+        {
+          Authorization: `Bearer ${token}`,
+        }
+      );
+      if (JSON.stringify(folders) !== JSON.stringify(response)) {
+        setFolders(response);
+      }
+    } catch (error) {
+      console.log("error");
+    }
   };
+
+  const getFilesFromParent = async (foldersRequestPath: string) => {
+    try {
+      const token = localStorage.getItem("@userToken");
+      const response = await sendGetRequest(
+        `${API_BASE_URL}/files/parent/${foldersRequestPath}`,
+        {
+          Authorization: `Bearer ${token}`,
+        }
+      );
+      if (JSON.stringify(folders) !== JSON.stringify(response)) {
+        setFiles(response);
+      }
+    } catch (error) {
+      console.log("error");
+    }
+  };
+
+  const getLastParam = (currentpathname: string): string => {
+    const splitted = currentpathname.split("/");
+    if (splitted.length <= 2) return "";
+    return splitted[splitted.length - 1];
+  };
+
+  const handleOpen = async (id: any) => {
+    try {
+      const token = localStorage.getItem("@userToken");
+      const response = await sendGetRequest(`${API_BASE_URL}/files/${id}`, {
+        Authorization: `Bearer ${token}`,
+      });
+      const { url } = response;
+      setSelectedFileContent(url);
+      setOpen(true);
+    } catch (error) {
+      console.log("error");
+    }
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedFileContent(null);
+  };
+
   const moveToFavorites = async (id: number) => {
     const loader = toast.loading("Veuillez patienter...");
     try {
@@ -104,51 +166,6 @@ export default function DashboardFavoritesView() {
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const getFolders = async () => {
-    try {
-      const token = localStorage.getItem("@userToken");
-      const response = await sendGetRequest(
-        `${API_BASE_URL}/folders/favorites`,
-        {
-          Authorization: `Bearer ${token}`,
-        }
-      );
-      if (JSON.stringify(folders) !== JSON.stringify(response)) {
-        setFolders(response);
-      }
-    } catch (error) {
-      console.log("error");
-    }
-  };
-
-  const getLastParam = (currentpathname: string): string => {
-    const splitted = currentpathname.split("/");
-    if (splitted.length <= 2) return "";
-    return splitted[splitted.length - 1];
-  };
-
-  const [open, setOpen] = useState(false);
-  const [selectedFileContent, setSelectedFileContent] = useState(null);
-
-  const handleOpen = async (id: any) => {
-    try {
-      const token = localStorage.getItem("@userToken");
-      const response = await sendGetRequest(`${API_BASE_URL}/files/${id}`, {
-        Authorization: `Bearer ${token}`,
-      });
-      const { url } = response;
-      setSelectedFileContent(url);
-      setOpen(true);
-    } catch (error) {
-      console.log("error");
-    }
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    setSelectedFileContent(null);
   };
 
   const moveToFavoritesFiles = async (id: number) => {
@@ -185,42 +202,17 @@ export default function DashboardFavoritesView() {
     }
   };
   useEffect(() => {
-    //console.log(lastPathnameId); ///TODO pas encore modifié par la ligne 181 a ce moement la
     const param = getLastParam(pathname);
     if (param.length == 0) getFiles();
+    else getFilesFromParent(param);
     // else getFilesFromParent(param);
-    else getFilesFromParent();
   }, [pathname]);
 
   useEffect(() => {
-    const filtered = folders.filter((folder) =>
-      folder.name.toLowerCase().includes(searchValue.toLowerCase())
-    );
-    setFilteredFolders(filtered);
-    const filteredFiles = files.filter((file: FileData) =>
-      file.name.toLowerCase().includes(searchValue.toLowerCase())
-    );
-    setFilteredFiles(filteredFiles);
-  }, [folders, files, searchValue]);
-
-  useEffect(() => {
-    if (allFoldersSelected) {
-      setSelectedFoldersIds(folders?.map((folder: FolderData) => folder.id));
-    } else {
-      setSelectedFoldersIds([]);
-    }
-  }, [allFoldersSelected]);
-
-  useEffect(() => {
-    const filtered = folders.filter((folder) =>
-      folder.name.toLowerCase().includes(searchValue.toLowerCase())
-    );
-    setFilteredFolders(filtered);
-  }, [folders, searchValue]);
-
-  useEffect(() => {
-    getFolders();
-  }, []);
+    const param = getLastParam(pathname);
+    if (param.length == 0) getFolders();
+    else getFoldersFromParent(param);
+  }, [pathname]);
 
   return (
     <Box
@@ -242,7 +234,8 @@ export default function DashboardFavoritesView() {
         handleSearchInputChange={handleSearchInputChange}
         searchValue={searchValue}
       />
-      <Breadcrumbs label={tabActive?.name} link="/dashboard-favorites" />
+      <Breadcrumbs label={tabActive?.name} link="/dashboard-shared" />
+
       <Grid>
         <Box
           sx={{
@@ -254,7 +247,7 @@ export default function DashboardFavoritesView() {
             alignItems: "flex-start",
           }}
         >
-          {(searchValue !== "" ? filteredFolders : folders)?.map(
+          {(searchValue !== "" ? filteredFolders : folders).map(
             (data: FolderData) => (
               <CardFolder
                 displayMoveForm={() => displayMoveForm(data.id)}
@@ -271,26 +264,22 @@ export default function DashboardFavoritesView() {
               />
             )
           )}
-
-          {(searchValue !== "" ? filteredFiles : files).map(
+          {(searchValue !== "" ? filteredFolders : files).map(
             (data: FileData) => (
-              <>
-                <CardFile
-                  displayMoveFileForm={() => displayMoveFileForm(data.id)}
-                  handleMoveToFavoritesChange={() =>
-                    handleMoveToFavoritesFilesChange(data.id)
-                  }
-                  key={data.id}
-                  id={data.id}
-                  onSelectFile={handleSelectFile}
-                  extension={data.extension}
-                  isSelected={selectedFiles.get(data.id)}
-                  creation_date={data.creation_date}
-                  isFavorite={data.isFavorite}
-                  name={data.name}
-                  onDoubleClick={() => handleOpen(data.id)}
-                />
-              </>
+              <CardFile
+                handleMoveToFavoritesChange={() =>
+                  handleMoveToFavoritesFilesChange(data.id)
+                }
+                key={data.id}
+                id={data.id}
+                onSelectFile={handleSelectFile}
+                extension={data.extension}
+                isSelected={selectedFiles.get(data.id)}
+                creation_date={data.creation_date}
+                isFavorite={data.isFavorite}
+                name={data.name}
+                onDoubleClick={() => handleOpen(data.id)}
+              />
             )
           )}
           {open && (
@@ -299,7 +288,6 @@ export default function DashboardFavoritesView() {
               handleClose={handleClose}
             />
           )}
-
           {showFormFolder && (
             <FormDialogFolder
               handleClose={() => setShowFormFolder(false)}
@@ -314,14 +302,6 @@ export default function DashboardFavoritesView() {
               folders={folders}
               handleClose={() => setShowFormMoveFolder(false)}
               folderToMove={folderToMove}
-            />
-          )}
-          {showFormMoveFile && (
-            <MoveDialogFile
-              files={files}
-              folders={folders}
-              handleClose={() => setShowFormMoveFile(false)}
-              fileToMove={fileToMove}
             />
           )}
           {showDeleteModal && (

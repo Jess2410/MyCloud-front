@@ -2,27 +2,15 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-// import Modal from "@mui/material/Modal";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import { sendGetRequest } from "../../utils/data";
-import { API_BASE_URL } from "../../constants/url";
-// const style = {
-//   position: "absolute" as "absolute",
-//   top: "50%",
-//   left: "50%",
-//   transform: "translate(-50%, -50%)",
-//   width: 400,
-//   bgcolor: "background.paper",
-//   border: "2px solid #000",
-//   boxShadow: 24,
-//   p: 4,
-// };
+import { FileData } from "../../views/auth/dashboard/DashboardCloudView";
+import { Document, PDFViewer, Page, Text } from "@react-pdf/renderer";
 
 type ModalFileViewerProps = {
   handleClose: () => void;
-  selectedFile?: string;
+  selectedFile?: FileData;
 };
 
 export default function ModalFileViewer({
@@ -43,11 +31,20 @@ export default function ModalFileViewer({
       </DialogActions>
       <DialogContent>
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          Contenu du fichier
+          {selectedFile?.name}
         </Typography>
         <Box sx={{ mt: 2 }}>
-          <img src={selectedFile} alt="" />
-          <iframe src={selectedFile} width="100%" height="500px" />
+          {selectedFile?.extension === "pdf" && selectedFile?.url ? (
+            <PDFViewer width="100%" height="500px">
+              <Document>
+                <Page>
+                  <iframe src={selectedFile.url} width="100%" height="100%" />
+                </Page>
+              </Document>
+            </PDFViewer>
+          ) : (
+            <img src={selectedFile?.url} alt="" />
+          )}
         </Box>
       </DialogContent>
     </Dialog>

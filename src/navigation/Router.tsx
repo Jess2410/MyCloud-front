@@ -13,6 +13,7 @@ import DashboardCloudView from "../views/auth/dashboard/DashboardCloudView";
 import DashboardFavoritesView from "../views/auth/dashboard/DashboardFavoritesView";
 import DashboardTrashView from "../views/auth/dashboard/DashboardTrashView";
 import Layout from "../views/Layout.component";
+import DashboardSharedView from "../views/auth/dashboard/DashboardSharedView";
 
 const AppRouter = () => {
   const { user } = useContext(UserContext);
@@ -41,6 +42,15 @@ const AppRouter = () => {
       element: (
         <Layout>
           <DashboardCloudView />
+        </Layout>
+      ),
+    },
+    {
+      path: "/dashboard-shared/*",
+      // element: user ? <DashboardCloudView /> : <LoginView />,
+      element: (
+        <Layout>
+          <DashboardSharedView />
         </Layout>
       ),
     },
@@ -76,6 +86,15 @@ const AppRouter = () => {
       element: (
         <Layout>
           <DashboardTrashView />
+        </Layout>
+      ),
+    },
+    {
+      path: "/dashboard-shared",
+      // element: user ? <DashboardCloudView /> : <LoginView />,
+      element: (
+        <Layout>
+          <DashboardSharedView />
         </Layout>
       ),
     },

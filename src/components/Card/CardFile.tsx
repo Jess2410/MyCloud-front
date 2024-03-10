@@ -1,5 +1,5 @@
-import { FC, useState, useEffect, ChangeEvent } from "react";
-import { Card as CardMui } from "@mui/material";
+import { FC, useState, useEffect, ChangeEvent, MouseEventHandler } from "react";
+import { Card as CardMui, Box } from "@mui/material";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
@@ -28,6 +28,7 @@ type CardProps = {
   onDoubleClick: () => void;
   // onAddSelectedCards: (id: number) => void;
   handleMoveToFavoritesChange: () => void;
+  displayMoveFileForm: any;
 };
 
 const CardFile: FC<CardProps> = ({
@@ -37,6 +38,7 @@ const CardFile: FC<CardProps> = ({
   isSelected,
   id,
   onDoubleClick,
+  displayMoveFileForm,
   // onAddSelectedCards,
   name,
   creation_date,
@@ -88,12 +90,18 @@ const CardFile: FC<CardProps> = ({
     onSelectFile(id, checked);
   };
 
+  const handleRightClick: MouseEventHandler<HTMLDivElement> = (e) => {
+    e.preventDefault();
+    displayMoveFileForm();
+    console.log("Clic droit détecté sur la carte!", id);
+  };
+
   useEffect(() => {
     if (isSelected !== undefined) setIsChecked(isSelected);
   }, [isSelected]);
 
   return (
-    <>
+    <Box onContextMenu={handleRightClick}>
       <CardMui
         className={isSelected ? styles["card-selected"] : styles["card"]}
         onDoubleClick={onDoubleClick}
@@ -132,7 +140,7 @@ const CardFile: FC<CardProps> = ({
           </Typography>
         </CardContent>
       </CardMui>
-    </>
+    </Box>
   );
 };
 

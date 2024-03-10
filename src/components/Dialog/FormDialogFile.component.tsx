@@ -6,11 +6,13 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { API_BASE_URL } from "../../constants/url";
-import { sendPostFileRequest, sendPostRequest } from "../../utils/data";
+import { sendPostFileRequest } from "../../utils/data";
 import { toast } from "react-toastify";
+import { FileData } from "../../views/auth/dashboard/DashboardCloudView";
 
 type FormDialogProps = {
   handleClose: () => void;
+  setFiles: React.Dispatch<React.SetStateAction<FileData[]>>;
 };
 
 export default function FormDialogFile({ handleClose }: FormDialogProps) {
@@ -19,14 +21,13 @@ export default function FormDialogFile({ handleClose }: FormDialogProps) {
     file: null as File | null,
   });
 
-  const [file, setFile] = useState(null);
-
   const createFile = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
+    console.log("🚀 ~ createFile ~ formData:", formData);
     const formJson = Object.fromEntries((formData as any).entries());
+    console.log("🚀 ~ createFile ~ formJson:", formJson);
 
-    // console.log("🚀 ~ createFile ~ formData:", formJson.image);
     const loader = toast.loading("Veuillez patienter...");
     try {
       const token = localStorage.getItem("@userToken");
@@ -90,22 +91,6 @@ export default function FormDialogFile({ handleClose }: FormDialogProps) {
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             variant="standard"
           />
-          {/* 
-          <TextField
-            type="file"
-            name="file"
-            variant="standard"
-            onChange={(e) => {
-              const target = e.target as HTMLInputElement;
-              const file = target.files && target.files[0];
-              if (file) {
-                setFormData({ ...formData, file: file });
-              }
-            }}
-            // onChange={(e: any) => {
-            //   setFile(e.target.files?.length ? e.target?.files[0] : null);
-            // }}
-          /> */}
           <input
             type="file"
             id="image"
