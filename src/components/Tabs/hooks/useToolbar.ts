@@ -25,6 +25,8 @@ const useToolbar = (folders: FolderData[], files: FileData[]) => {
   const [showFormFile, setShowFormFile] = useState(false);
   const [showFormMoveFolder, setShowFormMoveFolder] = useState(false);
   const [showFormMoveFile, setShowFormMoveFile] = useState(false);
+  const [showFormEditFolder, setShowFormEditFolder] = useState(false);
+  const [showFormEditFile, setShowFormEditFile] = useState(false);
   // const userContext = useContext(UserContext);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showDeleteDefModal, setShowDeleteDefModal] = useState(false);
@@ -32,6 +34,8 @@ const useToolbar = (folders: FolderData[], files: FileData[]) => {
   const [actionType, setActionType] = useState("");
   const [folderToMove, setFolderToMove] = useState<number>();
   const [fileToMove, setFileToMove] = useState<number>();
+  const [folderToEdit, setFolderToEdit] = useState<any>();
+  const [fileToEdit, setFileToEdit] = useState<any>();
 
   const [filteredFolders, setFilteredFolders] = useState<FolderData[]>([]);
   const [filteredFiles, setFilteredFiles] = useState<FileData[]>([]);
@@ -60,6 +64,14 @@ const useToolbar = (folders: FolderData[], files: FileData[]) => {
   const displayMoveFileForm = (id: number) => {
     setShowFormMoveFile(!showFormMoveFile);
     setFileToMove(id);
+  };
+  const displayEditFolderForm = (id: number, name: string) => {
+    setShowFormEditFolder(!showFormEditFolder);
+    setFolderToEdit({ id: id, name: name });
+  };
+  const displayEditFileForm = (id: number, name: string) => {
+    setShowFormEditFile(!showFormEditFile);
+    setFileToEdit({ id: id, name: name });
   };
   const displayDeleteModaleDef = () => {
     setShowDeleteDefModal(!showDeleteDefModal);
@@ -309,11 +321,19 @@ const useToolbar = (folders: FolderData[], files: FileData[]) => {
     displayMoveForm,
     setShowFormMoveFolder,
     showFormMoveFolder,
+    setShowFormEditFolder,
+    showFormEditFolder,
     folderToMove,
+    folderToEdit,
     displayMoveFileForm,
     setShowFormMoveFile,
     showFormMoveFile,
+    setShowFormEditFile,
+    showFormEditFile,
     fileToMove,
+    fileToEdit,
+    displayEditFolderForm,
+    displayEditFileForm,
   };
 };
 export default useToolbar;

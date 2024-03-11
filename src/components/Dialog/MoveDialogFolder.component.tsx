@@ -29,8 +29,6 @@ export default function MoveDialogFolder({
   folderToMove,
 }: // setFolders,
 MoveDialogProps) {
-  console.log("🚀 ~ folderToMove:", folderToMove);
-  console.log("🚀 ~ folders:", folders);
   const [newLocation, setNewLocation] = React.useState("");
 
   const handleChange = (event: SelectChangeEvent) => {

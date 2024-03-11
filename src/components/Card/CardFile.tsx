@@ -13,9 +13,8 @@ import starUnchecked from "../../assets/icons/Vectorstar-no-checked.svg";
 import checkboxChecked from "../../assets/icons/Vectorcheckbox-checked.png";
 import checkboxUnchecked from "../../assets/icons/Vectorcheckbox-no-checked.png";
 import styles from "./card.component.module.css";
-import { toast } from "react-toastify";
-import { sendPatchRequest } from "../../utils/data";
-import { API_BASE_URL } from "../../constants/url";
+import IconButton from "../IconButton/IconButton";
+import edit from "../../assets/icons/edit.png";
 
 type CardProps = {
   extension?: string;
@@ -29,6 +28,7 @@ type CardProps = {
   // onAddSelectedCards: (id: number) => void;
   handleMoveToFavoritesChange: () => void;
   displayMoveFileForm?: any;
+  displayEditFileForm?: any;
 };
 
 const CardFile: FC<CardProps> = ({
@@ -43,6 +43,7 @@ const CardFile: FC<CardProps> = ({
   name,
   creation_date,
   handleMoveToFavoritesChange,
+  displayEditFileForm,
 }) => {
   const [isChecked, setIsChecked] = useState<boolean>(isSelected ?? false);
 
@@ -109,7 +110,7 @@ const CardFile: FC<CardProps> = ({
   }, [isSelected]);
 
   return (
-    <Box onContextMenu={handleRightClick}>
+    <Box onContextMenu={handleRightClick} style={{ position: "relative" }}>
       <CardMui
         className={isSelected ? styles["card-selected"] : styles["card"]}
         onDoubleClick={onDoubleClick}
@@ -139,6 +140,17 @@ const CardFile: FC<CardProps> = ({
           >
             {name}
           </Typography>
+          <Box
+            sx={{
+              position: "absolute",
+              right: 10,
+              bottom: 40,
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <IconButton icon={edit} onClick={displayEditFileForm} />
+          </Box>
           <Typography
             variant="body2"
             color="text.secondary"

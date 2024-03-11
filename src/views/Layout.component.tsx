@@ -29,7 +29,7 @@ const Layout: React.FC<DashboardMainProps> = ({ children }) => {
       <CssBaseline />
       <Box sx={{ display: "flex", flexGrow: 1, justifyContent: "center" }}>
         <DashboardDrawer />
-        <Box sx={{ maxWidth: "1200px" }}>
+        <Box sx={{ width: "1200px" }}>
           <Box sx={{ display: "flex", flexGrow: 1, flexDirection: "column" }}>
             <DashboardHeader onLogout={logout} username={getUserName()} />
             {children}

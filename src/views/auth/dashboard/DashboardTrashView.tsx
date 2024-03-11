@@ -23,10 +23,13 @@ import CardFile from "../../../components/Card/CardFile";
 import ModalFileViewer from "../../../components/ModalFileViewer/ModalFileViewer.component";
 import RestoreDialogTrash from "../../../components/Dialog/RestoreDialogTrash.component";
 import DeleteDialogTrashDef from "../../../components/Dialog/DeleteDialogTrashDef.component";
+import EditFolderDialog from "../../../components/Dialog/EditFolder.component";
+import EditFileDialog from "../../../components/Dialog/EditFile.component";
 
 export default function DashboardTrashView() {
   const [folders, setFolders] = useState<FolderData[]>([]);
   const [files, setFiles] = useState<FileData[]>([]);
+  console.log("🚀 ~ DashboardTrashView ~ files:", files);
   const [loading, setLoading] = useState(false);
   const { pathname } = useLocation();
   const tabActive = tabsList.find((tab) => pathname.includes(tab.url));
@@ -59,6 +62,14 @@ export default function DashboardTrashView() {
     showDeleteDefModal,
     deleteDefinitivelyItems,
     displayMoveForm,
+    fileToEdit,
+    folderToEdit,
+    displayEditFolderForm,
+    displayEditFileForm,
+    setShowFormEditFile,
+    showFormEditFile,
+    setShowFormEditFolder,
+    showFormEditFolder,
   } = useToolbar(folders, files);
 
   const handleOpen = async (id: any) => {
@@ -88,6 +99,19 @@ export default function DashboardTrashView() {
       });
       if (JSON.stringify(folders) !== JSON.stringify(response)) {
         setFolders(response);
+      }
+    } catch (error) {
+      console.log("error");
+    }
+  };
+  const getFiles = async () => {
+    try {
+      const token = localStorage.getItem("@userToken");
+      const response = await sendGetRequest(`${API_BASE_URL}/files/trash`, {
+        Authorization: `Bearer ${token}`,
+      });
+      if (JSON.stringify(folders) !== JSON.stringify(response)) {
+        setFiles(response);
       }
     } catch (error) {
       console.log("error");
@@ -163,14 +187,14 @@ export default function DashboardTrashView() {
 
   useEffect(() => {
     getFolders();
+    getFiles();
   }, []);
 
   return (
-    <Box
-      component="main"
-      sx={{ flexGrow: 1, px: 2, display: "flex", flexDirection: "column" }}
-    >
+    <>
       <ToolBar
+        selectedFiles={selectedFiles}
+        selectedFolders={selectedFolders}
         setShowFormFolder={() => setShowFormFolder(!showFormFolder)}
         setShowFormFile={() => setShowFormFile(!showFormFile)}
         handleSelectAllCards={handleSelectAllCards}
@@ -189,103 +213,124 @@ export default function DashboardTrashView() {
         folders={folders}
         files={files}
       />
-      <Breadcrumbs label={tabActive?.name} link="/dashboard-cloud" />
-      {loading ? (
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100vh",
-          }}
-        >
-          <CircularProgress />
-        </Box>
-      ) : (
-        <Grid>
+      <Box
+        component="main"
+        sx={{ flexGrow: 1, px: 2, display: "flex", flexDirection: "column" }}
+      >
+        <Breadcrumbs label={tabActive?.name} link="/dashboard-cloud" />
+        {loading ? (
           <Box
             sx={{
-              pt: 4,
               display: "flex",
-              flexWrap: "wrap",
-              gap: "16px",
-              justifyContent: "flex-start",
-              alignItems: "flex-start",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100vh",
             }}
           >
-            {(searchValue !== "" ? filteredFolders : folders).map(
-              (data: FolderData) => (
-                <CardFolder
-                  displayMoveForm={() => displayMoveForm(data.id)}
-                  handleMoveToFavoritesChange={() => moveToFavorites(data.id)}
-                  key={data.id}
-                  id={data.id}
-                  onSelectFolder={handleSelectFolder}
-                  isSelected={selectedFolders.get(data.id)}
-                  creation_date={data.creation_date}
-                  isFavorite={data.isFavorite}
-                  name={data.name}
-                  // onDoubleClick={() => handleFolderDoubleClick(data.id)}
-                />
-              )
-            )}
-
-            {(searchValue !== "" ? filteredFolders : files).map(
-              (data: FileData) => (
-                <CardFile
-                  handleMoveToFavoritesChange={() =>
-                    moveToFavoritesFiles(data.id)
-                  }
-                  key={data.id}
-                  id={data.id}
-                  onSelectFile={handleSelectFile}
-                  extension={data.extension}
-                  isSelected={selectedFiles.get(data.id)}
-                  creation_date={data.creation_date}
-                  isFavorite={data.isFavorite}
-                  name={data.name}
-                  onDoubleClick={() => handleOpen(data.id)}
-                />
-              )
-            )}
-            {open && (
-              <ModalFileViewer
-                selectedFile={selectedFileContent}
-                handleClose={handleClose}
-              />
-            )}
-            {showFormFolder && (
-              <FormDialogFolder
-                handleClose={() => setShowFormFolder(false)}
-                setFolders={setFolders}
-              />
-            )}
-            {showFormFile && (
-              <FormDialogFile
-                handleClose={() => setShowFormFile(false)}
-                setFiles={setFiles}
-              />
-            )}
-            {showRestoreModal && (
-              <RestoreDialogTrash
-                deletedFolders={deletedFolders}
-                handleClose={() => setShowDeleteModal(false)}
-                actionType={actionType}
-                handleRestore={restoreSelectedItems}
-              />
-            )}
-            {showDeleteDefModal && (
-              <DeleteDialogTrashDef
-                deletedFolders={deletedFolders}
-                handleClose={() => setShowDeleteDefModal(false)}
-                handleDeleteDef={deleteDefinitivelyItems}
-                files={files}
-                folders={folders}
-              />
-            )}
+            <CircularProgress />
           </Box>
-        </Grid>
-      )}
-    </Box>
+        ) : (
+          <Grid>
+            <Box
+              sx={{
+                pt: 4,
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "16px",
+                justifyContent: "flex-start",
+                alignItems: "flex-start",
+              }}
+            >
+              {(searchValue !== "" ? filteredFolders : folders).map(
+                (data: FolderData) => (
+                  <CardFolder
+                    displayMoveForm={() => displayMoveForm(data.id)}
+                    handleMoveToFavoritesChange={() => moveToFavorites(data.id)}
+                    key={data.id}
+                    id={data.id}
+                    onSelectFolder={handleSelectFolder}
+                    isSelected={selectedFolders.get(data.id)}
+                    creation_date={data.creation_date}
+                    isFavorite={data.isFavorite}
+                    name={data.name}
+                    // onDoubleClick={() => handleFolderDoubleClick(data.id)}
+                  />
+                )
+              )}
+
+              {(searchValue !== "" ? filteredFolders : files).map(
+                (data: FileData) => (
+                  <CardFile
+                    handleMoveToFavoritesChange={() =>
+                      moveToFavoritesFiles(data.id)
+                    }
+                    key={data.id}
+                    id={data.id}
+                    onSelectFile={handleSelectFile}
+                    extension={data.extension}
+                    isSelected={selectedFiles.get(data.id)}
+                    creation_date={data.creation_date}
+                    isFavorite={data.isFavorite}
+                    name={data.name}
+                    onDoubleClick={() => handleOpen(data.id)}
+                  />
+                )
+              )}
+              {open && (
+                <ModalFileViewer
+                  selectedFile={selectedFileContent}
+                  handleClose={handleClose}
+                />
+              )}
+              {showFormFolder && (
+                <FormDialogFolder
+                  handleClose={() => setShowFormFolder(false)}
+                  setFolders={setFolders}
+                />
+              )}
+              {showFormFile && (
+                <FormDialogFile
+                  handleClose={() => setShowFormFile(false)}
+                  setFiles={setFiles}
+                />
+              )}
+              {showFormEditFolder && (
+                <EditFolderDialog
+                  folders={folders}
+                  handleClose={() => setShowFormEditFolder(false)}
+                  folderToEdit={folderToEdit}
+                  setFolders={setFolders}
+                />
+              )}
+              {showFormEditFile && (
+                <EditFileDialog
+                  files={files}
+                  handleClose={() => setShowFormEditFile(false)}
+                  fileToEdit={fileToEdit}
+                  setFiles={setFiles}
+                />
+              )}
+              {showRestoreModal && (
+                <RestoreDialogTrash
+                  deletedFolders={deletedFolders}
+                  handleClose={() => setShowDeleteModal(false)}
+                  actionType={actionType}
+                  handleRestore={restoreSelectedItems}
+                />
+              )}
+              {showDeleteDefModal && (
+                <DeleteDialogTrashDef
+                  deletedFolders={deletedFolders}
+                  handleClose={() => setShowDeleteDefModal(false)}
+                  handleDeleteDef={deleteDefinitivelyItems}
+                  files={files}
+                  folders={folders}
+                />
+              )}
+            </Box>
+          </Grid>
+        )}
+      </Box>
+    </>
   );
 }

@@ -5,7 +5,7 @@ import SearchWithFilter from "../SearchBarFilter/SearchBarFilter.component";
 import addFile from "../../assets/icons/add-file-icon.png";
 import addFolder from "../../assets/icons/add-folder-icon.png";
 import trash from "../../assets/icons/trash-icon.png";
-// import disabledTrash from "../../assets/icons/disabled-trash.png";
+import disabledTrash from "../../assets/icons/disabled-trash.png";
 import checkboxChecked from "../../assets/icons/Vectorcheckbox-checked.png";
 import checkboxUnchecked from "../../assets/icons/Vectorcheckbox-no-checked.png";
 import deftrashIcon from "../../assets/icons/trash-definitive-icon.png";
@@ -31,8 +31,8 @@ type ToolBarProps = {
   displayDeleteModaleDef?: () => void;
   folders?: any;
   files?: any;
-  // selectedFiles: Map<number, boolean>;
-  // selectedFolders: Map<number, boolean>;
+  selectedFiles: Map<number, boolean>;
+  selectedFolders: Map<number, boolean>;
   // handleSelectFolder: any;
   // handleSelectFile: any;
   // setSelectedFiles: () => void;
@@ -49,6 +49,8 @@ const ToolBar: React.FC<ToolBarProps> = ({
   searchValue,
   isChecked,
   displayDeleteModaleDef,
+  selectedFiles,
+  selectedFolders,
 }) => {
   return (
     <Box
@@ -61,7 +63,7 @@ const ToolBar: React.FC<ToolBarProps> = ({
         mr: 1,
         flexWrap: "wrap",
         px: 2,
-        // minWidth: "20vw",
+        width: "100%",
       }}
     >
       <Box
@@ -108,13 +110,15 @@ const ToolBar: React.FC<ToolBarProps> = ({
 
         {isTrash ? (
           <>
-            {/* {[...selectedFolders.values()].some((value) => value === true) ||
-            [...selectedFiles.values()].some((value) => value === true) ? (
+            {[...selectedFolders.values()].every((value) => value === false) &&
+            [...selectedFiles.values()].every((value) => value === false) ? (
               <IconButton icon={disabledTrash} />
-                // onClick={displayDeleteModaleDef}
-            ) : ( */}
-            <IconButton icon={deftrashIcon} onClick={displayDeleteModaleDef} />
-            {/* )} */}
+            ) : (
+              <IconButton
+                icon={deftrashIcon}
+                onClick={displayDeleteModaleDef}
+              />
+            )}
 
             <ButtonBase
               style={{
@@ -129,11 +133,14 @@ const ToolBar: React.FC<ToolBarProps> = ({
               Restaurer
             </ButtonBase>
           </>
-        ) : (
+        ) : [...selectedFolders.values()].some((value) => value === true) ||
+          [...selectedFiles.values()].some((value) => value === true) ? (
           <IconButton
             icon={trash}
             onClick={() => displayDeleteModale("none")}
           />
+        ) : (
+          <IconButton icon={disabledTrash} />
         )}
       </Box>
     </Box>

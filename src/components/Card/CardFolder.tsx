@@ -11,6 +11,7 @@ import starChecked from "../../assets/icons/Vectorstar-checked.svg";
 import shareIcon from "../../assets/icons/share.png";
 import starUnchecked from "../../assets/icons/Vectorstar-no-checked.svg";
 import checkboxChecked from "../../assets/icons/Vectorcheckbox-checked.png";
+import edit from "../../assets/icons/edit.png";
 import checkboxUnchecked from "../../assets/icons/Vectorcheckbox-no-checked.png";
 import styles from "./card.component.module.css";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -26,6 +27,7 @@ type CardFolderProps = {
   handleMoveToFavoritesChange: () => void;
   displayMoveForm: any;
   displayShareForm?: any;
+  displayEditForm?: any;
 };
 
 const CardFolder: FC<CardFolderProps> = ({
@@ -38,6 +40,7 @@ const CardFolder: FC<CardFolderProps> = ({
   handleMoveToFavoritesChange,
   displayMoveForm,
   displayShareForm,
+  displayEditForm,
 }) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -110,7 +113,17 @@ const CardFolder: FC<CardFolderProps> = ({
           >
             {name}
           </Typography>
-          <Box sx={{ position: "absolute", right: 10 }}>
+
+          <Box
+            sx={{
+              position: "absolute",
+              right: 10,
+              bottom: 10,
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <IconButton icon={edit} onClick={displayEditForm} />
             <IconButton icon={shareIcon} onClick={displayShareForm} />
           </Box>
           <Typography

@@ -20,6 +20,8 @@ import CardFile from "../../../components/Card/CardFile";
 import ModalFileViewer from "../../../components/ModalFileViewer/ModalFileViewer.component";
 import useToolbar from "../../../components/Tabs/hooks/useToolbar";
 import MoveDialogFolder from "../../../components/Dialog/MoveDialogFolder.component";
+import EditFolderDialog from "../../../components/Dialog/EditFolder.component";
+import EditFileDialog from "../../../components/Dialog/EditFile.component";
 
 export default function DashboardSharedView() {
   const { pathname } = useLocation();
@@ -58,6 +60,14 @@ export default function DashboardSharedView() {
     setShowFormMoveFolder,
     showFormMoveFolder,
     folderToMove,
+    fileToEdit,
+    folderToEdit,
+    displayEditFolderForm,
+    displayEditFileForm,
+    setShowFormEditFile,
+    showFormEditFile,
+    setShowFormEditFolder,
+    showFormEditFolder,
   } = useToolbar(folders, files);
 
   const getFolders = async () => {
@@ -251,11 +261,10 @@ export default function DashboardSharedView() {
   }, [deletedFiles, deletedFolders]);
 
   return (
-    <Box
-      component="main"
-      sx={{ flexGrow: 1, px: 2, display: "flex", flexDirection: "column" }}
-    >
+    <>
       <ToolBar
+        selectedFiles={selectedFiles}
+        selectedFolders={selectedFolders}
         setShowFormFolder={() => setShowFormFolder(!showFormFolder)}
         setShowFormFile={() => setShowFormFile(!showFormFile)}
         handleSelectAllCards={handleSelectAllCards}
@@ -270,104 +279,126 @@ export default function DashboardSharedView() {
         handleSearchInputChange={handleSearchInputChange}
         searchValue={searchValue}
       />
-      <Breadcrumbs label={tabActive?.name} link="/dashboard-shared" />
 
-      {loading ? (
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100vh",
-          }}
-        >
-          <CircularProgress />
-        </Box>
-      ) : (
-        <Grid>
+      <Box
+        component="main"
+        sx={{ flexGrow: 1, px: 2, display: "flex", flexDirection: "column" }}
+      >
+        <Breadcrumbs label={tabActive?.name} link="/dashboard-shared" />
+
+        {loading ? (
           <Box
             sx={{
-              pt: 4,
               display: "flex",
-              flexWrap: "wrap",
-              gap: "16px",
-              justifyContent: "flex-start",
-              alignItems: "flex-start",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100vh",
             }}
           >
-            {(searchValue !== "" ? filteredFolders : folders).map(
-              (data: FolderData) => (
-                <CardFolder
-                  displayMoveForm={() => displayMoveForm(data.id)}
-                  handleMoveToFavoritesChange={() => moveToFavorites(data.id)}
-                  key={data.id}
-                  id={data.id}
-                  onSelectFolder={handleSelectFolder}
-                  isSelected={selectedFolders.get(data.id)}
-                  creation_date={data.creation_date}
-                  isFavorite={data.isFavorite}
-                  name={data.name}
-                />
-              )
-            )}
-            {(searchValue !== "" ? filteredFolders : files).map(
-              (data: FileData) => (
-                <CardFile
-                  handleMoveToFavoritesChange={() =>
-                    moveToFavoritesFiles(data.id)
-                  }
-                  key={data.id}
-                  id={data.id}
-                  onSelectFile={handleSelectFile}
-                  extension={data.extension}
-                  isSelected={selectedFiles.get(data.id)}
-                  creation_date={data.creation_date}
-                  isFavorite={data.isFavorite}
-                  name={data.name}
-                  onDoubleClick={() => handleOpen(data.id)}
-                />
-              )
-            )}
-            {open && (
-              <ModalFileViewer
-                selectedFile={
-                  typeof selectedFileContent === "string"
-                    ? undefined
-                    : selectedFileContent
-                }
-                handleClose={handleClose}
-              />
-            )}
-            {showFormFolder && (
-              <FormDialogFolder
-                handleClose={() => setShowFormFolder(false)}
-                setFolders={setFolders}
-              />
-            )}
-            {showFormFile && (
-              <FormDialogFile
-                handleClose={() => setShowFormFile(false)}
-                setFiles={setFiles}
-              />
-            )}
-            {showFormMoveFolder && (
-              <MoveDialogFolder
-                folders={folders}
-                handleClose={() => setShowFormMoveFolder(false)}
-                folderToMove={folderToMove}
-              />
-            )}
-            {showDeleteModal && (
-              <DeleteDialog
-                handleClose={() => setShowDeleteModal(false)}
-                handleDelete={deleteSelectedItems}
-                files={files}
-                folders={folders}
-              />
-            )}
+            <CircularProgress />
           </Box>
-        </Grid>
-      )}
-    </Box>
+        ) : (
+          <Grid>
+            <Box
+              sx={{
+                pt: 4,
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "16px",
+                justifyContent: "flex-start",
+                alignItems: "flex-start",
+              }}
+            >
+              {(searchValue !== "" ? filteredFolders : folders).map(
+                (data: FolderData) => (
+                  <CardFolder
+                    displayMoveForm={() => displayMoveForm(data.id)}
+                    handleMoveToFavoritesChange={() => moveToFavorites(data.id)}
+                    key={data.id}
+                    id={data.id}
+                    onSelectFolder={handleSelectFolder}
+                    isSelected={selectedFolders.get(data.id)}
+                    creation_date={data.creation_date}
+                    isFavorite={data.isFavorite}
+                    name={data.name}
+                  />
+                )
+              )}
+              {(searchValue !== "" ? filteredFolders : files).map(
+                (data: FileData) => (
+                  <CardFile
+                    handleMoveToFavoritesChange={() =>
+                      moveToFavoritesFiles(data.id)
+                    }
+                    key={data.id}
+                    id={data.id}
+                    onSelectFile={handleSelectFile}
+                    extension={data.extension}
+                    isSelected={selectedFiles.get(data.id)}
+                    creation_date={data.creation_date}
+                    isFavorite={data.isFavorite}
+                    name={data.name}
+                    onDoubleClick={() => handleOpen(data.id)}
+                  />
+                )
+              )}
+              {open && (
+                <ModalFileViewer
+                  selectedFile={
+                    typeof selectedFileContent === "string"
+                      ? undefined
+                      : selectedFileContent
+                  }
+                  handleClose={handleClose}
+                />
+              )}
+              {showFormFolder && (
+                <FormDialogFolder
+                  handleClose={() => setShowFormFolder(false)}
+                  setFolders={setFolders}
+                />
+              )}
+              {showFormFile && (
+                <FormDialogFile
+                  handleClose={() => setShowFormFile(false)}
+                  setFiles={setFiles}
+                />
+              )}
+              {showFormEditFolder && (
+                <EditFolderDialog
+                  folders={folders}
+                  handleClose={() => setShowFormEditFolder(false)}
+                  folderToEdit={folderToEdit}
+                  setFolders={setFolders}
+                />
+              )}
+              {showFormEditFile && (
+                <EditFileDialog
+                  files={files}
+                  handleClose={() => setShowFormEditFile(false)}
+                  fileToEdit={fileToEdit}
+                  setFiles={setFiles}
+                />
+              )}
+              {showFormMoveFolder && (
+                <MoveDialogFolder
+                  folders={folders}
+                  handleClose={() => setShowFormMoveFolder(false)}
+                  folderToMove={folderToMove}
+                />
+              )}
+              {showDeleteModal && (
+                <DeleteDialog
+                  handleClose={() => setShowDeleteModal(false)}
+                  handleDelete={deleteSelectedItems}
+                  files={files}
+                  folders={folders}
+                />
+              )}
+            </Box>
+          </Grid>
+        )}
+      </Box>
+    </>
   );
 }
