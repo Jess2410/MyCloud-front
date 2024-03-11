@@ -59,28 +59,36 @@ const CardFile: FC<CardProps> = ({
     return <img src={iconFile} alt="icon" />;
   };
 
-  const moveToFavorites = async () => {
-    const loader = toast.loading("Veuillez patienter...");
-    try {
-      const token = localStorage.getItem("@userToken");
-      const response = await sendPatchRequest(
-        `${API_BASE_URL}/files/isFavorite`,
-        { Authorization: `Bearer ${token}` },
-        { id: id }
-      );
-      if (response.status === 200) {
-        toast.update(loader, {
-          render: response.message,
-          type: "success",
-          autoClose: 2000,
-          isLoading: false,
-        });
-        return;
-      }
-    } catch (error) {
-      console.log(error);
-    }
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
   };
+
+  // const moveToFavorites = async () => {
+  //   const loader = toast.loading("Veuillez patienter...");
+  //   try {
+  //     const token = localStorage.getItem("@userToken");
+  //     const response = await sendPatchRequest(
+  //       `${API_BASE_URL}/files/isFavorite`,
+  //       { Authorization: `Bearer ${token}` },
+  //       { id: id }
+  //     );
+  //     if (response.status === 200) {
+  //       toast.update(loader, {
+  //         render: response.message,
+  //         type: "success",
+  //         autoClose: 2000,
+  //         isLoading: false,
+  //       });
+  //       return;
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const handleSelect = (
     _event: ChangeEvent<HTMLInputElement>,
@@ -111,7 +119,7 @@ const CardFile: FC<CardProps> = ({
             icon={<img src={starUnchecked} alt="Unchecked" />}
             checkedIcon={<img src={starChecked} alt="Checked" />}
             checked={isFavorite}
-            onChange={moveToFavorites}
+            onChange={handleMoveToFavoritesChange}
             inputProps={{ "aria-label": "favorite" }}
           />
           <Checkbox
@@ -136,7 +144,7 @@ const CardFile: FC<CardProps> = ({
             color="text.secondary"
             className={styles["card__date"]}
           >
-            {creation_date}
+            {formatDate(creation_date)}
           </Typography>
         </CardContent>
       </CardMui>

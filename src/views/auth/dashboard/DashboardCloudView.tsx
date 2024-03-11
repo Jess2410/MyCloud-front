@@ -73,7 +73,7 @@ export default function DashboardCloudView() {
 
   const [folders, setFolders] = useState<FolderData[]>([]);
 
-  const [files, setFiles] = useState([]);
+  const [files, setFiles] = useState<FileData[]>([]);
 
   const [showFormShare, setShowFormShare] = useState(false);
   const [fileToShare, setFileToShare] = useState<number | undefined>(undefined);
@@ -85,7 +85,6 @@ export default function DashboardCloudView() {
   const [loading, setLoading] = useState(false);
 
   const displayShareForm = (id: number) => {
-    console.log("🚀 ~ displayShareForm ~ id:", id);
     setShowFormShare(!showFormShare);
     setFileToShare(id);
   };
@@ -94,8 +93,8 @@ export default function DashboardCloudView() {
     setShowFormFolder,
     showFormFile,
     setShowFormFile,
-    actionType,
     deletedFolders,
+    deletedFiles,
     displayDeleteModale,
     handleSelectAllCards,
     handleSearchInputChange,
@@ -241,6 +240,17 @@ export default function DashboardCloudView() {
           isLoading: false,
         });
 
+        const foldersCopy = [...folders];
+
+        const folderIndex = foldersCopy.findIndex((folder) => folder.id === id);
+        if (folderIndex !== -1) {
+          foldersCopy[folderIndex] = {
+            ...foldersCopy[folderIndex],
+            isFavorite: response.folder.isFavorite === 1 ? true : false,
+          };
+
+          setFolders(foldersCopy);
+        }
         return;
       }
     } catch (error) {
@@ -267,6 +277,18 @@ export default function DashboardCloudView() {
           autoClose: 2000,
           isLoading: false,
         });
+
+        const filesCopy = [...files];
+
+        const fileIndex = filesCopy.findIndex((file) => file.id === id);
+        if (fileIndex !== -1) {
+          filesCopy[fileIndex] = {
+            ...filesCopy[fileIndex],
+            isFavorite: response.file.isFavorite === 1 ? true : false,
+          };
+
+          setFiles(filesCopy);
+        }
         return;
       }
     } catch (error) {
@@ -276,16 +298,6 @@ export default function DashboardCloudView() {
     }
   };
 
-  const handleMoveToFavoritesChange = (id: number) => {
-    if (moveToFavorites) {
-      moveToFavorites(id);
-    }
-  };
-  const handleMoveToFavoritesFilesChange = (id: number) => {
-    if (moveToFavoritesFiles) {
-      moveToFavoritesFiles(id);
-    }
-  };
   useEffect(() => {
     const param = getLastParam(pathname);
     if (param.length == 0) getFiles();
@@ -297,6 +309,18 @@ export default function DashboardCloudView() {
     if (param.length == 0) getFolders();
     else getFoldersFromParent(param);
   }, [pathname]);
+
+  useEffect(() => {
+    const updatedFolders = folders.filter(
+      (folder) => !deletedFolders.includes(folder.id)
+    );
+    setFolders(updatedFolders);
+
+    const updatedFiles = files.filter(
+      (file) => !deletedFiles.includes(file.id)
+    );
+    setFiles(updatedFiles);
+  }, [deletedFiles, deletedFolders]);
 
   return (
     <Box
@@ -348,9 +372,7 @@ export default function DashboardCloudView() {
                 <CardFolder
                   displayMoveForm={() => displayMoveForm(data.id)}
                   displayShareForm={() => displayShareForm(data.id)}
-                  handleMoveToFavoritesChange={() =>
-                    handleMoveToFavoritesChange(data.id)
-                  }
+                  handleMoveToFavoritesChange={() => moveToFavorites(data.id)}
                   key={data.id}
                   id={data.id}
                   onSelectFolder={handleSelectFolder}
@@ -362,23 +384,26 @@ export default function DashboardCloudView() {
               )
             )}
             {(searchValue !== "" ? filteredFolders : files).map(
-              (data: FileData) => (
-                <CardFile
-                  displayMoveFileForm={() => displayMoveFileForm(data.id)}
-                  handleMoveToFavoritesChange={() =>
-                    handleMoveToFavoritesFilesChange(data.id)
-                  }
-                  key={data.id}
-                  id={data.id}
-                  onSelectFile={handleSelectFile}
-                  extension={data.extension}
-                  isSelected={selectedFiles.get(data.id)}
-                  creation_date={data.creation_date}
-                  isFavorite={data.isFavorite}
-                  name={data.name}
-                  onDoubleClick={() => handleOpen(data.id)}
-                />
-              )
+              (data: FileData) => {
+                console.log(data);
+                return (
+                  <CardFile
+                    displayMoveFileForm={() => displayMoveFileForm(data.id)}
+                    handleMoveToFavoritesChange={() =>
+                      moveToFavoritesFiles(data.id)
+                    }
+                    key={data.id}
+                    id={data.id}
+                    onSelectFile={handleSelectFile}
+                    extension={data.extension}
+                    isSelected={selectedFiles.get(data.id)}
+                    creation_date={data.creation_date}
+                    isFavorite={data.isFavorite}
+                    name={data.name}
+                    onDoubleClick={() => handleOpen(data.id)}
+                  />
+                );
+              }
             )}
             {open && (
               <ModalFileViewer
@@ -400,7 +425,10 @@ export default function DashboardCloudView() {
               />
             )}
             {showFormFile && (
-              <FormDialogFile handleClose={() => setShowFormFile(false)} />
+              <FormDialogFile
+                handleClose={() => setShowFormFile(false)}
+                setFiles={setFiles}
+              />
             )}
             {showFormMoveFolder && (
               <MoveDialogFolder
@@ -419,10 +447,8 @@ export default function DashboardCloudView() {
             )}
             {showDeleteModal && (
               <DeleteDialog
-                deletedFolders={deletedFolders}
                 handleClose={() => setShowDeleteModal(false)}
                 handleDelete={deleteSelectedItems}
-                actionType={actionType}
                 files={files}
                 folders={folders}
               />

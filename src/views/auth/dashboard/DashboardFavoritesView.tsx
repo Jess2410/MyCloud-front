@@ -3,7 +3,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { Box, Grid } from "@mui/material";
+import { Box, CircularProgress, Grid } from "@mui/material";
 // import { UserContext } from "../../../context/UserContext";
 import DeleteDialog from "../../../components/Dialog/DeleteDialog.component";
 import ToolBar from "../../../components/Tabs/ToolBar.component";
@@ -30,11 +30,12 @@ export default function DashboardFavoritesView() {
   // const userContext = useContext(UserContext);
 
   const [folders, setFolders] = useState<FolderData[]>([]);
-  const [files, setFiles] = useState([]);
+  const [files, setFiles] = useState<FileData[]>([]);
 
   const [allFoldersSelected, setAllFoldersSelected] = useState(false);
   const [selectedFoldersIds, setSelectedFoldersIds] = useState<number[]>([]);
   const [filteredFiles, setFilteredFiles] = useState<FileData[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const {
     showFormFolder,
@@ -43,6 +44,7 @@ export default function DashboardFavoritesView() {
     setShowFormFile,
     actionType,
     deletedFolders,
+    deletedFiles,
     displayDeleteModale,
     handleSelectAllCards,
     handleSearchInputChange,
@@ -82,28 +84,6 @@ export default function DashboardFavoritesView() {
 
   const getFilesFromParent = async () => {
     setFiles([]);
-  };
-  const moveToFavorites = async (id: number) => {
-    const loader = toast.loading("Veuillez patienter...");
-    try {
-      const token = localStorage.getItem("@userToken");
-      const response = await sendPatchRequest(
-        `${API_BASE_URL}/folders/isFavorite`,
-        { Authorization: `Bearer ${token}` },
-        { id: id }
-      );
-      if (response.status === 200) {
-        toast.update(loader, {
-          render: response.message,
-          type: "success",
-          autoClose: 2000,
-          isLoading: false,
-        });
-        return;
-      }
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   const getFolders = async () => {
@@ -151,6 +131,42 @@ export default function DashboardFavoritesView() {
     setSelectedFileContent(undefined);
   };
 
+  const moveToFavorites = async (id: number) => {
+    const loader = toast.loading("Veuillez patienter...");
+    try {
+      const token = localStorage.getItem("@userToken");
+      const response = await sendPatchRequest(
+        `${API_BASE_URL}/folders/isFavorite`,
+        { Authorization: `Bearer ${token}` },
+        { id: id }
+      );
+      if (response.status === 200) {
+        toast.update(loader, {
+          render: response.message,
+          type: "success",
+          autoClose: 2000,
+          isLoading: false,
+        });
+
+        const foldersCopy = [...folders];
+
+        const folderIndex = foldersCopy.findIndex((folder) => folder.id === id);
+        if (folderIndex !== -1) {
+          foldersCopy[folderIndex] = {
+            ...foldersCopy[folderIndex],
+            isFavorite: response.folder.isFavorite === 1 ? true : false,
+          };
+
+          setFolders(foldersCopy);
+        }
+
+        return;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const moveToFavoritesFiles = async (id: number) => {
     const loader = toast.loading("Veuillez patienter...");
     try {
@@ -167,6 +183,18 @@ export default function DashboardFavoritesView() {
           autoClose: 2000,
           isLoading: false,
         });
+
+        const filesCopy = [...files];
+
+        const fileIndex = filesCopy.findIndex((file) => file.id === id);
+        if (fileIndex !== -1) {
+          filesCopy[fileIndex] = {
+            ...filesCopy[fileIndex],
+            isFavorite: response.file.isFavorite === 1 ? true : false,
+          };
+
+          setFiles(filesCopy);
+        }
         return;
       }
     } catch (error) {
@@ -174,18 +202,7 @@ export default function DashboardFavoritesView() {
     }
   };
 
-  const handleMoveToFavoritesChange = (id: number) => {
-    if (moveToFavorites) {
-      moveToFavorites(id);
-    }
-  };
-  const handleMoveToFavoritesFilesChange = (id: number) => {
-    if (moveToFavoritesFiles) {
-      moveToFavoritesFiles(id);
-    }
-  };
   useEffect(() => {
-    //console.log(lastPathnameId); ///TODO pas encore modifié par la ligne 181 a ce moement la
     const param = getLastParam(pathname);
     if (param.length == 0) getFiles();
     // else getFilesFromParent(param);
@@ -222,6 +239,18 @@ export default function DashboardFavoritesView() {
     getFolders();
   }, []);
 
+  useEffect(() => {
+    const updatedFolders = folders.filter(
+      (folder) => !deletedFolders.includes(folder.id)
+    );
+    setFolders(updatedFolders);
+
+    const updatedFiles = files.filter(
+      (file) => !deletedFiles.includes(file.id)
+    );
+    setFiles(updatedFiles);
+  }, [deletedFiles, deletedFolders]);
+
   return (
     <Box
       component="main"
@@ -243,99 +272,111 @@ export default function DashboardFavoritesView() {
         searchValue={searchValue}
       />
       <Breadcrumbs label={tabActive?.name} link="/dashboard-favorites" />
-      <Grid>
+      {loading ? (
         <Box
           sx={{
-            pt: 4,
             display: "flex",
-            flexWrap: "wrap",
-            gap: "16px",
-            justifyContent: "flex-start",
-            alignItems: "flex-start",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
           }}
         >
-          {(searchValue !== "" ? filteredFolders : folders)?.map(
-            (data: FolderData) => (
-              <CardFolder
-                displayMoveForm={() => displayMoveForm(data.id)}
-                handleMoveToFavoritesChange={() =>
-                  handleMoveToFavoritesChange(data.id)
-                }
-                key={data.id}
-                id={data.id}
-                onSelectFolder={handleSelectFolder}
-                isSelected={selectedFolders.get(data.id)}
-                creation_date={data.creation_date}
-                isFavorite={data.isFavorite}
-                name={data.name}
-              />
-            )
-          )}
-
-          {(searchValue !== "" ? filteredFiles : files).map(
-            (data: FileData) => (
-              <>
-                <CardFile
-                  displayMoveFileForm={() => displayMoveFileForm(data.id)}
-                  handleMoveToFavoritesChange={() =>
-                    handleMoveToFavoritesFilesChange(data.id)
-                  }
+          <CircularProgress />
+        </Box>
+      ) : (
+        <Grid>
+          <Box
+            sx={{
+              pt: 4,
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "16px",
+              justifyContent: "flex-start",
+              alignItems: "flex-start",
+            }}
+          >
+            {(searchValue !== "" ? filteredFolders : folders)?.map(
+              (data: FolderData) => (
+                <CardFolder
+                  displayMoveForm={() => displayMoveForm(data.id)}
+                  handleMoveToFavoritesChange={() => moveToFavorites(data.id)}
                   key={data.id}
                   id={data.id}
-                  onSelectFile={handleSelectFile}
-                  extension={data.extension}
-                  isSelected={selectedFiles.get(data.id)}
+                  onSelectFolder={handleSelectFolder}
+                  isSelected={selectedFolders.get(data.id)}
                   creation_date={data.creation_date}
                   isFavorite={data.isFavorite}
                   name={data.name}
-                  onDoubleClick={() => handleOpen(data.id)}
                 />
-              </>
-            )
-          )}
-          {open && (
-            <ModalFileViewer
-              selectedFile={selectedFileContent}
-              handleClose={handleClose}
-            />
-          )}
+              )
+            )}
 
-          {showFormFolder && (
-            <FormDialogFolder
-              handleClose={() => setShowFormFolder(false)}
-              setFolders={setFolders}
-            />
-          )}
-          {showFormFile && (
-            <FormDialogFile handleClose={() => setShowFormFile(false)} />
-          )}
-          {showFormMoveFolder && (
-            <MoveDialogFolder
-              folders={folders}
-              handleClose={() => setShowFormMoveFolder(false)}
-              folderToMove={folderToMove}
-            />
-          )}
-          {showFormMoveFile && (
-            <MoveDialogFile
-              files={files}
-              folders={folders}
-              handleClose={() => setShowFormMoveFile(false)}
-              fileToMove={fileToMove}
-            />
-          )}
-          {showDeleteModal && (
-            <DeleteDialog
-              deletedFolders={deletedFolders}
-              handleClose={() => setShowDeleteModal(false)}
-              handleDelete={deleteSelectedItems}
-              actionType={actionType}
-              files={files}
-              folders={folders}
-            />
-          )}
-        </Box>
-      </Grid>
+            {(searchValue !== "" ? filteredFiles : files).map(
+              (data: FileData) => (
+                <>
+                  <CardFile
+                    displayMoveFileForm={() => displayMoveFileForm(data.id)}
+                    handleMoveToFavoritesChange={() =>
+                      moveToFavoritesFiles(data.id)
+                    }
+                    key={data.id}
+                    id={data.id}
+                    onSelectFile={handleSelectFile}
+                    extension={data.extension}
+                    isSelected={selectedFiles.get(data.id)}
+                    creation_date={data.creation_date}
+                    isFavorite={data.isFavorite}
+                    name={data.name}
+                    onDoubleClick={() => handleOpen(data.id)}
+                  />
+                </>
+              )
+            )}
+            {open && (
+              <ModalFileViewer
+                selectedFile={selectedFileContent}
+                handleClose={handleClose}
+              />
+            )}
+
+            {showFormFolder && (
+              <FormDialogFolder
+                handleClose={() => setShowFormFolder(false)}
+                setFolders={setFolders}
+              />
+            )}
+            {showFormFile && (
+              <FormDialogFile
+                handleClose={() => setShowFormFile(false)}
+                setFiles={setFiles}
+              />
+            )}
+            {showFormMoveFolder && (
+              <MoveDialogFolder
+                folders={folders}
+                handleClose={() => setShowFormMoveFolder(false)}
+                folderToMove={folderToMove}
+              />
+            )}
+            {showFormMoveFile && (
+              <MoveDialogFile
+                files={files}
+                folders={folders}
+                handleClose={() => setShowFormMoveFile(false)}
+                fileToMove={fileToMove}
+              />
+            )}
+            {showDeleteModal && (
+              <DeleteDialog
+                handleClose={() => setShowDeleteModal(false)}
+                handleDelete={deleteSelectedItems}
+                files={files}
+                folders={folders}
+              />
+            )}
+          </Box>
+        </Grid>
+      )}
     </Box>
   );
 }

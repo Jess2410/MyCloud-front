@@ -38,8 +38,6 @@ const CardFolder: FC<CardFolderProps> = ({
   handleMoveToFavoritesChange,
   displayMoveForm,
   displayShareForm,
-
-  // handleShowMoveForm,
 }) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();

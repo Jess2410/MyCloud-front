@@ -7,8 +7,6 @@ import DialogContentText from "@mui/material/DialogContentText";
 
 type DeleteDialogProps = {
   handleClose: () => void;
-  actionType?: string | null | undefined;
-  deletedFolders?: number[];
   files: any;
   folders: any;
   handleDelete: () => void;

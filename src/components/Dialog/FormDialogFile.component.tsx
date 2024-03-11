@@ -8,14 +8,17 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { API_BASE_URL } from "../../constants/url";
 import { sendPostFileRequest } from "../../utils/data";
 import { toast } from "react-toastify";
-// import { FileData } from "../../views/auth/dashboard/DashboardCloudView";
+import { FileData } from "../../views/auth/dashboard/DashboardCloudView";
 
 type FormDialogProps = {
   handleClose: () => void;
-  // setFiles: React.Dispatch<React.SetStateAction<FileData[]>>;
+  setFiles: React.Dispatch<React.SetStateAction<FileData[]>>;
 };
 
-export default function FormDialogFile({ handleClose }: FormDialogProps) {
+export default function FormDialogFile({
+  handleClose,
+  setFiles,
+}: FormDialogProps) {
   const [formData, setFormData] = useState<any>({
     name: "",
     file: null as File | null,
@@ -24,9 +27,8 @@ export default function FormDialogFile({ handleClose }: FormDialogProps) {
   const createFile = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    console.log("🚀 ~ createFile ~ formData:", formData);
+
     const formJson = Object.fromEntries((formData as any).entries());
-    console.log("🚀 ~ createFile ~ formJson:", formJson);
 
     const loader = toast.loading("Veuillez patienter...");
     try {
@@ -50,6 +52,7 @@ export default function FormDialogFile({ handleClose }: FormDialogProps) {
           autoClose: 2000,
           isLoading: false,
         });
+        setFiles((prev) => [...prev, response.file]);
         handleClose();
         return;
       }

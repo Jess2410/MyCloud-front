@@ -142,13 +142,22 @@ const useToolbar = (folders: FolderData[], files: FileData[]) => {
           autoClose: 2000,
           isLoading: false,
         });
+
+        setDeletedFolders(responseData.foldersIds);
+        setDeletedFiles(responseData.filesIds);
+
         displayDeleteModale("none");
       } else {
-        throw new Error("Failed to delete selected items");
+        throw new Error(
+          "Erreur lors de la suppression des éléments sélectionnés"
+        );
       }
     } catch (error) {
       displayDeleteModale("none");
-      console.error("Error deleting selected items:", error);
+      console.error(
+        "Erreur lors de la suppression des éléments sélectionnés",
+        error
+      );
     }
   };
   const restoreSelectedItems = async () => {
@@ -186,11 +195,16 @@ const useToolbar = (folders: FolderData[], files: FileData[]) => {
         });
         displayRestoreModale();
       } else {
-        throw new Error("Failed to restore selected items");
+        throw new Error(
+          "Erreur lors de la restauration des éléments sélectionnés"
+        );
       }
     } catch (error) {
       displayRestoreModale();
-      console.error("Error restoring selected items:", error);
+      console.error(
+        "Erreur lors de la restauration des éléments sélectionnés",
+        error
+      );
     }
   };
 
@@ -266,6 +280,8 @@ const useToolbar = (folders: FolderData[], files: FileData[]) => {
     setActionType,
     deletedFolders,
     setDeletedFolders,
+    deletedFiles,
+    setDeletedFiles,
     displayRestoreModale,
     displayDeleteModale,
     handleSelectAllCards,

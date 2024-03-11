@@ -16,7 +16,6 @@ type RestoreDialogTrashProps = {
 
 const RestoreDialogTrash: FC<RestoreDialogTrashProps> = ({
   handleClose,
-  deletedFolders,
   handleRestore,
 }) => {
   const navigate = useNavigate();
