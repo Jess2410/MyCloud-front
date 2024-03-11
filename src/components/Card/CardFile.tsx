@@ -25,7 +25,6 @@ type CardProps = {
   name: string;
   creation_date: string;
   onDoubleClick: () => void;
-  // onAddSelectedCards: (id: number) => void;
   handleMoveToFavoritesChange: () => void;
   displayMoveFileForm?: any;
   displayEditFileForm?: any;
@@ -39,7 +38,6 @@ const CardFile: FC<CardProps> = ({
   id,
   onDoubleClick,
   displayMoveFileForm,
-  // onAddSelectedCards,
   name,
   creation_date,
   handleMoveToFavoritesChange,
@@ -54,9 +52,6 @@ const CardFile: FC<CardProps> = ({
     if (extension === "png" || extension === "jpeg") {
       return <img src={iconFileImage} alt="icon" />;
     }
-    // if (type === "folder") {
-    //   return <img src={iconFolder} alt="icon" />;
-    // }
     return <img src={iconFile} alt="icon" />;
   };
 
@@ -67,29 +62,6 @@ const CardFile: FC<CardProps> = ({
     const year = date.getFullYear();
     return `${day}-${month}-${year}`;
   };
-
-  // const moveToFavorites = async () => {
-  //   const loader = toast.loading("Veuillez patienter...");
-  //   try {
-  //     const token = localStorage.getItem("@userToken");
-  //     const response = await sendPatchRequest(
-  //       `${API_BASE_URL}/files/isFavorite`,
-  //       { Authorization: `Bearer ${token}` },
-  //       { id: id }
-  //     );
-  //     if (response.status === 200) {
-  //       toast.update(loader, {
-  //         render: response.message,
-  //         type: "success",
-  //         autoClose: 2000,
-  //         isLoading: false,
-  //       });
-  //       return;
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
 
   const handleSelect = (
     _event: ChangeEvent<HTMLInputElement>,
@@ -102,7 +74,6 @@ const CardFile: FC<CardProps> = ({
   const handleRightClick: MouseEventHandler<HTMLDivElement> = (e) => {
     e.preventDefault();
     displayMoveFileForm();
-    console.log("Clic droit détecté sur la carte!", id);
   };
 
   useEffect(() => {

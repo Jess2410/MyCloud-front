@@ -27,13 +27,13 @@ const DeleteDialogTrashDef: FC<DeleteDialogDefTrashProps> = ({
     >
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          Êtes-vous sûr(e) de vouloir vider la corbeille ?
+          Êtes-vous sûr(e) de vouloir supprimer ces éléments définitivement ?
         </DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Retour</Button>
         <Button onClick={handleDeleteDef} autoFocus>
-          Vider
+          Supprimer
         </Button>
       </DialogActions>
     </Dialog>

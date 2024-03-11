@@ -33,6 +33,8 @@ export default function DashboardSharedView() {
   const [files, setFiles] = useState<FileData[]>([]);
 
   const [loading, setLoading] = useState(false);
+  const [showFormShare, setShowFormShare] = useState(false);
+  const [fileToShare, setFileToShare] = useState<number | undefined>(undefined);
 
   const [open, setOpen] = useState(false);
   const [selectedFileContent, setSelectedFileContent] = useState<FileData>();
@@ -63,6 +65,7 @@ export default function DashboardSharedView() {
     fileToEdit,
     folderToEdit,
     displayEditFolderForm,
+    displayMoveFileForm,
     displayEditFileForm,
     setShowFormEditFile,
     showFormEditFile,
@@ -72,6 +75,7 @@ export default function DashboardSharedView() {
 
   const getFolders = async () => {
     try {
+      setLoading(true);
       const token = localStorage.getItem("@userToken");
       const response = await sendGetRequest(`${API_BASE_URL}/permissions`, {
         Authorization: `Bearer ${token}`,
@@ -81,22 +85,14 @@ export default function DashboardSharedView() {
       }
     } catch (error) {
       console.log("error");
+    } finally {
+      setLoading(false);
     }
   };
-
-  // const getFiles = async () => {
-  //   try {
-  //     const token = localStorage.getItem("@userToken");
-  //     const response = await sendGetRequest(`${API_BASE_URL}/files`, {
-  //       Authorization: `Bearer ${token}`,
-  //     });
-  //     if (JSON.stringify(files) !== JSON.stringify(response)) {
-  //       setFiles(response);
-  //     }
-  //   } catch (error) {
-  //     console.log("error");
-  //   }
-  // };
+  const displayShareForm = (id: number) => {
+    setShowFormShare(!showFormShare);
+    setFileToShare(id);
+  };
 
   const getFoldersFromParent = async (foldersRequestPath: string) => {
     try {
@@ -292,7 +288,7 @@ export default function DashboardSharedView() {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              height: "100vh",
+              height: "50vh",
             }}
           >
             <CircularProgress />
@@ -313,6 +309,10 @@ export default function DashboardSharedView() {
                 (data: FolderData) => (
                   <CardFolder
                     displayMoveForm={() => displayMoveForm(data.id)}
+                    displayShareForm={() => displayShareForm(data.id)}
+                    displayEditForm={() =>
+                      displayEditFolderForm(data.id, data.name)
+                    }
                     handleMoveToFavoritesChange={() => moveToFavorites(data.id)}
                     key={data.id}
                     id={data.id}
@@ -327,6 +327,10 @@ export default function DashboardSharedView() {
               {(searchValue !== "" ? filteredFolders : files).map(
                 (data: FileData) => (
                   <CardFile
+                    displayMoveFileForm={() => displayMoveFileForm(data.id)}
+                    displayEditFileForm={() =>
+                      displayEditFileForm(data.id, data.name)
+                    }
                     handleMoveToFavoritesChange={() =>
                       moveToFavoritesFiles(data.id)
                     }

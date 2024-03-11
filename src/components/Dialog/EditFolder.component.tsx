@@ -23,7 +23,6 @@ export default function EditFolderDialog({
   setFolders,
   folders,
 }: FormDialogProps) {
-  console.log("🚀 ~ folderToEdit:", folderToEdit);
   const [formData, setFormData] = useState<any>({
     name: "",
   });

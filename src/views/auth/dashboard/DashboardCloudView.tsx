@@ -72,14 +72,10 @@ export default function DashboardCloudView() {
   const { pathname } = useLocation();
 
   const tabActive = tabsList.find((tab) => pathname.includes(tab.url));
-
   const [folders, setFolders] = useState<FolderData[]>([]);
-
   const [files, setFiles] = useState<FileData[]>([]);
-
   const [showFormShare, setShowFormShare] = useState(false);
   const [fileToShare, setFileToShare] = useState<number | undefined>(undefined);
-
   const [open, setOpen] = useState(false);
   const [selectedFileContent, setSelectedFileContent] = useState<
     FileData | undefined
@@ -90,6 +86,7 @@ export default function DashboardCloudView() {
     setShowFormShare(!showFormShare);
     setFileToShare(id);
   };
+
   const {
     showFormFolder,
     setShowFormFolder,
@@ -363,7 +360,7 @@ export default function DashboardCloudView() {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              height: "100vh",
+              height: "50vh",
             }}
           >
             <CircularProgress />

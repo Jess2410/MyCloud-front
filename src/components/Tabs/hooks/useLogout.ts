@@ -12,7 +12,6 @@ const useLogout = () => {
         Authorization: `Bearer ${token}`,
       });
       if (response.status === 200) {
-        console.log(response.message);
         localStorage.removeItem("@userToken");
         navigate("/");
       }

@@ -16,6 +16,7 @@ import checkboxUnchecked from "../../assets/icons/Vectorcheckbox-no-checked.png"
 import styles from "./card.component.module.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import IconButton from "../IconButton/IconButton";
+import { tabsList } from "../../views/auth/dashboard/DashboardCloudView";
 
 type CardFolderProps = {
   isFavorite: boolean;
@@ -44,8 +45,16 @@ const CardFolder: FC<CardFolderProps> = ({
 }) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-
+  const tabActive = tabsList.find((tab) => pathname.includes(tab.url));
   const [isChecked, setIsChecked] = useState<boolean>(isSelected ?? false);
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
 
   const handleSelect = (
     _event: ChangeEvent<HTMLInputElement>,
@@ -60,22 +69,12 @@ const CardFolder: FC<CardFolderProps> = ({
   };
 
   const handleDoubleClick = () => {
-    console.log(id);
     navigate(`${pathname}/${id}`);
   };
 
   const handleRightClick: MouseEventHandler<HTMLDivElement> = (e) => {
     e.preventDefault();
     displayMoveForm();
-    console.log("Clic droit détecté sur la carte!", id);
-  };
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const day = date.getDate().toString().padStart(2, "0");
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const year = date.getFullYear();
-    return `${day}-${month}-${year}`;
   };
 
   useEffect(() => {
@@ -124,7 +123,9 @@ const CardFolder: FC<CardFolderProps> = ({
             }}
           >
             <IconButton icon={edit} onClick={displayEditForm} />
-            <IconButton icon={shareIcon} onClick={displayShareForm} />
+            {tabActive?.key !== 4 && (
+              <IconButton icon={shareIcon} onClick={displayShareForm} />
+            )}
           </Box>
           <Typography
             variant="body2"

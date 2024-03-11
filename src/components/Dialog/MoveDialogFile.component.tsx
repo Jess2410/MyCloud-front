@@ -36,7 +36,6 @@ export default function MoveDialogFile({
     const formData = new FormData(event.currentTarget);
     const formJson = Object.fromEntries((formData as any).entries());
     const folder_id = formJson.folder_id;
-    console.log("🚀 ~ moveFile ~ folder_id:", folder_id);
     const loader = toast.loading("Veuillez patienter...");
 
     try {
@@ -58,7 +57,6 @@ export default function MoveDialogFile({
         });
 
         handleClose();
-        // setFolders((prev) => [...prev, response[0]]);
         return;
       }
       toast.update(loader, {
@@ -74,15 +72,6 @@ export default function MoveDialogFile({
       console.log(error);
     }
   };
-
-  // const handleSubmitFolder = (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   const formData = new FormData(event.currentTarget);
-  //   const formJson = Object.fromEntries((formData as any).entries());
-  //   const nameFolder = formJson.name;
-  //   handleClose();
-  // };
-
   return (
     <>
       <Dialog
@@ -95,17 +84,6 @@ export default function MoveDialogFile({
       >
         <DialogTitle>Nouvel emplacement</DialogTitle>
         <DialogContent>
-          {/* <TextField
-            autoFocus
-            required
-            margin="dense"
-            id="name"
-            name="name"
-            label="Nom"
-            type="text"
-            fullWidth
-            variant="standard"
-          /> */}
           <Box sx={{ minWidth: 120 }}>
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">Emplacement</InputLabel>

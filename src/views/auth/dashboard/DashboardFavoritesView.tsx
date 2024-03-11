@@ -23,21 +23,23 @@ import MoveDialogFolder from "../../../components/Dialog/MoveDialogFolder.compon
 import MoveDialogFile from "../../../components/Dialog/MoveDialogFile.component";
 import EditFolderDialog from "../../../components/Dialog/EditFolder.component";
 import EditFileDialog from "../../../components/Dialog/EditFile.component";
+import FormSendUserFolderDialog from "../../../components/Dialog/FormSendUserFolder.component";
 
 export default function DashboardFavoritesView() {
   const { pathname } = useLocation();
 
   const tabActive = tabsList.find((tab) => pathname.includes(tab.url));
 
-  // const userContext = useContext(UserContext);
-
   const [folders, setFolders] = useState<FolderData[]>([]);
   const [files, setFiles] = useState<FileData[]>([]);
-
+  const [showFormShare, setShowFormShare] = useState(false);
+  const [fileToShare, setFileToShare] = useState<number | undefined>(undefined);
   const [allFoldersSelected, setAllFoldersSelected] = useState(false);
   const [selectedFoldersIds, setSelectedFoldersIds] = useState<number[]>([]);
   const [filteredFiles, setFilteredFiles] = useState<FileData[]>([]);
   const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [selectedFileContent, setSelectedFileContent] = useState(undefined);
 
   const {
     showFormFolder,
@@ -73,28 +75,13 @@ export default function DashboardFavoritesView() {
     showFormEditFile,
     setShowFormEditFolder,
     showFormEditFolder,
+    displayEditFolderForm,
+    displayEditFileForm,
   } = useToolbar(folders, files);
-
-  const getFiles = async () => {
-    try {
-      const token = localStorage.getItem("@userToken");
-      const response = await sendGetRequest(`${API_BASE_URL}/files/favorites`, {
-        Authorization: `Bearer ${token}`,
-      });
-      if (JSON.stringify(files) !== JSON.stringify(response)) {
-        setFiles(response);
-      }
-    } catch (error) {
-      console.log("error");
-    }
-  };
-
-  const getFilesFromParent = async () => {
-    setFiles([]);
-  };
 
   const getFolders = async () => {
     try {
+      setLoading(true);
       const token = localStorage.getItem("@userToken");
       const response = await sendGetRequest(
         `${API_BASE_URL}/folders/favorites`,
@@ -107,7 +94,30 @@ export default function DashboardFavoritesView() {
       }
     } catch (error) {
       console.log("error");
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const getFiles = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("@userToken");
+      const response = await sendGetRequest(`${API_BASE_URL}/files/favorites`, {
+        Authorization: `Bearer ${token}`,
+      });
+      if (JSON.stringify(files) !== JSON.stringify(response)) {
+        setFiles(response);
+      }
+    } catch (error) {
+      console.log("error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getFilesFromParent = async () => {
+    setFiles([]);
   };
 
   const getLastParam = (currentpathname: string): string => {
@@ -115,9 +125,6 @@ export default function DashboardFavoritesView() {
     if (splitted.length <= 2) return "";
     return splitted[splitted.length - 1];
   };
-
-  const [open, setOpen] = useState(false);
-  const [selectedFileContent, setSelectedFileContent] = useState(undefined);
 
   const handleOpen = async (id: any) => {
     try {
@@ -209,10 +216,14 @@ export default function DashboardFavoritesView() {
     }
   };
 
+  const displayShareForm = (id: number) => {
+    setShowFormShare(!showFormShare);
+    setFileToShare(id);
+  };
+
   useEffect(() => {
     const param = getLastParam(pathname);
     if (param.length == 0) getFiles();
-    // else getFilesFromParent(param);
     else getFilesFromParent();
   }, [pathname]);
 
@@ -289,7 +300,7 @@ export default function DashboardFavoritesView() {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              height: "100vh",
+              height: "50vh",
             }}
           >
             <CircularProgress />
@@ -310,6 +321,10 @@ export default function DashboardFavoritesView() {
                 (data: FolderData) => (
                   <CardFolder
                     displayMoveForm={() => displayMoveForm(data.id)}
+                    displayShareForm={() => displayShareForm(data.id)}
+                    displayEditForm={() =>
+                      displayEditFolderForm(data.id, data.name)
+                    }
                     handleMoveToFavoritesChange={() => moveToFavorites(data.id)}
                     key={data.id}
                     id={data.id}
@@ -327,6 +342,9 @@ export default function DashboardFavoritesView() {
                   <>
                     <CardFile
                       displayMoveFileForm={() => displayMoveFileForm(data.id)}
+                      displayEditFileForm={() =>
+                        displayEditFileForm(data.id, data.name)
+                      }
                       handleMoveToFavoritesChange={() =>
                         moveToFavoritesFiles(data.id)
                       }
@@ -349,11 +367,17 @@ export default function DashboardFavoritesView() {
                   handleClose={handleClose}
                 />
               )}
-
               {showFormFolder && (
                 <FormDialogFolder
                   handleClose={() => setShowFormFolder(false)}
                   setFolders={setFolders}
+                />
+              )}
+              {showFormShare && (
+                <FormSendUserFolderDialog
+                  handleClose={() => setShowFormShare(false)}
+                  setFolders={setFolders}
+                  fileToShare={fileToShare}
                 />
               )}
               {showFormFile && (

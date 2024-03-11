@@ -29,11 +29,11 @@ import EditFileDialog from "../../../components/Dialog/EditFile.component";
 export default function DashboardTrashView() {
   const [folders, setFolders] = useState<FolderData[]>([]);
   const [files, setFiles] = useState<FileData[]>([]);
-  console.log("🚀 ~ DashboardTrashView ~ files:", files);
   const [loading, setLoading] = useState(false);
   const { pathname } = useLocation();
   const tabActive = tabsList.find((tab) => pathname.includes(tab.url));
-
+  const [showFormShare, setShowFormShare] = useState(false);
+  const [fileToShare, setFileToShare] = useState<number | undefined>(undefined);
   const [open, setOpen] = useState(false);
   const [selectedFileContent, setSelectedFileContent] = useState(undefined);
 
@@ -64,6 +64,7 @@ export default function DashboardTrashView() {
     displayMoveForm,
     fileToEdit,
     folderToEdit,
+    displayMoveFileForm,
     displayEditFolderForm,
     displayEditFileForm,
     setShowFormEditFile,
@@ -71,6 +72,11 @@ export default function DashboardTrashView() {
     setShowFormEditFolder,
     showFormEditFolder,
   } = useToolbar(folders, files);
+
+  const displayShareForm = (id: number) => {
+    setShowFormShare(!showFormShare);
+    setFileToShare(id);
+  };
 
   const handleOpen = async (id: any) => {
     try {
@@ -93,6 +99,7 @@ export default function DashboardTrashView() {
 
   const getFolders = async () => {
     try {
+      setLoading(true);
       const token = localStorage.getItem("@userToken");
       const response = await sendGetRequest(`${API_BASE_URL}/folders/trash`, {
         Authorization: `Bearer ${token}`,
@@ -102,8 +109,11 @@ export default function DashboardTrashView() {
       }
     } catch (error) {
       console.log("error");
+    } finally {
+      setLoading(false);
     }
   };
+
   const getFiles = async () => {
     try {
       const token = localStorage.getItem("@userToken");
@@ -151,6 +161,7 @@ export default function DashboardTrashView() {
       console.log(error);
     }
   };
+
   const moveToFavoritesFiles = async (id: number) => {
     const loader = toast.loading("Veuillez patienter...");
     try {
@@ -224,7 +235,7 @@ export default function DashboardTrashView() {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              height: "100vh",
+              height: "50vh",
             }}
           >
             <CircularProgress />
@@ -245,6 +256,10 @@ export default function DashboardTrashView() {
                 (data: FolderData) => (
                   <CardFolder
                     displayMoveForm={() => displayMoveForm(data.id)}
+                    displayShareForm={() => displayShareForm(data.id)}
+                    displayEditForm={() =>
+                      displayEditFolderForm(data.id, data.name)
+                    }
                     handleMoveToFavoritesChange={() => moveToFavorites(data.id)}
                     key={data.id}
                     id={data.id}
@@ -253,7 +268,6 @@ export default function DashboardTrashView() {
                     creation_date={data.creation_date}
                     isFavorite={data.isFavorite}
                     name={data.name}
-                    // onDoubleClick={() => handleFolderDoubleClick(data.id)}
                   />
                 )
               )}
@@ -261,6 +275,10 @@ export default function DashboardTrashView() {
               {(searchValue !== "" ? filteredFolders : files).map(
                 (data: FileData) => (
                   <CardFile
+                    displayMoveFileForm={() => displayMoveFileForm(data.id)}
+                    displayEditFileForm={() =>
+                      displayEditFileForm(data.id, data.name)
+                    }
                     handleMoveToFavoritesChange={() =>
                       moveToFavoritesFiles(data.id)
                     }
